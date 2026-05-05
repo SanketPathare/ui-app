@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
-import { Copy, Check, RefreshCcw, ArrowLeft } from "lucide-react";
+import { Copy, Check, RefreshCcw, ArrowLeft, Sun, Moon } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -29,6 +29,7 @@ export function GeneratorLayout({
 }: GeneratorLayoutProps) {
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState<"css" | "tailwind" | "html">("css");
+  const [previewMode, setPreviewMode] = useState<"dark" | "light">("dark");
 
   const copyToClipboard = () => {
     let codeToCopy = "";
@@ -131,8 +132,16 @@ export function GeneratorLayout({
 
         {/* Preview Section */}
         <div className="lg:col-span-8 space-y-8">
-          <div className="relative aspect-square md:aspect-video lg:aspect-auto lg:h-[450px] rounded-[2.5rem] border border-white/5 bg-[#020617] shadow-brand-primary/5 group overflow-hidden">
-            <div className="absolute inset-0 preview-checkerboard opacity-[0.07]" />
+          <div className={cn(
+            "relative aspect-square md:aspect-video lg:aspect-auto lg:h-[450px] rounded-[2.5rem] border transition-all duration-500 overflow-hidden group",
+            previewMode === "dark" 
+              ? "bg-[#020617] border-white/5 shadow-brand-primary/5" 
+              : "bg-white border-slate-200 shadow-xl shadow-slate-200/50"
+          )}>
+            <div className={cn(
+              "absolute inset-0 preview-checkerboard transition-opacity duration-500",
+              previewMode === "dark" ? "opacity-[0.07]" : "opacity-[0.03]"
+            )} />
             {/* Ambient Glows */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/2 h-1/2 bg-brand-primary/5 blur-[100px] pointer-events-none" />
             
@@ -144,10 +153,45 @@ export function GeneratorLayout({
                </div>
             </div>
             
-            <div className="absolute top-4 left-4">
-               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900/80 backdrop-blur-xl border border-white/5 text-[9px] font-black text-slate-400 uppercase tracking-widest shadow-sm">
+            <div className="absolute top-4 left-4 flex items-center gap-2">
+               <div className={cn(
+                 "flex items-center gap-1.5 px-3 py-1.5 rounded-xl backdrop-blur-xl border text-[9px] font-black uppercase tracking-widest shadow-sm transition-all",
+                 previewMode === "dark"
+                   ? "bg-slate-900/80 border-white/5 text-slate-400"
+                   : "bg-white/80 border-slate-200 text-slate-500"
+               )}>
                  <div className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
                  Render Output
+               </div>
+
+               <div className={cn(
+                 "flex p-1 rounded-xl backdrop-blur-xl border transition-all",
+                 previewMode === "dark"
+                   ? "bg-slate-900/80 border-white/5"
+                   : "bg-white/80 border-slate-200"
+               )}>
+                 <button
+                   onClick={() => setPreviewMode("light")}
+                   className={cn(
+                     "p-1 rounded-lg transition-all",
+                     previewMode === "light" 
+                       ? "bg-white text-brand-primary shadow-sm" 
+                       : "text-slate-500 hover:text-slate-400"
+                   )}
+                 >
+                   <Sun className="w-3 h-3" />
+                 </button>
+                 <button
+                   onClick={() => setPreviewMode("dark")}
+                   className={cn(
+                     "p-1 rounded-lg transition-all",
+                     previewMode === "dark" 
+                       ? "bg-slate-800 text-brand-primary shadow-sm" 
+                       : "text-slate-500 hover:text-slate-400"
+                   )}
+                 >
+                   <Moon className="w-3 h-3" />
+                 </button>
                </div>
             </div>
           </div>

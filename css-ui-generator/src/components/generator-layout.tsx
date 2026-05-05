@@ -160,12 +160,15 @@ export function GeneratorLayout({
                    ? "bg-slate-900/80 border-white/5 text-slate-400"
                    : "bg-white/80 border-slate-200 text-slate-500"
                )}>
-                 <div className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
+                 <div className="relative flex items-center justify-center">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping absolute" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 relative" />
+                 </div>
                  Render Output
                </div>
 
                <div className={cn(
-                 "flex p-1 rounded-xl backdrop-blur-xl border transition-all",
+                 "flex p-0.5 rounded-xl backdrop-blur-xl border transition-all",
                  previewMode === "dark"
                    ? "bg-slate-900/80 border-white/5"
                    : "bg-white/80 border-slate-200"
@@ -173,9 +176,9 @@ export function GeneratorLayout({
                  <button
                    onClick={() => setPreviewMode("light")}
                    className={cn(
-                     "p-1 rounded-lg transition-all",
+                     "p-1.5 rounded-lg transition-all",
                      previewMode === "light" 
-                       ? "bg-white text-brand-primary shadow-sm" 
+                       ? "bg-brand-primary text-white shadow-lg shadow-brand-primary/20 scale-110" 
                        : "text-slate-500 hover:text-slate-400"
                    )}
                  >
@@ -184,9 +187,9 @@ export function GeneratorLayout({
                  <button
                    onClick={() => setPreviewMode("dark")}
                    className={cn(
-                     "p-1 rounded-lg transition-all",
+                     "p-1.5 rounded-lg transition-all",
                      previewMode === "dark" 
-                       ? "bg-slate-800 text-brand-primary shadow-sm" 
+                       ? "bg-brand-primary text-white shadow-lg shadow-brand-primary/20 scale-110" 
                        : "text-slate-500 hover:text-slate-400"
                    )}
                  >
@@ -251,8 +254,8 @@ export function GeneratorLayout({
                 {copied ? "Copied" : "Copy Code"}
               </button>
             </div>
-            <div className="p-6 relative z-10 min-h-[100px]">
-              <pre className="text-xs font-mono text-indigo-200/90 overflow-x-auto selection:bg-brand-primary/40 leading-relaxed whitespace-pre-wrap">
+            <div className="p-4 relative z-10 min-h-[100px]">
+              <pre className="text-[11px] font-mono text-indigo-200/90 overflow-x-auto selection:bg-brand-primary/40 leading-relaxed whitespace-pre-wrap">
                 <code className="block py-1">
                   {activeTab === "css" ? cssCode : activeTab === "tailwind" ? tailwindCode : htmlCode}
                 </code>

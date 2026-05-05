@@ -24,7 +24,7 @@
     children: React.ReactNode;
   }>) {
     return (
-      <html lang="en">
+      <html lang="en" className="dark">
         <body
           className={`${inter.variable} ${outfit.variable} font-sans antialiased bg-[#020617] text-slate-100 selection:bg-brand-primary/30 selection:text-brand-primary`}
         >

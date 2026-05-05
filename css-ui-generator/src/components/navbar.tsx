@@ -156,7 +156,7 @@ export function Navbar() {
         <div className="flex items-center gap-3">
           <Link
             href="/docs"
-            className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg text-slate-400 hover:text-brand-primary dark:hover:text-brand-primary transition-all text-xs font-bold"
+            className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg text-slate-400 hover:text-brand-primary transition-all text-xs font-bold"
           >
             <BookOpen className="w-3.5 h-3.5" />
             Docs

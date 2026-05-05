@@ -56,7 +56,7 @@ export function TextShadowGenerator() {
             setText(e.target.value);
             setActivePreset(null);
           }}
-          className="w-full p-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-sm font-bold focus:border-brand-primary outline-none transition-all"
+          className="w-full p-3 rounded-xl bg-white/5 border border-white/10 text-sm font-bold focus:border-brand-primary outline-none transition-all"
           placeholder="Enter text..."
         />
         <div className="space-y-2">
@@ -73,7 +73,7 @@ export function TextShadowGenerator() {
               setFontSize(parseInt(e.target.value));
               setActivePreset(null);
             }}
-            className="w-full h-1 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
           />
         </div>
       </div>
@@ -98,7 +98,7 @@ export function TextShadowGenerator() {
                 item.setter(parseInt(e.target.value));
                 setActivePreset(null);
               }}
-              className="w-full h-1 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+              className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
             />
           </div>
         ))}
@@ -117,7 +117,7 @@ export function TextShadowGenerator() {
               setOpacity(parseInt(e.target.value) / 100);
               setActivePreset(null);
             }}
-            className="w-full h-1 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
           />
         </div>
       </div>
@@ -133,7 +133,7 @@ export function TextShadowGenerator() {
                 "px-2 py-2 rounded-lg text-[9px] font-black uppercase tracking-tighter transition-all",
                 activePreset === p.name 
                   ? "bg-brand-primary text-white shadow-lg border-brand-primary" 
-                  : "bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-slate-500 hover:text-brand-primary"
+                  : "bg-white/5 border border-white/10 text-slate-500 hover:text-brand-primary"
               )}
             >
               {p.name}
@@ -144,7 +144,7 @@ export function TextShadowGenerator() {
 
       <div className="pt-6 border-t border-slate-100 dark:border-white/5">
         <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-3 block">Color</label>
-        <div className="flex gap-2 p-1.5 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
+        <div className="flex gap-2 p-1.5 rounded-xl bg-white/5 border border-white/10">
           <input 
             type="color" 
             value={color} 

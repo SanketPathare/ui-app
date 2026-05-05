@@ -46,13 +46,13 @@ export function BorderRadiusGenerator() {
           "w-full flex items-center justify-between p-3 rounded-xl border transition-all text-[10px] font-black uppercase tracking-widest",
           all 
             ? "bg-brand-primary/10 border-brand-primary/30 text-brand-primary shadow-sm" 
-            : "bg-slate-100 dark:bg-white/5 border-slate-200 dark:border-white/5 text-slate-500"
+            : "bg-white/5 border-white/10 text-slate-500"
         )}
       >
         Sync Corners
         <div className={cn(
           "w-8 h-4 rounded-full relative transition-colors",
-          all ? "bg-brand-primary" : "bg-slate-300 dark:bg-slate-700"
+          all ? "bg-brand-primary" : "bg-white/10"
         )}>
           <div className={cn(
             "absolute top-0.5 w-3 h-3 bg-white rounded-full transition-all",
@@ -74,7 +74,7 @@ export function BorderRadiusGenerator() {
               max="200"
               value={topLeft}
               onChange={(e) => updateAll(parseInt(e.target.value))}
-              className="w-full h-1 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+              className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
             />
           </div>
         ) : (
@@ -96,7 +96,7 @@ export function BorderRadiusGenerator() {
                   max="200"
                   value={item.value}
                   onChange={(e) => item.setter(parseInt(e.target.value))}
-                  className="w-full h-1 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+                  className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
                 />
               </div>
             ))}
@@ -111,7 +111,7 @@ export function BorderRadiusGenerator() {
             <button
               key={p.name}
               onClick={() => applyPreset(p)}
-              className="px-2 py-2 rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-[9px] font-black uppercase tracking-tighter text-slate-500 hover:text-brand-primary hover:border-brand-primary transition-all"
+              className="px-2 py-2 rounded-lg bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-tighter text-slate-500 hover:text-brand-primary hover:border-brand-primary transition-all"
             >
               {p.name}
             </button>

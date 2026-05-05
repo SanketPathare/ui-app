@@ -246,7 +246,7 @@ export function MeshGradientGenerator() {
                 "flex items-center gap-2 px-3 py-2 rounded-xl border text-[10px] font-black uppercase tracking-wider transition-all",
                 activePreset === p.name
                   ? "bg-brand-primary/10 border-brand-primary text-brand-primary"
-                  : "bg-slate-100 dark:bg-white/5 border-slate-200 dark:border-white/5 text-slate-500 hover:text-brand-primary hover:border-brand-primary"
+                  : "bg-white/5 border-white/10 text-slate-500 hover:text-brand-primary hover:border-brand-primary"
               )}
             >
               <Sparkles className="w-3 h-3" /> {p.name}
@@ -283,7 +283,7 @@ export function MeshGradientGenerator() {
               max={item.max}
               step={1}
               onChange={(e) => item.setter(parseInt(e.target.value))}
-              className="w-full h-1.5 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+              className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
             />
           </div>
         ))}
@@ -294,7 +294,7 @@ export function MeshGradientGenerator() {
             onClick={() => setAnimate(!animate)}
             className={cn(
               "px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all",
-              animate ? "bg-brand-primary text-white" : "bg-slate-100 dark:bg-white/5 text-slate-500"
+              animate ? "bg-brand-primary text-white" : "bg-white/5 text-slate-500"
             )}
           >
             {animate ? "On" : "Off"}
@@ -317,7 +317,7 @@ export function MeshGradientGenerator() {
 
         <div className="space-y-4 max-h-[280px] overflow-y-auto pr-1">
           {points.map((point, index) => (
-            <div key={point.id} className="p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5 space-y-3 relative group">
+            <div key={point.id} className="p-3 rounded-xl bg-white/5 border border-white/10 space-y-3 relative group">
               <button
                 onClick={() => removePoint(point.id)}
                 className="absolute top-2 right-2 p-1 text-slate-400 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity"
@@ -352,7 +352,7 @@ export function MeshGradientGenerator() {
                     max={ctrl.max}
                     step={1}
                     onChange={(e) => updatePoint(point.id, { [ctrl.key]: parseInt(e.target.value) })}
-                    className="w-full h-1 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+                    className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
                   />
                 </div>
               ))}

@@ -54,7 +54,7 @@ box-shadow: 0 10px 20px -10px ${bgColor};`;
           type="text"
           value={text}
           onChange={(e) => setText(e.target.value)}
-          className="w-full px-4 py-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-xs font-bold focus:ring-2 focus:ring-brand-primary/50 outline-none transition-all dark:text-white"
+          className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-xs font-bold focus:ring-2 focus:ring-brand-primary/50 outline-none transition-all text-white"
         />
       </div>
 
@@ -76,7 +76,7 @@ box-shadow: 0 10px 20px -10px ${bgColor};`;
               max={item.max}
               value={item.value}
               onChange={(e) => item.setter(parseInt(e.target.value))}
-              className="w-full h-1 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+              className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
             />
           </div>
         ))}
@@ -89,7 +89,7 @@ box-shadow: 0 10px 20px -10px ${bgColor};`;
             <button
               key={p.name}
               onClick={() => applyPreset(p)}
-              className="px-1 py-2 rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-[9px] font-black uppercase tracking-tighter text-slate-500 hover:text-brand-primary hover:border-brand-primary transition-all"
+              className="px-1 py-2 rounded-lg bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-tighter text-slate-500 hover:text-brand-primary hover:border-brand-primary transition-all"
             >
               {p.name}
             </button>
@@ -100,14 +100,14 @@ box-shadow: 0 10px 20px -10px ${bgColor};`;
       <div className="pt-6 border-t border-slate-100 dark:border-white/5 grid grid-cols-2 gap-4">
         <div className="space-y-3">
           <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Background</label>
-          <div className="p-1.5 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5 flex items-center gap-2">
+          <div className="p-1.5 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2">
             <input type="color" value={bgColor} onChange={(e) => setBgColor(e.target.value)} className="w-8 h-8 rounded-lg overflow-hidden border-none cursor-pointer shrink-0" />
             <span className="text-[9px] font-mono font-black text-slate-500 uppercase">{bgColor}</span>
           </div>
         </div>
         <div className="space-y-3">
           <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Text</label>
-          <div className="p-1.5 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5 flex items-center gap-2">
+          <div className="p-1.5 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2">
             <input type="color" value={textColor} onChange={(e) => setTextColor(e.target.value)} className="w-8 h-8 rounded-lg overflow-hidden border-none cursor-pointer shrink-0" />
             <span className="text-[9px] font-mono font-black text-slate-500 uppercase">{textColor}</span>
           </div>

@@ -64,7 +64,7 @@ border-radius: 24px;`;
               max={item.max}
               value={item.value}
               onChange={(e) => item.setter(parseInt(e.target.value))}
-              className="w-full h-1 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+              className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
             />
           </div>
         ))}
@@ -77,7 +77,7 @@ border-radius: 24px;`;
             <button
               key={p.name}
               onClick={() => applyPreset(p)}
-              className="px-1 py-2 rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-[9px] font-black uppercase tracking-tighter text-slate-500 hover:text-brand-primary hover:border-brand-primary transition-all"
+              className="px-1 py-2 rounded-lg bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-tighter text-slate-500 hover:text-brand-primary hover:border-brand-primary transition-all"
             >
               {p.name}
             </button>
@@ -99,7 +99,7 @@ border-radius: 24px;`;
               style={{ backgroundColor: c }}
             />
           ))}
-          <div className="w-8 h-8 rounded-lg border border-slate-200 dark:border-white/5 relative overflow-hidden">
+          <div className="w-8 h-8 rounded-lg border border-white/10 relative overflow-hidden">
             <input 
               type="color" 
               value={color} 

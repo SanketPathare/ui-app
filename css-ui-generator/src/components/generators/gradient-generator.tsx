@@ -65,7 +65,7 @@ export function GradientGenerator() {
     <div className="space-y-8">
       <div className="space-y-3">
         <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Engine Mode</label>
-        <div className="flex gap-2 p-1 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
+        <div className="flex gap-2 p-1 rounded-xl bg-white/5 border border-white/10">
           {(["linear", "radial"] as const).map((t) => (
             <button
               key={t}
@@ -73,8 +73,8 @@ export function GradientGenerator() {
               className={cn(
                 "flex-1 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all",
                 type === t 
-                  ? "bg-white dark:bg-brand-primary text-slate-900 dark:text-white shadow-sm" 
-                  : "text-slate-500 hover:text-slate-900 dark:hover:text-slate-300"
+                  ? "bg-brand-primary text-white shadow-lg shadow-brand-primary/20" 
+                  : "text-slate-500 hover:text-slate-300"
               )}
             >
               {t}
@@ -95,7 +95,7 @@ export function GradientGenerator() {
             max="360"
             value={angle}
             onChange={(e) => setAngle(parseInt(e.target.value))}
-            className="w-full h-1.5 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
           />
         </div>
       )}
@@ -112,7 +112,7 @@ export function GradientGenerator() {
                 const newColors = [...colors].reverse().map((c, i) => ({ ...c, stop: 100 - c.stop }));
                 setColors(newColors);
               }}
-              className="p-1.5 rounded-lg bg-slate-100 dark:bg-white/5 text-slate-500 hover:text-brand-primary transition-all"
+              className="p-1.5 rounded-lg bg-white/5 text-slate-500 hover:text-brand-primary transition-all"
               title="Reverse Order"
             >
               <MoveHorizontal className="w-3.5 h-3.5" />
@@ -122,7 +122,7 @@ export function GradientGenerator() {
                 const randomHex = () => "#" + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
                 setColors(colors.map(c => ({ ...c, color: randomHex() })));
               }}
-              className="p-1.5 rounded-lg bg-slate-100 dark:bg-white/5 text-slate-500 hover:text-brand-primary transition-all"
+              className="p-1.5 rounded-lg bg-white/5 text-slate-500 hover:text-brand-primary transition-all"
               title="Randomize Matrix"
             >
               <RotateCcw className="w-3.5 h-3.5" />
@@ -139,7 +139,7 @@ export function GradientGenerator() {
         
         <div className="space-y-3">
           {colors.map((c, index) => (
-            <div key={c.id} className="group flex items-center gap-3 p-2 rounded-xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 transition-all hover:border-brand-primary/20">
+            <div key={c.id} className="group flex items-center gap-3 p-2 rounded-xl bg-white/[0.02] border border-white/5 transition-all hover:border-brand-primary/20">
               <button
                 onClick={() => setActiveId(c.id)}
                 className={cn(
@@ -159,7 +159,7 @@ export function GradientGenerator() {
                   max="100"
                   value={c.stop}
                   onChange={(e) => updateColor(c.id, { stop: parseInt(e.target.value) })}
-                  className="w-full h-1 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+                  className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
                 />
               </div>
               {/* Hide delete icons for the first two colors */}
@@ -183,7 +183,7 @@ export function GradientGenerator() {
             <button
               key={p.name}
               onClick={() => applyPreset(p.colors)}
-              className="px-2 py-2 rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-[9px] font-black uppercase tracking-tighter text-slate-500 hover:text-brand-primary hover:border-brand-primary transition-all"
+              className="px-2 py-2 rounded-lg bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-tighter text-slate-500 hover:text-brand-primary hover:border-brand-primary transition-all"
             >
               {p.name}
             </button>
@@ -192,14 +192,14 @@ export function GradientGenerator() {
       </div>
 
       {activeColor && (
-        <div className="pt-6 border-t border-slate-100 dark:border-white/5 space-y-4">
+        <div className="pt-6 border-t border-white/10 dark:border-white/5 space-y-4">
           <div className="flex justify-between items-center">
              <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Hex Code</label>
              <span className="text-[10px] font-mono font-black text-brand-primary uppercase">
                {activeColor.color}
              </span>
           </div>
-          <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-white/5 shadow-inner">
+          <div className="rounded-2xl overflow-hidden border border-white/10 shadow-inner">
             <HexColorPicker
               color={activeColor.color}
               onChange={(color) => updateColor(activeColor.id, { color })}

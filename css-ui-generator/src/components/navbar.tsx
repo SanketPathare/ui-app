@@ -21,7 +21,14 @@ import {
   Maximize,
   PanelLeft,
   Navigation,
-  Monitor
+  Monitor,
+  CheckSquare,
+  ToggleLeft,
+  Tag,
+  Info,
+  Maximize2,
+  TextInput,
+  ClipboardList
 } from "lucide-react";
 
 const navItems = [
@@ -69,6 +76,12 @@ const moreTools = [
   { title: "Footer", href: "/footer", icon: Layout },
   { title: "Card Layout", href: "/cards", icon: Grid },
   { title: "Breakpoints", href: "/breakpoints", icon: Monitor },
+  { title: "Form Gen", href: "/forms", icon: ClipboardList },
+  { title: "Input Field", href: "/inputs", icon: Type },
+  { title: "Checkbox", href: "/checkbox", icon: CheckSquare },
+  { title: "Toggle Switch", href: "/toggle", icon: ToggleLeft },
+  { title: "Badge Lab", href: "/badge", icon: Tag },
+  { title: "Tooltip Pro", href: "/tooltip", icon: Info },
 ];
 
 export function Navbar() {

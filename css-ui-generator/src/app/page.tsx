@@ -20,7 +20,13 @@ import {
   Maximize,
   PanelLeft,
   Navigation,
-  Monitor
+  Monitor,
+  CheckSquare,
+  ToggleLeft,
+  Tag,
+  Info,
+  Maximize2,
+  ClipboardList
 } from "lucide-react";
 
 const tools = [
@@ -230,6 +236,54 @@ const tools = [
     href: "/breakpoints",
     icon: Monitor,
     color: "from-cyan-500 to-blue-500",
+    shadow: "shadow-cyan-500/20",
+  },
+  {
+    title: "Form Gen",
+    description: "Build complex, responsive forms with customized layouts and validation states.",
+    href: "/forms",
+    icon: ClipboardList,
+    color: "from-amber-500 to-orange-600",
+    shadow: "shadow-amber-500/20",
+  },
+  {
+    title: "Input Field",
+    description: "Design premium input states, focus effects, and floating labels.",
+    href: "/inputs",
+    icon: Type,
+    color: "from-blue-500 to-indigo-600",
+    shadow: "shadow-blue-500/20",
+  },
+  {
+    title: "Checkbox & Radio",
+    description: "Create custom-branded selection controls with smooth animations.",
+    href: "/checkbox",
+    icon: CheckSquare,
+    color: "from-emerald-500 to-teal-600",
+    shadow: "shadow-emerald-500/20",
+  },
+  {
+    title: "Toggle Switch",
+    description: "Design interactive iOS-style toggle switches with custom themes.",
+    href: "/toggle",
+    icon: ToggleLeft,
+    color: "from-indigo-500 to-violet-600",
+    shadow: "shadow-indigo-500/20",
+  },
+  {
+    title: "Badge Lab",
+    description: "Create status indicators, tags, and pill components with glass effects.",
+    href: "/badge",
+    icon: Tag,
+    color: "from-rose-500 to-pink-600",
+    shadow: "shadow-rose-500/20",
+  },
+  {
+    title: "Tooltip Pro",
+    description: "Design elegant informational tooltips with smart positioning.",
+    href: "/tooltip",
+    icon: Info,
+    color: "from-cyan-500 to-blue-600",
     shadow: "shadow-cyan-500/20",
   },
 ];

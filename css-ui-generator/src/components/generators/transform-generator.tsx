@@ -41,13 +41,13 @@ export function TransformGenerator() {
               step={item.step || 1}
               value={item.value}
               onChange={(e) => item.setter(parseFloat(e.target.value))}
-              className="w-full h-1 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+              className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
             />
           </div>
         ))}
       </div>
 
-      <div className="pt-6 border-t border-slate-100 dark:border-white/5 grid grid-cols-2 gap-2">
+      <div className="pt-6 border-t border-white/10 grid grid-cols-2 gap-2">
         {[
           { name: "3D Tilt", r: 15, s: 1.1, sx: 10, sy: 0 },
           { name: "Skew", r: 0, s: 1, sx: 20, sy: 0 },
@@ -62,7 +62,7 @@ export function TransformGenerator() {
               setSkewX(p.sx);
               setSkewY(p.sy);
             }}
-            className="px-2 py-2 rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-[9px] font-black uppercase tracking-tighter text-slate-500 hover:text-brand-primary transition-all"
+            className="px-2 py-2 rounded-lg bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-tighter text-slate-500 hover:text-brand-primary transition-all"
           >
             {p.name}
           </button>

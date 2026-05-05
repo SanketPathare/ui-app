@@ -35,7 +35,7 @@ export function OpacityGenerator() {
             max="100"
             value={opacity * 100}
             onChange={(e) => setOpacity(parseInt(e.target.value) / 100)}
-            className="w-full h-1 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
           />
         </div>
 
@@ -50,7 +50,7 @@ export function OpacityGenerator() {
             max="100"
             value={hoverOpacity * 100}
             onChange={(e) => setHoverOpacity(parseInt(e.target.value) / 100)}
-            className="w-full h-1 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
           />
         </div>
 
@@ -66,12 +66,12 @@ export function OpacityGenerator() {
             step="0.1"
             value={transitionTime}
             onChange={(e) => setTransitionTime(parseFloat(e.target.value))}
-            className="w-full h-1 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
           />
         </div>
       </div>
 
-      <div className="pt-6 border-t border-slate-100 dark:border-white/5">
+      <div className="pt-6 border-t border-white/10">
         <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-4 block">Presets</label>
         <div className="grid grid-cols-2 gap-2">
           {[
@@ -83,7 +83,7 @@ export function OpacityGenerator() {
             <button
               key={p.name}
               onClick={() => { setOpacity(p.b); setHoverOpacity(p.h); }}
-              className="px-2 py-2 rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-[9px] font-black uppercase tracking-tighter text-slate-500 hover:text-brand-primary transition-all"
+              className="px-2 py-2 rounded-lg bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-tighter text-slate-500 hover:text-brand-primary transition-all"
             >
               {p.name}
             </button>

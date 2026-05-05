@@ -50,11 +50,11 @@ export function GradientBorderGenerator() {
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Color 1</label>
-          <input type="color" value={color1} onChange={(e) => setColor1(e.target.value)} className="w-full h-10 p-1 bg-transparent border border-slate-200 dark:border-white/5 rounded-lg cursor-pointer" />
+          <input type="color" value={color1} onChange={(e) => setColor1(e.target.value)} className="w-full h-10 p-1 bg-transparent border border-white/10 rounded-lg cursor-pointer" />
         </div>
         <div className="space-y-2">
           <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Color 2</label>
-          <input type="color" value={color2} onChange={(e) => setColor2(e.target.value)} className="w-full h-10 p-1 bg-transparent border border-slate-200 dark:border-white/5 rounded-lg cursor-pointer" />
+          <input type="color" value={color2} onChange={(e) => setColor2(e.target.value)} className="w-full h-10 p-1 bg-transparent border border-white/10 rounded-lg cursor-pointer" />
         </div>
       </div>
 
@@ -70,7 +70,7 @@ export function GradientBorderGenerator() {
           max={20} 
           step={1} 
           onChange={(e) => setBorderWidth(parseInt(e.target.value))} 
-          className="w-full h-1.5 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+          className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
         />
       </div>
 
@@ -86,7 +86,7 @@ export function GradientBorderGenerator() {
           max={100} 
           step={1} 
           onChange={(e) => setBorderRadius(parseInt(e.target.value))} 
-          className="w-full h-1.5 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+          className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
         />
       </div>
 
@@ -102,7 +102,7 @@ export function GradientBorderGenerator() {
           max={360} 
           step={1} 
           onChange={(e) => setAngle(parseInt(e.target.value))} 
-          className="w-full h-1.5 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+          className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
         />
       </div>
 

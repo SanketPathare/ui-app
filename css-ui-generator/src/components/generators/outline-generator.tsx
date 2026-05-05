@@ -43,7 +43,7 @@ export function OutlineGenerator() {
             max="20"
             value={width}
             onChange={(e) => setWidth(parseInt(e.target.value))}
-            className="w-full h-1 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
           />
         </div>
 
@@ -58,7 +58,7 @@ export function OutlineGenerator() {
             max="40"
             value={offset}
             onChange={(e) => setOffset(parseInt(e.target.value))}
-            className="w-full h-1 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
           />
         </div>
 
@@ -73,12 +73,12 @@ export function OutlineGenerator() {
             max="100"
             value={radius}
             onChange={(e) => setRadius(parseInt(e.target.value))}
-            className="w-full h-1 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
           />
         </div>
       </div>
 
-      <div className="space-y-3 pt-4 border-t border-slate-100 dark:border-white/5">
+      <div className="space-y-3 pt-4 border-t border-white/10">
         <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Style</label>
         <div className="grid grid-cols-2 gap-2">
           {["solid", "dashed", "dotted", "double"].map((s) => (
@@ -89,7 +89,7 @@ export function OutlineGenerator() {
                 "px-2 py-2 rounded-lg text-[9px] font-black uppercase tracking-tighter transition-all",
                 style === s 
                   ? "bg-brand-primary text-white shadow-lg" 
-                  : "bg-slate-100 dark:bg-white/5 text-slate-500 hover:text-brand-primary border border-slate-200 dark:border-white/5"
+                  : "bg-white/5 text-slate-500 hover:text-brand-primary border border-white/10"
               )}
             >
               {s}
@@ -98,14 +98,14 @@ export function OutlineGenerator() {
         </div>
       </div>
 
-      <div className="space-y-3 pt-4 border-t border-slate-100 dark:border-white/5">
+      <div className="space-y-3 pt-4 border-t border-white/10">
         <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Presets</label>
         <div className="grid grid-cols-2 gap-2">
           {presets.map((p) => (
             <button
               key={p.name}
               onClick={() => applyPreset(p)}
-              className="px-2 py-2 rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-[9px] font-black uppercase tracking-tighter text-slate-500 hover:text-brand-primary hover:border-brand-primary transition-all"
+              className="px-2 py-2 rounded-lg bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-tighter text-slate-500 hover:text-brand-primary hover:border-brand-primary transition-all"
             >
               {p.name}
             </button>
@@ -113,9 +113,9 @@ export function OutlineGenerator() {
         </div>
       </div>
 
-      <div className="pt-6 border-t border-slate-100 dark:border-white/5">
+      <div className="pt-6 border-t border-white/10">
         <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-3 block">Outline Color</label>
-        <div className="flex gap-2 p-1.5 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
+        <div className="flex gap-2 p-1.5 rounded-xl bg-white/5 border border-white/10">
           <input 
             type="color" 
             value={color} 
@@ -129,7 +129,7 @@ export function OutlineGenerator() {
 
   const preview = (
     <div 
-      className="w-40 h-40 md:w-56 md:h-56 bg-slate-100 dark:bg-white/10 transition-all duration-300"
+      className="w-40 h-40 md:w-56 md:h-56 bg-white/10 transition-all duration-300"
       style={{ 
         outline: `${width}px ${style} ${color}`,
         outlineOffset: `${offset}px`,

@@ -117,7 +117,7 @@ ${hasGrain ? `.aurora-grain {
             <button
               key={p.name}
               onClick={() => applyPreset(p)}
-              className="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-[10px] font-black uppercase tracking-wider text-slate-500 hover:text-brand-primary hover:border-brand-primary transition-all"
+              className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-wider text-slate-500 hover:text-brand-primary hover:border-brand-primary transition-all"
             >
               <Sparkles className="w-3 h-3" /> {p.name}
             </button>
@@ -125,20 +125,20 @@ ${hasGrain ? `.aurora-grain {
         </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-2 pt-4 border-t border-slate-100 dark:border-white/5">
+      <div className="grid grid-cols-4 gap-2 pt-4 border-t border-white/10">
         {colors.map((c, i) => (
           <div key={i} className="space-y-1.5">
             <input 
               type="color" 
               value={c} 
               onChange={(e) => setColor(i, e.target.value)} 
-              className="w-full h-10 p-1 bg-transparent border border-slate-200 dark:border-white/5 rounded-lg cursor-pointer" 
+              className="w-full h-10 p-1 bg-transparent border border-white/10 rounded-lg cursor-pointer" 
             />
           </div>
         ))}
       </div>
 
-      <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-white/5">
+      <div className="space-y-4 pt-4 border-t border-white/10">
         {[
           { label: "Animation Speed", value: speed, setter: setSpeed, min: 5, max: 60, unit: "s", reverse: true },
           { label: "Blur Intensity", value: blur, setter: setBlur, min: 0, max: 100, unit: "px" },
@@ -156,20 +156,20 @@ ${hasGrain ? `.aurora-grain {
               max={item.max} 
               step={1} 
               onChange={(e) => item.setter(item.reverse ? (65 - parseInt(e.target.value)) : parseInt(e.target.value))} 
-              className="w-full h-1.5 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+              className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
             />
           </div>
         ))}
       </div>
 
-      <div className="grid grid-cols-2 gap-2 pt-4 border-t border-slate-100 dark:border-white/5">
+      <div className="grid grid-cols-2 gap-2 pt-4 border-t border-white/10">
         <button
           onClick={() => setHasGrain(!hasGrain)}
           className={cn(
             "flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all border",
             hasGrain 
               ? "bg-brand-primary/10 border-brand-primary/30 text-brand-primary" 
-              : "bg-white dark:bg-white/5 border-slate-200 dark:border-white/5 text-slate-500"
+              : "bg-white/5 border-white/10 text-slate-500"
           )}
         >
           <Grid className="w-3.5 h-3.5" /> Grain
@@ -180,7 +180,7 @@ ${hasGrain ? `.aurora-grain {
             "flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all border",
             hasGlass 
               ? "bg-brand-primary/10 border-brand-primary/30 text-brand-primary" 
-              : "bg-white dark:bg-white/5 border-slate-200 dark:border-white/5 text-slate-500"
+              : "bg-white/5 border-white/10 text-slate-500"
           )}
         >
           <Play className="w-3.5 h-3.5" /> Glass
@@ -202,7 +202,7 @@ ${hasGrain ? `.aurora-grain {
         </button>
         <button
           onClick={reset}
-          className="p-3 rounded-2xl bg-slate-100 dark:bg-white/5 text-slate-500 hover:text-brand-primary transition-colors"
+          className="p-3 rounded-2xl bg-white/5 text-slate-500 hover:text-brand-primary transition-colors"
         >
           <RefreshCcw className="w-4 h-4" />
         </button>

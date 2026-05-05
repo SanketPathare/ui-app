@@ -59,7 +59,7 @@ border-radius: ${radius};`;
           <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Color</label>
           <div className="flex items-center gap-2">
              <div 
-               className="w-4 h-4 rounded-full border border-slate-200" 
+               className="w-4 h-4 rounded-full border border-white/10" 
                style={{ backgroundColor: color }}
              />
              <input 
@@ -84,7 +84,7 @@ border-radius: ${radius};`;
           max={500} 
           step={1} 
           onChange={(e) => setSize(parseInt(e.target.value))} 
-          className="w-full h-1.5 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+          className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
         />
       </div>
 
@@ -98,7 +98,7 @@ border-radius: ${radius};`;
         </button>
       </div>
 
-      <div className="p-4 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5 space-y-2">
+      <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2">
         <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Current Radius</label>
         <div className="text-[10px] font-mono text-slate-600 dark:text-slate-300 break-all leading-relaxed">
           {radius}

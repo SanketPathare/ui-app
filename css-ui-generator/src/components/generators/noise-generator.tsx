@@ -68,7 +68,7 @@ export function NoiseGenerator() {
           max={100} 
           step={1} 
           onChange={(e) => setDensity(parseInt(e.target.value) / 100)} 
-          className="w-full h-1.5 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+          className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
         />
       </div>
 
@@ -84,11 +84,11 @@ export function NoiseGenerator() {
           max={100} 
           step={1} 
           onChange={(e) => setOpacity(parseInt(e.target.value) / 100)} 
-          className="w-full h-1.5 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+          className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
         />
       </div>
 
-      <div className="p-4 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5 space-y-2">
+      <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2">
         <div className="flex items-center gap-2 mb-2">
            <div className="w-1.5 h-1.5 rounded-full bg-brand-primary" />
            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Implementation Tip</span>

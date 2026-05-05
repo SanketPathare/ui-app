@@ -95,7 +95,7 @@ box-shadow: ${getBoxShadow()};`;
           <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Base Color</label>
           <div className="flex items-center gap-2">
              <div 
-               className="w-4 h-4 rounded-full border border-slate-200" 
+               className="w-4 h-4 rounded-full border border-white/10" 
                style={{ backgroundColor: color }}
              />
              <input 
@@ -120,7 +120,7 @@ box-shadow: ${getBoxShadow()};`;
           max={400} 
           step={1} 
           onChange={(e) => setSize(parseInt(e.target.value))} 
-          className="w-full h-1.5 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+          className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
         />
       </div>
 
@@ -136,7 +136,7 @@ box-shadow: ${getBoxShadow()};`;
           max={200} 
           step={1} 
           onChange={(e) => setRadius(parseInt(e.target.value))} 
-          className="w-full h-1.5 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+          className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
         />
       </div>
 
@@ -152,7 +152,7 @@ box-shadow: ${getBoxShadow()};`;
           max={50} 
           step={1} 
           onChange={(e) => setDistance(parseInt(e.target.value))} 
-          className="w-full h-1.5 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+          className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
         />
       </div>
 
@@ -168,7 +168,7 @@ box-shadow: ${getBoxShadow()};`;
           max={100} 
           step={1} 
           onChange={(e) => setBlur(parseInt(e.target.value))} 
-          className="w-full h-1.5 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+          className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
         />
       </div>
 
@@ -184,7 +184,7 @@ box-shadow: ${getBoxShadow()};`;
           max={50} 
           step={1} 
           onChange={(e) => setIntensity(parseInt(e.target.value) / 100)} 
-          className="w-full h-1.5 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+          className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
         />
       </div>
 
@@ -199,7 +199,7 @@ box-shadow: ${getBoxShadow()};`;
                 "px-3 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all border",
                 shape === s 
                   ? "bg-brand-primary border-brand-primary text-white" 
-                  : "bg-white dark:bg-white/5 border-slate-200 dark:border-white/5 text-slate-600 dark:text-slate-400 hover:border-brand-primary/30"
+                  : "bg-white/5 border-white/10 text-slate-400 hover:border-brand-primary/30"
               )}
             >
               {s}

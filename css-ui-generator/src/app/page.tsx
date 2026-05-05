@@ -25,8 +25,11 @@ import {
   ToggleLeft,
   Tag,
   Info,
-  Maximize2,
-  ClipboardList
+  ClipboardList,
+  Play,
+  Loader2,
+  ArrowDownCircle,
+  Type as TypeIcon
 } from "lucide-react";
 
 const tools = [
@@ -285,6 +288,62 @@ const tools = [
     icon: Info,
     color: "from-cyan-500 to-blue-600",
     shadow: "shadow-cyan-500/20",
+  },
+  {
+    title: "Animations",
+    description: "Create complex CSS animations with timing functions and delays.",
+    href: "/animations",
+    icon: Play,
+    color: "from-purple-500 to-indigo-600",
+    shadow: "shadow-purple-500/20",
+  },
+  {
+    title: "Keyframes",
+    description: "Design multi-step CSS keyframe animations with visual timeline.",
+    href: "/keyframes",
+    icon: RotateCw,
+    color: "from-blue-500 to-cyan-600",
+    shadow: "shadow-blue-500/20",
+  },
+  {
+    title: "Hover Lab",
+    description: "Design premium hover effects, transitions, and button interactions.",
+    href: "/hover",
+    icon: MousePointer2,
+    color: "from-pink-500 to-rose-600",
+    shadow: "shadow-pink-500/20",
+  },
+  {
+    title: "Spinners",
+    description: "Build modern loading indicators and animated SVG spinners.",
+    href: "/spinners",
+    icon: Loader2,
+    color: "from-amber-500 to-orange-600",
+    shadow: "shadow-amber-500/20",
+  },
+  {
+    title: "Typing",
+    description: "Create realistic typing and typewriter animations for text content.",
+    href: "/typing",
+    icon: TypeIcon,
+    color: "from-emerald-500 to-teal-600",
+    shadow: "shadow-emerald-500/20",
+  },
+  {
+    title: "Scroll Anim",
+    description: "Design scroll-triggered animations and entry effects.",
+    href: "/scroll",
+    icon: ArrowDownCircle,
+    color: "from-indigo-500 to-blue-600",
+    shadow: "shadow-indigo-500/20",
+  },
+  {
+    title: "Parallax",
+    description: "Create immersive 3D parallax effects and depth layers.",
+    href: "/parallax",
+    icon: Layers,
+    color: "from-violet-500 to-purple-600",
+    shadow: "shadow-violet-500/20",
   },
 ];
 

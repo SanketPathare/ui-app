@@ -27,8 +27,12 @@ import {
   Tag,
   Info,
   Maximize2,
-  TextInput,
-  ClipboardList
+  ClipboardList,
+  Play,
+  RotateCw,
+  Loader2,
+  ArrowDownCircle,
+  Type as TypeIcon
 } from "lucide-react";
 
 const navItems = [
@@ -82,6 +86,13 @@ const moreTools = [
   { title: "Toggle Switch", href: "/toggle", icon: ToggleLeft },
   { title: "Badge Lab", href: "/badge", icon: Tag },
   { title: "Tooltip Pro", href: "/tooltip", icon: Info },
+  { title: "Animations", href: "/animations", icon: Play },
+  { title: "Keyframes", href: "/keyframes", icon: RotateCw },
+  { title: "Hover Lab", href: "/hover", icon: MousePointer2 },
+  { title: "Spinners", href: "/spinners", icon: Loader2 },
+  { title: "Typing", href: "/typing", icon: TypeIcon },
+  { title: "Scroll Anim", href: "/scroll", icon: ArrowDownCircle },
+  { title: "Parallax", href: "/parallax", icon: Layers },
 ];
 
 export function Navbar() {

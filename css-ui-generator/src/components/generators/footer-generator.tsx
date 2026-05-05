@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { GeneratorLayout } from "@/components/generator-layout";
-import { Layout, Facebook, Twitter, Github, Linkedin, Mail } from "lucide-react";
+import { Layout, Mail, Globe, Share2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function FooterGenerator() {
@@ -57,8 +57,8 @@ export function FooterGenerator() {
         <h3 class="font-black text-xl tracking-tight">BRAND</h3>
         <p class="text-sm text-white/60 leading-relaxed max-w-xs">Building the next generation of the web with high-fidelity UI components.</p>
         ${showSocials ? `<div class="flex gap-4">
-          <a href="#" class="p-2 bg-white/5 rounded-lg hover:bg-white/10 transition-colors"><Twitter class="w-4 h-4"/></a>
-          <a href="#" class="p-2 bg-white/5 rounded-lg hover:bg-white/10 transition-colors"><Github class="w-4 h-4"/></a>
+          <a href="#" class="p-2 bg-white/5 rounded-lg hover:bg-white/10 transition-colors"><Globe class="w-4 h-4"/></a>
+          <a href="#" class="p-2 bg-white/5 rounded-lg hover:bg-white/10 transition-colors"><Mail class="w-4 h-4"/></a>
         </div>` : ""}
       </div>
       

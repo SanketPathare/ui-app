@@ -149,9 +149,9 @@ export function ParallaxGenerator() {
   };
 
   const preview = (
-    <div className="w-full h-[450px] flex items-center justify-center bg-black/20 rounded-[2rem] p-12 overflow-hidden [perspective:1000px]">
+    <div className="w-full h-[400px] flex items-center justify-center rounded-[2rem] p-8 overflow-hidden [perspective:1000px]">
        <div 
-         className="w-80 h-96 relative group cursor-pointer [transform-style:preserve-3d] transition-all ease-out"
+         className="w-64 h-80 relative group cursor-pointer [transform-style:preserve-3d] transition-all ease-out"
          style={{ 
             perspective: `${perspective}px`,
             transform: `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
@@ -171,17 +171,17 @@ export function ParallaxGenerator() {
           <div 
             className="absolute inset-0 flex items-center justify-center [transform:translateZ(60px)] pointer-events-none"
           >
-             <div className="w-24 h-24 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 flex items-center justify-center shadow-2xl">
-                <Layers className="w-10 h-10 text-white opacity-40" />
+             <div className="w-20 h-20 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 flex items-center justify-center shadow-2xl">
+                <Layers className="w-8 h-8 text-white opacity-40" />
              </div>
-          </div>
+          </div>  
 
           {/* Top Layer (Title) */}
-          <div className="absolute bottom-12 left-0 w-full px-8 [transform:translateZ(100px)] pointer-events-none">
+          <div className="absolute bottom-10 left-0 w-full px-8 [transform:translateZ(100px)] pointer-events-none">
              <div className="space-y-2">
-                <div className="h-4 w-24 bg-white/20 rounded-full" style={{ backgroundColor: accentColor + '40' }} />
-                <div className="h-2 w-full bg-white/5 rounded-full" />
-                <div className="h-2 w-2/3 bg-white/5 rounded-full" />
+                <div className="h-3 w-20 bg-white/20 rounded-full" style={{ backgroundColor: accentColor + '40' }} />
+                <div className="h-1.5 w-full bg-white/5 rounded-full" />
+                <div className="h-1.5 w-2/3 bg-white/5 rounded-full" />
              </div>
           </div>
 
@@ -197,10 +197,7 @@ export function ParallaxGenerator() {
           )}
        </div>
 
-       <div className="absolute bottom-8 flex items-center gap-2 opacity-30">
-          <MousePointer2 className="w-3 h-3 text-brand-primary" />
-          <span className="text-[9px] font-black uppercase tracking-widest text-white">Interactive 3D Space</span>
-       </div>
+     
     </div>
   );
 

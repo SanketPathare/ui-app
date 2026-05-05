@@ -143,7 +143,8 @@ export function TypingGenerator() {
   );
 
   const preview = (
-    <div className="w-full h-[300px] flex items-center justify-center bg-black/20 rounded-[2rem] p-12 overflow-hidden">
+    <>
+    <div className="w-full h-[300px] flex items-center justify-center rounded-[2rem] p-12 overflow-hidden">
        <div 
          key={text + speed + infinite} // Force animation restart on change
          className="font-mono font-black text-white whitespace-nowrap overflow-hidden border-r-4 transition-all duration-300"
@@ -167,11 +168,9 @@ export function TypingGenerator() {
          }
        `}</style>
 
-       <div className="absolute bottom-8 flex items-center gap-2 opacity-30">
-          <Sparkles className="w-3 h-3 text-brand-primary" />
-          <span className="text-[9px] font-black uppercase tracking-widest text-white">Dynamic steps animation</span>
-       </div>
     </div>
+     
+    </>
   );
 
   return (

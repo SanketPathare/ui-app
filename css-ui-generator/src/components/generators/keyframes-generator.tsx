@@ -150,7 +150,7 @@ export function KeyframesGenerator() {
   );
 
   const preview = (
-    <div className="w-full h-[400px] flex items-center justify-center bg-black/20 rounded-[2rem] p-12 overflow-hidden">
+    <div className="w-full h-[400px] flex items-center justify-center rounded-[2rem] p-12 overflow-hidden">
       <div 
         className="w-24 h-24 rounded-3xl bg-brand-primary relative flex items-center justify-center shadow-2xl"
         style={{ 

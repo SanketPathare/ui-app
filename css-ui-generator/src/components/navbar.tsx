@@ -91,7 +91,6 @@ const moreTools = [
   { title: "Hover Lab", href: "/hover", icon: MousePointer2 },
   { title: "Spinners", href: "/spinners", icon: Loader2 },
   { title: "Typing", href: "/typing", icon: TypeIcon },
-  { title: "Scroll Anim", href: "/scroll", icon: ArrowDownCircle },
   { title: "Parallax", href: "/parallax", icon: Layers },
 ];
 

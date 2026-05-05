@@ -157,7 +157,7 @@ ${type === 'dots' ? `
   );
 
   const preview = (
-    <div className="w-full h-[300px] flex items-center justify-center bg-black/20 rounded-[2rem] p-12">
+    <div className="w-full h-[300px] flex items-center justify-center rounded-[2rem] p-12">
        {type === 'dots' ? (
          <div className="flex gap-3">
             {[1,2,3].map(i => (

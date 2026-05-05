@@ -28,7 +28,6 @@ import {
   ClipboardList,
   Play,
   Loader2,
-  ArrowDownCircle,
   Type as TypeIcon
 } from "lucide-react";
 
@@ -328,14 +327,6 @@ const tools = [
     icon: TypeIcon,
     color: "from-emerald-500 to-teal-600",
     shadow: "shadow-emerald-500/20",
-  },
-  {
-    title: "Scroll Anim",
-    description: "Design scroll-triggered animations and entry effects.",
-    href: "/scroll",
-    icon: ArrowDownCircle,
-    color: "from-indigo-500 to-blue-600",
-    shadow: "shadow-indigo-500/20",
   },
   {
     title: "Parallax",

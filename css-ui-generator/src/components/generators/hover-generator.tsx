@@ -164,7 +164,7 @@ export function HoverGenerator() {
   );
 
   const preview = (
-    <div className="w-full h-[400px] flex items-center justify-center bg-black/20 rounded-[2rem] p-12">
+    <div className="w-full h-[400px] flex items-center justify-center rounded-[2rem] p-12 overflow-hidden">
       <div 
         className="group relative cursor-pointer"
       >

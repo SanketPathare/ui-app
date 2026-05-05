@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#020617] selection:bg-brand-primary/30 selection:text-brand-primary">
+    <div className="min-h-screen bg-[#020617] selection:bg-brand-primary/30 selection:text-brand-primary">
       <Navbar />
       <main className="relative z-10">
         <AnimatePresence mode="wait">

@@ -177,10 +177,10 @@ export default function Home() {
               <Sparkles className="w-3 h-3" />
               Next-Gen CSS Tools
             </div>
-            <h1 className="text-4xl md:text-6xl font-display font-black tracking-tight text-slate-900 dark:text-white leading-[1.1]">
+            <h1 className="text-4xl md:text-6xl font-display font-black tracking-tight text-white leading-[1.1]">
               Elevate your <span className="bg-gradient-to-r from-brand-primary via-brand-accent to-brand-secondary bg-clip-text text-transparent">Digital Craft</span>
             </h1>
-            <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl font-medium">
+            <p className="text-lg text-slate-400 leading-relaxed max-w-xl font-medium">
               A premium suite of CSS generators for modern developers. 
               Create, refine, and deploy stunning UI components.
             </p>
@@ -191,7 +191,7 @@ export default function Home() {
               <Link 
                 key={tool.href} 
                 href={tool.href}
-                className="group relative p-6 rounded-[2rem] bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-white/5 hover:border-brand-primary/50 transition-all duration-500 hover:shadow-2xl hover:-translate-y-1.5 overflow-hidden"
+                className="group relative p-6 rounded-[2rem] bg-slate-900/50 border border-white/5 hover:border-brand-primary/50 transition-all duration-500 hover:shadow-2xl hover:-translate-y-1.5 overflow-hidden"
               >
                 {/* Hover Glow */}
                 <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -200,17 +200,17 @@ export default function Home() {
                   <tool.icon className="w-6 h-6" />
                 </div>
                 
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-brand-primary transition-colors">{tool.title}</h3>
-                <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 leading-relaxed font-medium">{tool.description}</p>
+                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-brand-primary transition-colors">{tool.title}</h3>
+                <p className="text-sm text-slate-400 mb-6 leading-relaxed font-medium">{tool.description}</p>
                 
-                <div className="flex items-center text-[10px] font-black text-brand-primary dark:text-brand-primary uppercase tracking-widest group-hover:gap-3 gap-1.5 transition-all">
+                <div className="flex items-center text-[10px] font-black text-brand-primary uppercase tracking-widest group-hover:gap-3 gap-1.5 transition-all">
                   Launch Engine <ArrowRight className="w-3.5 h-3.5" />
                 </div>
               </Link>
             ))}
           </div>
 
-          <div className="relative rounded-[2.5rem] bg-slate-900 dark:bg-indigo-950/40 p-6 md:p-12 text-center space-y-6 overflow-hidden border border-white/5">
+          <div className="relative rounded-[2.5rem] bg-indigo-950/40 p-6 md:p-12 text-center space-y-6 overflow-hidden border border-white/5">
             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 pointer-events-none" />
             <div className="relative z-10">
               <h2 className="text-2xl md:text-4xl font-display font-black text-white">Transform your workflow</h2>

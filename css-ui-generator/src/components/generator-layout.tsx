@@ -55,10 +55,10 @@ export function GeneratorLayout({
         <div className="space-y-4">
           <div className="space-y-2">
             
-            <h1 className="text-3xl font-display font-black tracking-tight text-slate-900 dark:text-white leading-none">
+            <h1 className="text-3xl font-display font-black tracking-tight text-white leading-none">
               {title}
             </h1>
-            <p className="text-slate-500 dark:text-slate-400 max-w-xl text-sm leading-relaxed font-medium">
+            <p className="text-slate-400 max-w-xl text-sm leading-relaxed font-medium">
               {description}
             </p>
           </div>
@@ -67,7 +67,7 @@ export function GeneratorLayout({
         {onReset && (
           <button
             onClick={onReset}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold border border-slate-200 dark:border-white/5 bg-white dark:bg-white/5 hover:bg-slate-50 dark:hover:bg-white/10 transition-all active:scale-95 shadow-sm"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold border border-white/5 bg-white/5 hover:bg-white/10 transition-all active:scale-95 shadow-sm"
           >
             <RefreshCcw className="w-3.5 h-3.5" />
             Reset
@@ -78,9 +78,9 @@ export function GeneratorLayout({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Controls Section */}
         <div className="lg:col-span-4 space-y-6">
-          <div className="bg-white dark:bg-[#020617] rounded-[2rem] border border-slate-200 dark:border-white/5 shadow-xl shadow-slate-200/10 dark:shadow-none overflow-hidden">
-            <div className="p-6 border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/[0.02]">
-              <h2 className="font-bold text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400 flex items-center gap-2">
+          <div className="bg-[#020617] rounded-[2rem] border border-white/5 shadow-none overflow-hidden">
+            <div className="p-6 border-b border-white/5 bg-white/[0.02]">
+              <h2 className="font-bold text-xs uppercase tracking-widest text-slate-400 flex items-center gap-2">
                 <div className="w-1 h-3 bg-brand-primary rounded-full" />
                 Parameters
               </h2>
@@ -90,9 +90,9 @@ export function GeneratorLayout({
             </div>
           </div>
 
-          <div className="bg-white dark:bg-[#020617] rounded-[2rem] border border-slate-200 dark:border-white/5 shadow-xl shadow-slate-200/10 dark:shadow-none overflow-hidden">
-            <div className="p-6 border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/[0.02]">
-              <h2 className="font-bold text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400 flex items-center gap-2">
+          <div className="bg-[#020617] rounded-[2rem] border border-white/5 shadow-none overflow-hidden">
+            <div className="p-6 border-b border-white/5 bg-white/[0.02]">
+              <h2 className="font-bold text-xs uppercase tracking-widest text-slate-400 flex items-center gap-2">
                 <div className="w-1 h-3 bg-brand-secondary rounded-full" />
                 Engine Specs
               </h2>
@@ -112,7 +112,7 @@ export function GeneratorLayout({
                    <span className="text-amber-500">Stable</span>
                  </div>
                </div>
-               <div className="pt-4 border-t border-slate-100 dark:border-white/5">
+               <div className="pt-4 border-t border-white/5">
                  <a 
                    href={`https://developer.mozilla.org/en-US/docs/Web/CSS/${title.toLowerCase().replace(/ /g, "-")}`}
                    target="_blank"
@@ -131,8 +131,8 @@ export function GeneratorLayout({
 
         {/* Preview Section */}
         <div className="lg:col-span-8 space-y-8">
-          <div className="relative aspect-square md:aspect-video lg:aspect-auto lg:h-[450px] rounded-[2.5rem] border border-slate-200 dark:border-white/5 bg-white dark:bg-[#020617] shadow-2xl dark:shadow-brand-primary/5 group overflow-hidden">
-            <div className="absolute inset-0 preview-checkerboard opacity-[0.03] dark:opacity-[0.07]" />
+          <div className="relative aspect-square md:aspect-video lg:aspect-auto lg:h-[450px] rounded-[2.5rem] border border-white/5 bg-[#020617] shadow-brand-primary/5 group overflow-hidden">
+            <div className="absolute inset-0 preview-checkerboard opacity-[0.07]" />
             {/* Ambient Glows */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/2 h-1/2 bg-brand-primary/5 blur-[100px] pointer-events-none" />
             
@@ -145,16 +145,16 @@ export function GeneratorLayout({
             </div>
             
             <div className="absolute top-4 left-4">
-               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-white/20 dark:border-white/5 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest shadow-sm">
+               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900/80 backdrop-blur-xl border border-white/5 text-[9px] font-black text-slate-400 uppercase tracking-widest shadow-sm">
                  <div className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
                  Render Output
                </div>
             </div>
           </div>
 
-          <div className="bg-slate-900 dark:bg-[#020617] rounded-[2rem] overflow-hidden border border-slate-800 dark:border-white/5 shadow-2xl relative">
+          <div className="bg-[#020617] rounded-[2rem] overflow-hidden border border-white/5 shadow-2xl relative">
             <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 to-transparent pointer-events-none" />
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 dark:border-white/5 bg-slate-900/50 dark:bg-black/20 backdrop-blur-md relative z-10">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-black/20 backdrop-blur-md relative z-10">
               <div className="flex items-center gap-2">
                 <div className="flex gap-1 p-1 rounded-lg bg-black/20 border border-white/5">
                   <button
@@ -200,7 +200,7 @@ export function GeneratorLayout({
                   "group flex items-center gap-1.5 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 shadow-lg",
                   copied 
                     ? "bg-emerald-500 text-white" 
-                    : "bg-white dark:bg-white/10 hover:bg-slate-50 dark:hover:bg-white/20 text-slate-900 dark:text-white"
+                    : "bg-white/10 hover:bg-white/20 text-white"
                 )}
               >
                 {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />}

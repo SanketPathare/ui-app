@@ -36,7 +36,13 @@ import {
   Zap,
   Star,
   Search,
-  Type as TypeIcon
+  Type as TypeIcon,
+  Scissors,
+  Hexagon,
+  Spline,
+  Image,
+  Activity,
+  Component
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -53,6 +59,19 @@ const toolCategories = [
       { title: "Neumorphism", href: "/neumorphism", icon: Layers },
       { title: "Blob Shape", href: "/blob", icon: Sparkles },
       { title: "Noise Texture", href: "/noise", icon: Grid },
+    ]
+  },
+  {
+    name: "SVG & Geometry",
+    icon: Zap,
+    color: "text-yellow-400",
+    tools: [
+      { title: "SVG Shapes", href: "/svg-shape", icon: Zap },
+      { title: "Clip-path", href: "/clip-path", icon: Scissors },
+      { title: "SVG Divider", href: "/svg-divider", icon: Spline },
+      { title: "Icon Lab", href: "/icon-gen", icon: Image },
+      { title: "Polygon Gen", href: "/polygon", icon: Hexagon },
+      { title: "Curve Shape", href: "/curve-shape", icon: Activity },
     ]
   },
   {

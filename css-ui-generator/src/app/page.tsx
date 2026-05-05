@@ -28,7 +28,13 @@ import {
   ClipboardList,
   Play,
   Loader2,
-  Type as TypeIcon
+  Type as TypeIcon,
+  Scissors,
+  Hexagon,
+  Spline,
+  Image,
+  Activity,
+  Zap
 } from "lucide-react";
 
 const tools = [
@@ -335,6 +341,54 @@ const tools = [
     icon: Layers,
     color: "from-violet-500 to-purple-600",
     shadow: "shadow-violet-500/20",
+  },
+  {
+    title: "SVG Shapes",
+    description: "Create organic and geometric SVG shapes for your UI.",
+    href: "/svg-shape",
+    icon: Zap,
+    color: "from-yellow-400 to-orange-500",
+    shadow: "shadow-yellow-400/20",
+  },
+  {
+    title: "Clip-path",
+    description: "Design custom clipping paths using CSS clip-path property.",
+    href: "/clip-path",
+    icon: Scissors,
+    color: "from-rose-500 to-pink-600",
+    shadow: "shadow-rose-500/20",
+  },
+  {
+    title: "SVG Divider",
+    description: "Create beautiful section dividers and wave transitions.",
+    href: "/svg-divider",
+    icon: Spline,
+    color: "from-cyan-400 to-blue-500",
+    shadow: "shadow-cyan-400/20",
+  },
+  {
+    title: "Icon Lab",
+    description: "Design custom glassmorphic and stylized icons.",
+    href: "/icon-gen",
+    icon: Image,
+    color: "from-indigo-500 to-purple-600",
+    shadow: "shadow-indigo-500/20",
+  },
+  {
+    title: "Polygon Gen",
+    description: "Create custom multi-sided geometric shapes.",
+    href: "/polygon",
+    icon: Hexagon,
+    color: "from-emerald-400 to-teal-500",
+    shadow: "shadow-emerald-400/20",
+  },
+  {
+    title: "Curve Shape",
+    description: "Design smooth Bezier curves and organic fluid shapes.",
+    href: "/curve-shape",
+    icon: Activity,
+    color: "from-orange-400 to-red-500",
+    shadow: "shadow-orange-400/20",
   },
 ];
 

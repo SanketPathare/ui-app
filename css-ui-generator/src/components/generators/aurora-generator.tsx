@@ -102,7 +102,7 @@ export function AuroraGenerator() {
   );
 
   const preview = (
-    <div className="w-full h-[350px] md:w-[600px] md:h-[400px] rounded-[2.5rem] relative overflow-hidden shadow-2xl border border-white/10 group">
+    <div className="w-full h-[350px] md:w-[600px] md:h-[300px]  relative overflow-hidden shadow-2xl border border-white/10 group">
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes aurora-preview {
           0% { background-position: 0% 50%; }

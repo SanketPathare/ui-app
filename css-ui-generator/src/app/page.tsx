@@ -161,6 +161,14 @@ const tools = [
     color: "from-rose-400 to-orange-500",
     shadow: "shadow-rose-400/20",
   },
+  {
+    title: "Scrollbar",
+    description: "Design custom scrollbars for webkit browsers with full control.",
+    href: "/scrollbar",
+    icon: Settings2,
+    color: "from-blue-500 to-cyan-500",
+    shadow: "shadow-blue-500/20",
+  },
 ];
 
 export default function Home() {

@@ -21,6 +21,9 @@ const patternTypes = [
   { id: "graph", name: "Graph" },
   { id: "blueprint", name: "Print" },
   { id: "circuit", name: "Circuit" },
+  { id: "triangles", name: "Triangles" },
+  { id: "diagonal-grid", name: "Diagonal" },
+  { id: "paper", name: "Paper" },
 ];
 
 export function PatternGenerator() {
@@ -138,6 +141,24 @@ export function PatternGenerator() {
           backgroundSize: `${size}px ${size}px, ${size}px ${size}px, ${size}px ${size}px`,
           backgroundPosition: `0 0, ${size/2}px 0, 0 ${size/2}px`,
           backgroundColor: bgColor,
+        };
+      case "triangles":
+        return {
+          backgroundImage: `linear-gradient(45deg, ${rgba} 25%, transparent 25%), linear-gradient(-45deg, ${rgba} 25%, transparent 25%), linear-gradient(45deg, transparent 75%, ${rgba} 75%), linear-gradient(-45deg, transparent 75%, ${rgba} 75%)`,
+          backgroundSize: `${size}px ${size}px`,
+          backgroundColor: bgColor,
+        };
+      case "diagonal-grid":
+        return {
+          backgroundImage: `linear-gradient(${angle}deg, ${rgba} 1px, transparent 1px), linear-gradient(${angle + 90}deg, ${rgba} 1px, transparent 1px)`,
+          backgroundSize: `${size}px ${size}px`,
+          backgroundColor: bgColor,
+        };
+      case "paper":
+        return {
+          backgroundImage: `linear-gradient(#f1f1f1 1px, transparent 1px), linear-gradient(90deg, #f1f1f1 1px, transparent 1px)`,
+          backgroundSize: `20px 20px`,
+          backgroundColor: "#ffffff",
         };
       default:
         return {};

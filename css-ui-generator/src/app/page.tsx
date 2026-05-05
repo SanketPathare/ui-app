@@ -13,7 +13,14 @@ import {
   Ghost,
   RotateCw,
   Settings2,
-  Grid
+  Grid,
+  Layout,
+  Columns,
+  Rows,
+  Maximize,
+  PanelLeft,
+  Navigation,
+  Monitor
 } from "lucide-react";
 
 const tools = [
@@ -160,6 +167,70 @@ const tools = [
     icon: Settings2,
     color: "from-blue-500 to-cyan-500",
     shadow: "shadow-blue-500/20",
+  },
+  {
+    title: "CSS Grid",
+    description: "Design complex two-dimensional layouts with ease and precision.",
+    href: "/grid",
+    icon: Grid,
+    color: "from-blue-600 to-indigo-700",
+    shadow: "shadow-blue-600/20",
+  },
+  {
+    title: "Flexbox Lab",
+    description: "Master one-dimensional layouts with flexible alignment and spacing.",
+    href: "/flexbox",
+    icon: Columns,
+    color: "from-emerald-500 to-teal-600",
+    shadow: "shadow-emerald-500/20",
+  },
+  {
+    title: "Container Lab",
+    description: "Create responsive wrappers and fluid layout constraints.",
+    href: "/container",
+    icon: Maximize,
+    color: "from-orange-500 to-red-600",
+    shadow: "shadow-orange-500/20",
+  },
+  {
+    title: "Navbar Engine",
+    description: "Design modern, responsive navigation bars with glassmorphism.",
+    href: "/navigation",
+    icon: Navigation,
+    color: "from-purple-500 to-violet-600",
+    shadow: "shadow-purple-500/20",
+  },
+  {
+    title: "Sidebar Pro",
+    description: "Build functional application sidebars with collapsibility.",
+    href: "/sidebar",
+    icon: PanelLeft,
+    color: "from-indigo-500 to-blue-600",
+    shadow: "shadow-indigo-500/20",
+  },
+  {
+    title: "Footer Builder",
+    description: "Create information-rich footers with multi-column layouts.",
+    href: "/footer",
+    icon: Layout,
+    color: "from-slate-700 to-slate-900",
+    shadow: "shadow-slate-700/20",
+  },
+  {
+    title: "Card Layouts",
+    description: "Design responsive grid-based card architectures for content.",
+    href: "/cards",
+    icon: Grid,
+    color: "from-rose-500 to-pink-600",
+    shadow: "shadow-rose-500/20",
+  },
+  {
+    title: "Breakpoints",
+    description: "Visualize and configure responsive design viewport constraints.",
+    href: "/breakpoints",
+    icon: Monitor,
+    color: "from-cyan-500 to-blue-500",
+    shadow: "shadow-cyan-500/20",
   },
 ];
 

@@ -14,7 +14,14 @@ import {
   Sparkles,
   Settings2,
   Grid,
-  Type
+  Type,
+  Layout,
+  Columns,
+  Rows,
+  Maximize,
+  PanelLeft,
+  Navigation,
+  Monitor
 } from "lucide-react";
 
 const navItems = [
@@ -54,6 +61,14 @@ const moreTools = [
   { title: "Text Shadow", href: "/text-shadow", icon: Type },
   { title: "Pattern Engine", href: "/pattern", icon: Grid },
   { title: "Custom Scrollbar", href: "/scrollbar", icon: Settings2 },
+  { title: "CSS Grid", href: "/grid", icon: Grid },
+  { title: "Flexbox", href: "/flexbox", icon: Columns },
+  { title: "Container", href: "/container", icon: Maximize },
+  { title: "Navbar", href: "/navigation", icon: Navigation },
+  { title: "Sidebar", href: "/sidebar", icon: PanelLeft },
+  { title: "Footer", href: "/footer", icon: Layout },
+  { title: "Card Layout", href: "/cards", icon: Grid },
+  { title: "Breakpoints", href: "/breakpoints", icon: Monitor },
 ];
 
 export function Navbar() {

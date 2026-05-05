@@ -196,7 +196,7 @@ export function SidebarGenerator() {
         {/* Brand */}
         <div className="flex items-center gap-2.5 mb-6 px-4">
            <div className="w-8 h-8 rounded-xl bg-brand-primary flex items-center justify-center font-black text-white shrink-0 shadow-lg shadow-brand-primary/20 ring-1 ring-white/20 text-xs">S</div>
-           {!isCollapsed && <span className="text-[11px] font-black text-white uppercase tracking-widest">Antigravity</span>}
+           {!isCollapsed && <span className="text-[11px] font-black text-white uppercase tracking-widest">Logo</span>}
         </div>
 
         {/* Search simulation */}

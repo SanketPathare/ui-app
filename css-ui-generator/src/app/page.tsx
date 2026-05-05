@@ -34,7 +34,13 @@ import {
   Spline,
   Image,
   Activity,
-  Zap
+  Zap,
+  Code,
+  Terminal,
+  Cpu,
+  Laptop,
+  Braces,
+  Wind
 } from "lucide-react";
 
 const tools = [
@@ -381,6 +387,30 @@ const tools = [
     icon: Activity,
     color: "from-orange-400 to-red-500",
     shadow: "shadow-orange-400/20",
+  },
+  {
+    title: "Tailwind Gen",
+    description: "Build custom Tailwind utility combinations for complex UI components.",
+    href: "/tailwind-gen",
+    icon: Wind,
+    color: "from-sky-400 to-indigo-500",
+    shadow: "shadow-sky-400/20",
+  },
+  {
+    title: "HTML to TW",
+    description: "Convert raw HTML with inline styles to clean Tailwind CSS classes.",
+    href: "/html-to-tw",
+    icon: Code,
+    color: "from-emerald-500 to-green-600",
+    shadow: "shadow-emerald-500/20",
+  },
+  {
+    title: "CSS to TW",
+    description: "Translate traditional CSS properties into equivalent Tailwind utilities.",
+    href: "/css-to-tw",
+    icon: Terminal,
+    color: "from-blue-500 to-cyan-600",
+    shadow: "shadow-blue-500/20",
   },
 ];
 

@@ -42,7 +42,13 @@ import {
   Spline,
   Image,
   Activity,
-  Component
+  Component,
+  Code,
+  Terminal,
+  Cpu,
+  Laptop,
+  Braces,
+  Wind
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -126,6 +132,16 @@ const toolCategories = [
       { title: "Spinners", href: "/spinners", icon: Loader2 },
       { title: "Typing FX", href: "/typing", icon: TypeIcon },
       { title: "Parallax", href: "/parallax", icon: Layers },
+    ]
+  },
+  {
+    name: "Dev & Frameworks",
+    icon: Code,
+    color: "text-indigo-400",
+    tools: [
+      { title: "Tailwind Gen", href: "/tailwind-gen", icon: Wind },
+      { title: "HTML to TW", href: "/html-to-tw", icon: Code },
+      { title: "CSS to TW", href: "/css-to-tw", icon: Terminal },
     ]
   }
 ];

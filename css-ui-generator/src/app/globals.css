@@ -131,9 +131,9 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  @apply bg-brand-primary/20 rounded-full;
+  @apply bg-brand-primary/40 rounded-full border-2 border-[#030712];
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  @apply bg-brand-primary/40;
+  @apply bg-brand-primary/60;
 }

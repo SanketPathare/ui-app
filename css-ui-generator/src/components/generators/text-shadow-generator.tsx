@@ -78,7 +78,7 @@ export function TextShadowGenerator() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-5 pt-4 border-t border-slate-100 dark:border-white/5">
+      <div className="grid grid-cols-1 gap-5 pt-4 border-t border-white/10">
         {[
           { label: "Horizontal", value: hOffset, setter: setHOffset, min: -50, max: 50 },
           { label: "Vertical", value: vOffset, setter: setVOffset, min: -50, max: 50 },
@@ -122,7 +122,7 @@ export function TextShadowGenerator() {
         </div>
       </div>
 
-      <div className="space-y-3 pt-4 border-t border-slate-100 dark:border-white/5">
+      <div className="space-y-3 pt-4 border-t border-white/10">
         <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Presets</label>
         <div className="grid grid-cols-2 gap-2">
           {presets.map((p) => (
@@ -142,7 +142,7 @@ export function TextShadowGenerator() {
         </div>
       </div>
 
-      <div className="pt-6 border-t border-slate-100 dark:border-white/5">
+      <div className="pt-6 border-t border-white/10">
         <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-3 block">Color</label>
         <div className="flex gap-2 p-1.5 rounded-xl bg-white/5 border border-white/10">
           <input 

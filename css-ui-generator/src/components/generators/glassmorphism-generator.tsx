@@ -70,7 +70,7 @@ border-radius: 24px;`;
         ))}
       </div>
 
-      <div className="space-y-3 pt-4 border-t border-slate-100 dark:border-white/5">
+      <div className="space-y-3 pt-4 border-t border-white/10">
         <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Visual Presets</label>
         <div className="grid grid-cols-4 gap-2">
           {presets.map((p) => (
@@ -85,7 +85,7 @@ border-radius: 24px;`;
         </div>
       </div>
 
-      <div className="pt-6 border-t border-slate-100 dark:border-white/5 space-y-3">
+      <div className="pt-6 border-t border-white/10 space-y-3">
         <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Glass Tint</label>
         <div className="flex gap-3">
           {["#ffffff", "#000000", "#8b5cf6", "#06b6d4"].map((c) => (

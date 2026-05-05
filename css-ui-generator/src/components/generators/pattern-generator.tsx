@@ -184,7 +184,7 @@ export function PatternGenerator() {
                 "px-2 py-2 rounded-lg text-[9px] font-black uppercase tracking-tighter transition-all",
                 type === p.id 
                   ? "bg-brand-primary text-white shadow-lg border-brand-primary" 
-                  : "bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-slate-500 hover:text-brand-primary"
+                  : "bg-white/5 border border-white/10 text-slate-500 hover:text-brand-primary"
               )}
             >
               {p.name}
@@ -193,7 +193,7 @@ export function PatternGenerator() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-5 pt-4 border-t border-slate-100 dark:border-white/5">
+      <div className="grid grid-cols-1 gap-5 pt-4 border-t border-white/10">
         {[
           { label: "Density", value: size, setter: setSize, min: 4, max: 200, unit: "px" },
           { label: "Thickness", value: thickness, setter: setThickness, min: 1, max: 20, unit: "px" },
@@ -210,7 +210,7 @@ export function PatternGenerator() {
               max={item.max}
               value={item.value}
               onChange={(e) => item.setter(parseInt(e.target.value))}
-              className="w-full h-1 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+              className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
             />
           </div>
         ))}
@@ -231,7 +231,7 @@ export function PatternGenerator() {
         </div>
       </div>
 
-      <div className="space-y-3 pt-4 border-t border-slate-100 dark:border-white/5">
+      <div className="space-y-3 pt-4 border-t border-white/10">
         <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Preview Scale</label>
         <input
           type="range"
@@ -243,10 +243,10 @@ export function PatternGenerator() {
         />
       </div>
 
-      <div className="pt-6 border-t border-slate-100 dark:border-white/5 grid grid-cols-2 gap-4">
+      <div className="pt-6 border-t border-white/10 grid grid-cols-2 gap-4">
         <div className="space-y-3">
           <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Foreground</label>
-          <div className="flex gap-2 p-1.5 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
+          <div className="flex gap-2 p-1.5 rounded-xl bg-white/5 border border-white/10">
             <input 
               type="color" 
               value={color} 
@@ -257,7 +257,7 @@ export function PatternGenerator() {
         </div>
         <div className="space-y-3 relative group">
           <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Background</label>
-          <div className="flex gap-2 p-1.5 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
+          <div className="flex gap-2 p-1.5 rounded-xl bg-white/5 border border-white/10">
             <input 
               type="color" 
               value={bgColor} 

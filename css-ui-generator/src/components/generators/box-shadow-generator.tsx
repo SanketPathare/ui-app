@@ -136,7 +136,7 @@ export function BoxShadowGenerator() {
         </button>
       </div>
 
-      <div className="space-y-3 pt-4 border-t border-slate-100 dark:border-white/5">
+      <div className="space-y-3 pt-4 border-t border-white/10">
         <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Preview Specs</label>
         <div className="grid grid-cols-1 gap-4">
           <div className="space-y-2">
@@ -170,7 +170,7 @@ export function BoxShadowGenerator() {
         </div>
       </div>
 
-      <div className="space-y-3 pt-4 border-t border-slate-100 dark:border-white/5">
+      <div className="space-y-3 pt-4 border-t border-white/10">
         <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Library</label>
         <div className="grid grid-cols-3 gap-2">
           {presets.map((p) => (
@@ -185,7 +185,7 @@ export function BoxShadowGenerator() {
         </div>
       </div>
 
-      <div className="pt-6 border-t border-slate-100 dark:border-white/5 grid grid-cols-2 gap-4">
+      <div className="pt-6 border-t border-white/10 grid grid-cols-2 gap-4">
         <div className="space-y-3">
           <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Shadow</label>
           <div className="flex gap-2 p-1.5 rounded-xl bg-white/5 border border-white/10">

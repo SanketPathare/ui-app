@@ -256,7 +256,7 @@ export function MeshGradientGenerator() {
       </div>
 
       {/* Global Controls */}
-      <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-white/5">
+      <div className="space-y-4 pt-4 border-t border-white/10">
         <div className="flex items-center justify-between">
           <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Base Color</label>
           <input
@@ -303,7 +303,7 @@ export function MeshGradientGenerator() {
       </div>
 
       {/* Points */}
-      <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-white/5">
+      <div className="space-y-4 pt-4 border-t border-white/10">
         <div className="flex items-center justify-between">
           <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Points ({points.length}/8)</label>
           <button

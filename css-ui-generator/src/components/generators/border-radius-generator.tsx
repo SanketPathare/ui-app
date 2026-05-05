@@ -104,7 +104,7 @@ export function BorderRadiusGenerator() {
         )}
       </div>
 
-      <div className="space-y-3 pt-4 border-t border-slate-100 dark:border-white/5">
+      <div className="space-y-3 pt-4 border-t border-white/10">
         <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Geometry Presets</label>
         <div className="grid grid-cols-3 gap-2">
           {presets.map((p) => (

@@ -69,7 +69,6 @@ const toolCategories = [
       { title: "SVG Shapes", href: "/svg-shape", icon: Zap },
       { title: "Clip-path", href: "/clip-path", icon: Scissors },
       { title: "SVG Divider", href: "/svg-divider", icon: Spline },
-      { title: "Icon Lab", href: "/icon-gen", icon: Image },
       { title: "Polygon Gen", href: "/polygon", icon: Hexagon },
       { title: "Curve Shape", href: "/curve-shape", icon: Activity },
     ]

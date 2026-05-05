@@ -367,14 +367,6 @@ const tools = [
     shadow: "shadow-cyan-400/20",
   },
   {
-    title: "Icon Lab",
-    description: "Design custom glassmorphic and stylized icons.",
-    href: "/icon-gen",
-    icon: Image,
-    color: "from-indigo-500 to-purple-600",
-    shadow: "shadow-indigo-500/20",
-  },
-  {
     title: "Polygon Gen",
     description: "Create custom multi-sided geometric shapes.",
     href: "/polygon",

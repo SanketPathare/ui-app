@@ -2,7 +2,22 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import { GeneratorLayout } from "@/components/generator-layout";
-import { Scissors, Plus, Trash2, Maximize2, Move, Layout, Square, Hexagon, Star, MessageSquare } from "lucide-react";
+import { 
+  Scissors, 
+  Plus, 
+  Trash2, 
+  Maximize2, 
+  Move, 
+  Layout, 
+  Square, 
+  Hexagon, 
+  Star, 
+  MessageSquare,
+  Image as ImageIcon,
+  Palette,
+  RotateCw,
+  Layers
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface Point {
@@ -17,11 +32,15 @@ const PRESETS: Record<string, Point[]> = {
   Hexagon: [{ x: 25, y: 0 }, { x: 75, y: 0 }, { x: 100, y: 50 }, { x: 75, y: 100 }, { x: 25, y: 100 }, { x: 0, y: 50 }],
   Star: [{ x: 50, y: 0 }, { x: 63, y: 38 }, { x: 100, y: 35 }, { x: 71, y: 59 }, { x: 81, y: 100 }, { x: 50, y: 79 }, { x: 19, y: 100 }, { x: 29, y: 59 }, { x: 0, y: 35 }, { x: 37, y: 38 }],
   Message: [{ x: 0, y: 0 }, { x: 100, y: 0 }, { x: 100, y: 75 }, { x: 75, y: 75 }, { x: 75, y: 100 }, { x: 50, y: 75 }, { x: 0, y: 75 }],
+  Arrow: [{ x: 0, y: 20 }, { x: 60, y: 20 }, { x: 60, y: 0 }, { x: 100, y: 50 }, { x: 60, y: 100 }, { x: 60, y: 80 }, { x: 0, y: 80 }],
+  Diamond: [{ x: 50, y: 0 }, { x: 100, y: 50 }, { x: 50, y: 100 }, { x: 0, y: 50 }],
 };
 
 export function ClipPathGenerator() {
   const [points, setPoints] = useState<Point[]>(PRESETS.Pentagon);
   const [draggingIdx, setDraggingIdx] = useState<number | null>(null);
+  const [bgType, setBgType] = useState<"gradient" | "image" | "solid">("gradient");
+  const [accentColor, setAccentColor] = useState("#8b5cf6");
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleMouseDown = (idx: number) => {
@@ -57,9 +76,9 @@ export function ClipPathGenerator() {
 
   const addPoint = () => {
     if (points.length >= 20) return;
-    const p1 = points[points.length - 1];
-    const p2 = points[0];
-    setPoints([...points, { x: Math.round((p1.x + p2.x) / 2), y: Math.round((p1.y + p2.y) / 2) }]);
+    const last = points[points.length - 1];
+    const first = points[0];
+    setPoints([...points, { x: Math.round((last.x + first.x) / 2), y: Math.round((last.y + first.y) / 2) }]);
   };
 
   const removePoint = (idx: number) => {
@@ -70,101 +89,123 @@ export function ClipPathGenerator() {
   const clipPathValue = `polygon(${points.map(p => `${p.x}% ${p.y}%`).join(", ")})`;
   const cssCode = `clip-path: ${clipPathValue};`;
   const tailwindCode = `clip-[${clipPathValue}]`;
-  const htmlCode = `<div style="clip-path: ${clipPathValue}; width: 300px; height: 300px; background: linear-gradient(135deg, #6366f1, #a855f7);"></div>`;
+  const htmlCode = `<div style="clip-path: ${clipPathValue}; width: 300px; height: 300px; background: ${bgType === 'gradient' ? `linear-gradient(135deg, ${accentColor}, #22d3ee)` : accentColor};"></div>`;
 
   const controls = (
     <div className="space-y-6">
       <div className="space-y-4">
         <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Presets</label>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-4 gap-2">
           {Object.keys(PRESETS).map(name => (
             <button
               key={name}
               onClick={() => setPoints(PRESETS[name])}
-              className="flex flex-col items-center gap-2 p-3 rounded-xl bg-white/5 border border-white/5 hover:border-brand-primary/50 transition-all group"
+              className="flex flex-col items-center gap-2 p-2.5 rounded-xl bg-white/5 border border-white/5 hover:border-brand-primary/50 transition-all group"
             >
-              <div className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/5 group-hover:bg-brand-primary/10 group-hover:text-brand-primary transition-colors">
-                {name === "Square" && <Square className="w-4 h-4" />}
-                {name === "Hexagon" && <Hexagon className="w-4 h-4" />}
-                {name === "Star" && <Star className="w-4 h-4" />}
-                {name === "Message" && <MessageSquare className="w-4 h-4" />}
-                {name === "Triangle" && <Maximize2 className="w-4 h-4 rotate-45" />}
-                {name === "Pentagon" && <Layout className="w-4 h-4" />}
+              <div className="w-7 h-7 flex items-center justify-center rounded-lg bg-white/5 group-hover:bg-brand-primary/10 group-hover:text-brand-primary transition-colors">
+                {name === "Square" && <Square className="w-3.5 h-3.5" />}
+                {name === "Hexagon" && <Hexagon className="w-3.5 h-3.5" />}
+                {name === "Star" && <Star className="w-3.5 h-3.5" />}
+                {name === "Message" && <MessageSquare className="w-3.5 h-3.5" />}
+                {name === "Triangle" && <Maximize2 className="w-3.5 h-3.5 rotate-45" />}
+                {name === "Pentagon" && <Layout className="w-3.5 h-3.5" />}
+                {name === "Arrow" && <Move className="w-3.5 h-3.5" />}
+                {name === "Diamond" && <RotateCw className="w-3.5 h-3.5 rotate-45" />}
               </div>
-              <span className="text-[9px] font-bold text-slate-400 group-hover:text-white uppercase tracking-tighter">{name}</span>
+              <span className="text-[8px] font-bold text-slate-500 group-hover:text-white uppercase tracking-tighter">{name}</span>
             </button>
           ))}
         </div>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-4 pt-4 border-t border-white/5">
+        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Visuals</label>
+        <div className="flex gap-2 p-1 rounded-xl bg-white/5 border border-white/5">
+          {(["gradient", "solid", "image"] as const).map((type) => (
+            <button
+              key={type}
+              onClick={() => setBgType(type)}
+              className={cn(
+                "flex-1 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all capitalize",
+                bgType === type ? "bg-brand-primary text-white" : "text-slate-500 hover:text-slate-300"
+              )}
+            >
+              {type}
+            </button>
+          ))}
+        </div>
+        <div className="flex items-center justify-between px-2">
+          <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Accent Color</span>
+          <input 
+            type="color" value={accentColor} onChange={(e) => setAccentColor(e.target.value)}
+            className="w-10 h-6 p-0 border-none bg-transparent cursor-pointer rounded overflow-hidden"
+          />
+        </div>
+      </div>
+
+      <div className="space-y-4 pt-4 border-t border-white/5">
         <div className="flex items-center justify-between">
-          <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Points ({points.length})</label>
+          <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Nodes ({points.length})</label>
           <button 
             onClick={addPoint}
             disabled={points.length >= 20}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-primary/10 text-brand-primary text-[10px] font-black uppercase tracking-widest hover:bg-brand-primary/20 transition-all disabled:opacity-50"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 text-slate-300 text-[9px] font-black uppercase tracking-widest hover:bg-brand-primary/10 hover:text-brand-primary transition-all disabled:opacity-30"
           >
-            <Plus className="w-3 h-3" /> Add Point
+            <Plus className="w-3 h-3" /> Add Node
           </button>
         </div>
-        <div className="grid grid-cols-1 gap-1 max-h-[200px] overflow-y-auto custom-scrollbar pr-2">
+        <div className="grid grid-cols-1 gap-1 max-h-[160px] overflow-y-auto custom-scrollbar pr-2">
           {points.map((p, i) => (
-            <div key={i} className="flex items-center gap-3 p-2 rounded-lg bg-white/5 border border-white/5 group/point">
-              <div className="w-5 h-5 rounded flex items-center justify-center bg-white/5 text-[9px] font-bold text-slate-500">
+            <div key={i} className="flex items-center gap-3 p-2 rounded-xl bg-white/5 border border-white/5 group/node">
+              <div className="w-5 h-5 rounded flex items-center justify-center bg-white/10 text-[8px] font-bold text-slate-400">
                 {i + 1}
               </div>
-              <div className="flex-1 grid grid-cols-2 gap-2">
-                <div className="flex items-center gap-2">
-                   <span className="text-[9px] font-bold text-slate-500">X:</span>
-                   <span className="text-[10px] font-mono text-brand-primary">{p.x}%</span>
-                </div>
-                <div className="flex items-center gap-2">
-                   <span className="text-[9px] font-bold text-slate-500">Y:</span>
-                   <span className="text-[10px] font-mono text-brand-primary">{p.y}%</span>
-                </div>
+              <div className="flex-1 grid grid-cols-2 gap-2 text-[9px] font-mono text-slate-500">
+                <span>X:{p.x}</span>
+                <span>Y:{p.y}</span>
               </div>
               <button 
                 onClick={() => removePoint(i)}
-                className="opacity-0 group-hover/point:opacity-100 p-1.5 rounded-md hover:bg-rose-500/10 hover:text-rose-500 text-slate-500 transition-all"
+                className="opacity-0 group-hover/node:opacity-100 p-1 rounded-md hover:bg-rose-500/10 hover:text-rose-500 text-slate-500 transition-all"
               >
-                <Trash2 className="w-3.5 h-3.5" />
+                <Trash2 className="w-3 h-3" />
               </button>
             </div>
           ))}
         </div>
       </div>
-
-      <div className="p-4 rounded-2xl bg-indigo-500/5 border border-indigo-500/10">
-        <p className="text-[10px] text-indigo-300 leading-relaxed font-medium">
-          <Move className="w-3 h-3 inline mr-1 text-indigo-400" />
-          Drag the points on the preview canvas to modify the shape in real-time.
-        </p>
-      </div>
     </div>
   );
 
   const preview = (
-    <div className="relative w-full max-w-[400px] aspect-square">
+    <div className="relative w-[240px] h-[240px] md:w-[320px] md:h-[320px]">
       <div 
         ref={containerRef}
-        className="absolute inset-0 bg-slate-900/50 rounded-2xl overflow-hidden border border-white/5"
+        className="absolute inset-0 bg-slate-950 rounded-[2.5rem] overflow-hidden border border-white/5 shadow-2xl"
       >
-        <div className="absolute inset-0 grid grid-cols-10 grid-rows-10 opacity-20 pointer-events-none">
+        <div className="absolute inset-0 grid grid-cols-10 grid-rows-10 opacity-[0.05] pointer-events-none">
           {Array.from({ length: 100 }).map((_, i) => (
             <div key={i} className="border-[0.5px] border-white/10" />
           ))}
         </div>
 
         <div 
-          className="absolute inset-0 bg-gradient-to-br from-brand-primary via-brand-accent to-brand-secondary transition-all duration-300 shadow-2xl"
-          style={{ clipPath: clipPathValue }}
+          className={cn(
+            "absolute inset-0 transition-all duration-500",
+            bgType === "gradient" ? "bg-gradient-to-br from-brand-primary to-brand-secondary" : 
+            bgType === "solid" ? "bg-brand-primary" : "bg-[url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center"
+          )}
+          style={{ 
+            clipPath: clipPathValue,
+            backgroundColor: bgType === "solid" ? accentColor : undefined,
+            backgroundImage: bgType === "gradient" ? `linear-gradient(135deg, ${accentColor}, #22d3ee)` : undefined
+          }}
         />
 
-        <svg className="absolute inset-0 w-full h-full overflow-visible pointer-events-none">
+        <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full overflow-visible pointer-events-none">
           <polyline
-            points={points.map(p => `${p.x}%,${p.y}%`).join(" ")}
-            className="fill-none stroke-brand-primary/30 stroke-1"
+            points={points.map(p => `${p.x},${p.y}`).join(" ")}
+            className="fill-none stroke-white/10 stroke-[0.5]"
             style={{ vectorEffect: "non-scaling-stroke" }}
           />
         </svg>
@@ -174,12 +215,12 @@ export function ClipPathGenerator() {
             key={i}
             onMouseDown={() => handleMouseDown(i)}
             className={cn(
-              "absolute w-4 h-4 -ml-2 -mt-2 rounded-full border-2 border-white cursor-move transition-transform active:scale-125 z-20",
-              draggingIdx === i ? "bg-white scale-125 shadow-xl shadow-brand-primary/50" : "bg-brand-primary"
+              "absolute w-5 h-5 -ml-2.5 -mt-2.5 rounded-full border-2 cursor-move transition-all active:scale-125 z-20 flex items-center justify-center shadow-lg",
+              draggingIdx === i ? "bg-white border-brand-primary scale-125" : "bg-slate-700 border-white/20"
             )}
             style={{ left: `${p.x}%`, top: `${p.y}%` }}
           >
-            <div className="absolute inset-0 rounded-full animate-ping bg-white opacity-20 pointer-events-none" />
+             <div className="w-1 h-1 rounded-full bg-white/20" />
           </div>
         ))}
       </div>
@@ -189,7 +230,7 @@ export function ClipPathGenerator() {
   return (
     <GeneratorLayout
       title="Clip-path Generator"
-      description="Design custom clipping paths using SVG-like polygons with interactive point manipulation."
+      description="Design custom clipping paths using SVG-like polygons with interactive manipulation."
       controls={controls}
       preview={preview}
       cssCode={cssCode}

@@ -162,7 +162,7 @@ const tools = [
     shadow: "shadow-rose-400/20",
   },
   {
-    title: "Scrollbar",
+    title: "Custom Scrollbar",
     description: "Design custom scrollbars for webkit browsers with full control.",
     href: "/scrollbar",
     icon: Settings2,

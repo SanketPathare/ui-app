@@ -211,7 +211,7 @@ ${hasGrain ? `.aurora-grain {
   );
 
   const preview = (
-    <div className="w-full h-[350px] md:w-[600px] md:h-[400px] rounded-[3rem] relative overflow-hidden shadow-2xl border border-white/10 group bg-black">
+    <div className="w-full h-[350px] md:w-[400px] md:h-[350px] rounded-[3rem] relative overflow-hidden shadow-2xl border border-white/10 group bg-black">
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes aurora-preview {
           0% { background-position: 0% 50%; }
@@ -252,10 +252,7 @@ ${hasGrain ? `.aurora-grain {
         </div>
       )}
       
-      <div className="absolute top-6 left-6 flex items-center gap-2">
-         <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-         <span className="text-[9px] font-black uppercase tracking-widest text-white/50">Aurora Engine</span>
-      </div>
+    
     </div>
   );
 

@@ -54,7 +54,7 @@ const moreTools = [
   { title: "Gradient Border", href: "/gradient-border", icon: Square },
   { title: "Text Shadow", href: "/text-shadow", icon: Type },
   { title: "Pattern Engine", href: "/pattern", icon: Grid },
-  { title: "Scrollbar", href: "/scrollbar", icon: Settings2 },
+  { title: "Custom Scrollbar", href: "/scrollbar", icon: Settings2 },
 ];
 
 export function Navbar() {

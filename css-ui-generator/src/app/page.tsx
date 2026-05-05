@@ -122,14 +122,6 @@ const tools = [
     shadow: "shadow-fuchsia-500/20",
   },
   {
-    title: "SVG Wave",
-    description: "Design smooth, organic SVG waves for section separators.",
-    href: "/wave",
-    icon: Settings2,
-    color: "from-blue-400 to-indigo-500",
-    shadow: "shadow-blue-400/20",
-  },
-  {
     title: "Mesh Gradient",
     description: "Create beautiful, fluid gradients by layering radial points.",
     href: "/mesh-gradient",

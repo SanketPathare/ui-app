@@ -48,7 +48,6 @@ const navItems = [
 const moreTools = [
   { title: "Neumorphism", href: "/neumorphism", icon: Layers },
   { title: "Blob Shape", href: "/blob", icon: Sparkles },
-  { title: "SVG Wave", href: "/wave", icon: Settings2 },
   { title: "Noise Texture", href: "/noise", icon: Grid },
   { title: "Aurora", href: "/aurora", icon: Palette },
   { title: "Gradient Border", href: "/gradient-border", icon: Square },

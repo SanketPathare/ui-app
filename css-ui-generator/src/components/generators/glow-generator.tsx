@@ -1,0 +1,131 @@
+"use client";
+
+import { useState } from "react";
+import { GeneratorLayout } from "@/components/generator-layout";
+import { Zap, Sparkles, Activity, Sun } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+export function GlowGenerator() {
+  const [glowColor, setGlowColor] = useState("#8b5cf6");
+  const [glowIntensity, setGlowIntensity] = useState(30);
+  const [spread, setSpread] = useState(60);
+  const [isAnimated, setIsAnimated] = useState(true);
+
+  const cssCode = `.glow-effect {
+  box-shadow: 0 0 ${glowIntensity}px ${spread}px ${glowColor}33;
+  ${isAnimated ? 'animation: glow-pulse 2s infinite ease-in-out;' : ''}
+}
+
+@keyframes glow-pulse {
+  0%, 100% { filter: drop-shadow(0 0 ${glowIntensity / 2}px ${glowColor}); }
+  50% { filter: drop-shadow(0 0 ${glowIntensity}px ${glowColor}); }
+}`;
+
+  const tailwindCode = `<div className="shadow-[0_0_${glowIntensity}px_${spread}px_${glowColor}33] ${isAnimated ? 'animate-pulse' : ''}">
+  {/* Content */}
+</div>`;
+
+  const htmlCode = `<div class="glow-container">
+  <div style="box-shadow: 0 0 ${glowIntensity}px ${spread}px ${glowColor}33; ${isAnimated ? 'animation: glow-pulse 2s infinite ease-in-out;' : ''}">
+    <!-- Content -->
+  </div>
+</div>
+
+<style>
+  @keyframes glow-pulse {
+    0%, 100% { filter: drop-shadow(0 0 ${glowIntensity / 2}px ${glowColor}); }
+    50% { filter: drop-shadow(0 0 ${glowIntensity}px ${glowColor}); }
+  }
+</style>`;
+
+  const reset = () => {
+    setGlowColor("#8b5cf6");
+    setGlowIntensity(30);
+    setSpread(60);
+    setIsAnimated(true);
+  };
+
+  const controls = (
+    <div className="space-y-6">
+      <div className="space-y-4">
+        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Glow Color</label>
+        <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
+           <input type="color" value={glowColor} onChange={(e) => setGlowColor(e.target.value)} className="w-10 h-10 rounded-lg bg-transparent border-none cursor-pointer" />
+           <input type="text" value={glowColor} onChange={(e) => setGlowColor(e.target.value)} className="bg-transparent border-none text-xs font-mono text-white w-full uppercase" />
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500 flex justify-between">
+           Intensity <span>{glowIntensity}px</span>
+        </label>
+        <input 
+          type="range" min="0" max="100" value={glowIntensity} 
+          onChange={(e) => setGlowIntensity(parseInt(e.target.value))}
+          className="w-full accent-brand-primary"
+        />
+      </div>
+
+      <div className="space-y-4">
+        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500 flex justify-between">
+           Spread <span>{spread}px</span>
+        </label>
+        <input 
+          type="range" min="0" max="150" value={spread} 
+          onChange={(e) => setSpread(parseInt(e.target.value))}
+          className="w-full accent-brand-primary"
+        />
+      </div>
+
+      <button 
+        onClick={() => setIsAnimated(!isAnimated)}
+        className={cn(
+          "w-full flex items-center justify-between p-4 rounded-xl border transition-all",
+          isAnimated ? "bg-brand-primary/10 border-brand-primary text-brand-primary" : "bg-white/5 border-white/5 text-slate-500"
+        )}
+      >
+        <span className="text-[10px] font-black uppercase tracking-widest">Pulse Animation</span>
+        <Activity className={cn("w-4 h-4", isAnimated ? "animate-bounce" : "")} />
+      </button>
+    </div>
+  );
+
+  const preview = (
+    <div className="relative group">
+       <div 
+         className={cn(
+           "w-32 h-32 rounded-[2.5rem] bg-slate-900 border border-white/20 flex items-center justify-center transition-all duration-500",
+           isAnimated ? "animate-glow-pulse" : ""
+         )}
+         style={{ 
+           boxShadow: `0 0 ${glowIntensity}px ${spread / 2}px ${glowColor}33`,
+           filter: `drop-shadow(0 0 ${glowIntensity / 2}px ${glowColor})`
+         }}
+       >
+          <Zap className="w-10 h-10 text-white" />
+       </div>
+       <style jsx>{`
+          @keyframes glow-pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+          }
+          .animate-glow-pulse {
+            animation: glow-pulse 2s infinite ease-in-out;
+          }
+       `}</style>
+    </div>
+  );
+
+  return (
+    <GeneratorLayout
+      title="Glow Effect"
+      description="Create atmospheric neon glows, ambient backlights, and pulsing aura effects for your UI elements."
+      controls={controls}
+      preview={preview}
+      cssCode={cssCode}
+      tailwindCode={tailwindCode}
+      htmlCode={htmlCode}
+      onReset={reset}
+    />
+  );
+}

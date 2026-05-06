@@ -35,12 +35,11 @@ import {
   Image,
   Activity,
   Zap,
-  Code,
-  Terminal,
-  Cpu,
-  Laptop,
   Braces,
-  Wind
+  Wind,
+  Cpu,
+  Terminal,
+  Code
 } from "lucide-react";
 
 const tools = [
@@ -459,6 +458,14 @@ const tools = [
     icon: Rows,
     color: "from-indigo-400 to-blue-600",
     shadow: "shadow-indigo-400/20",
+  },
+  {
+    title: "Online Compiler",
+    description: "Real-time HTML, CSS, and JS editor with live preview and edge rendering.",
+    href: "/compiler",
+    icon: Terminal,
+    color: "from-slate-600 to-slate-800",
+    shadow: "shadow-slate-600/20",
   },
 ];
 

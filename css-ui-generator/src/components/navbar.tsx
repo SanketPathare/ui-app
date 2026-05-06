@@ -148,6 +148,7 @@ const toolCategories = [
       { title: "Tailwind Gen", href: "/tailwind-gen", icon: Wind },
       { title: "HTML to TW", href: "/html-to-tw", icon: Code },
       { title: "CSS to TW", href: "/css-to-tw", icon: Terminal },
+      { title: "Online Compiler", href: "/compiler", icon: Cpu },
     ]
   }
 ];

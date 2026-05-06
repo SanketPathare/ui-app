@@ -36,7 +36,7 @@ export function GeneratorLayout({
     if (activeTab === "css") codeToCopy = cssCode;
     else if (activeTab === "react") codeToCopy = tailwindCode || "";
     else codeToCopy = htmlCode || "";
-    
+
     navigator.clipboard.writeText(codeToCopy);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -47,7 +47,7 @@ export function GeneratorLayout({
       {/* Premium Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="space-y-4">
-          <Link 
+          <Link
             href="/"
             className="inline-flex items-center gap-1.5 text-[10px] font-black text-slate-500 hover:text-brand-primary uppercase tracking-widest transition-colors group"
           >
@@ -63,7 +63,7 @@ export function GeneratorLayout({
             </p>
           </div>
         </div>
-        
+
         {onReset && (
           <button
             onClick={onReset}
@@ -92,13 +92,13 @@ export function GeneratorLayout({
 
           <div className="p-6 rounded-[2rem] bg-brand-primary/5 border border-brand-primary/10 flex items-start gap-4">
             <div className="w-10 h-10 rounded-xl bg-brand-primary/10 flex items-center justify-center text-brand-primary flex-shrink-0">
-               <Terminal className="w-5 h-5" />
+              <Terminal className="w-5 h-5" />
             </div>
             <div className="space-y-1">
-               <h4 className="text-[11px] font-black uppercase tracking-widest text-white">Engine Specs</h4>
-               <p className="text-[10px] text-slate-500 font-medium leading-relaxed">
-                 Optimized for modern browser engines and high-performance UI rendering.
-               </p>
+              <h4 className="text-[11px] font-black uppercase tracking-widest text-white">Engine Specs</h4>
+              <p className="text-[10px] text-slate-500 font-medium leading-relaxed">
+                Optimized for modern browser engines and high-performance UI rendering.
+              </p>
             </div>
           </div>
         </div>
@@ -166,7 +166,7 @@ export function GeneratorLayout({
                   <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Copy-Paste Ready Exports</p>
                 </div>
               </div>
-              <button 
+              <button
                 onClick={copyToClipboard}
                 className={cn(
                   "flex items-center gap-2 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 shadow-2xl",
@@ -200,7 +200,7 @@ export function GeneratorLayout({
                       activeTab === "css" ? "text-brand-primary" : "text-slate-500 hover:text-slate-300"
                     )}
                   >
-                    Vanilla CSS
+                    CSS
                   </button>
                   {htmlCode && (
                     <button

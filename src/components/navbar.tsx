@@ -64,7 +64,6 @@ const toolCategories = [
       { title: "Border Animation", href: "/fx-border-anim", icon: Box },
       { title: "Shimmer Effect", href: "/fx-shimmer", icon: Activity },
       { title: "Cursor Effect", href: "/fx-cursor", icon: MousePointer2 },
-      { title: "Custom Scrollbar", href: "/fx-scrollbar", icon: Rows },
       { title: "Box Shadow", href: "/box-shadow", icon: Box },
       { title: "Border Radius", href: "/border-radius", icon: Square },
       { title: "Glassmorphism", href: "/glassmorphism", icon: Layers },
@@ -120,7 +119,6 @@ const toolCategories = [
       { title: "Footer", href: "/footer", icon: Layout },
       { title: "Badge Lab", href: "/badge", icon: Tag },
       { title: "Tooltip Pro", href: "/tooltip", icon: Info },
-      { title: "Custom Scroll", href: "/scrollbar", icon: Settings2 },
     ]
   },
   {

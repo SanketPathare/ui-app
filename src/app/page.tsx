@@ -380,14 +380,6 @@ const tools = [
     shadow: "shadow-orange-400/20",
   },
   {
-    title: "Tailwind Gen",
-    description: "Build custom Tailwind utility combinations for complex UI components.",
-    href: "/tailwind-gen",
-    icon: Wind,
-    color: "from-sky-400 to-indigo-500",
-    shadow: "shadow-sky-400/20",
-  },
-  {
     title: "HTML to TW",
     description: "Convert raw HTML with inline styles to clean Tailwind CSS classes.",
     href: "/html-to-tw",

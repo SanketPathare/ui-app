@@ -13,6 +13,7 @@ export function ObjectFitGenerator() {
   const cssCode = `.media-element {\n  object-fit: ${fit};\n  object-position: ${positionX}% ${positionY}%;\n  width: 100%;\n  height: 100%;\n}`;
   const tailwindCode = `<img class="object-${fit} object-[${positionX}%_${positionY}%] w-full h-full" src="..." />`;
   const htmlCode = `<img src="..." style="object-fit: ${fit}; object-position: ${positionX}% ${positionY}%; width: 100%; height: 100%;">`;
+  const jsCode = `const setMediaFit = (img) => {\n  img.style.objectFit = "${fit}";\n  img.style.objectPosition = "${positionX}% ${positionY}%";\n};`;
 
   const reset = () => {
     setFit("cover");
@@ -122,6 +123,7 @@ export function ObjectFitGenerator() {
       cssCode={cssCode}
       tailwindCode={tailwindCode}
       htmlCode={htmlCode}
+      jsCode={jsCode}
       onReset={reset}
     />
   );

@@ -238,6 +238,7 @@ export function BackdropFilterGenerator() {
     <GeneratorLayout
       title="Backdrop Lab"
       description="Design premium frosted glass effects and background-aware visual filters."
+      icon={<Layers className="w-8 h-8" />}
       controls={controls}
       preview={preview}
       cssCode={cssCode}

@@ -15,6 +15,7 @@ interface GeneratorLayoutProps {
   tailwindCode?: string;
   htmlCode?: string;
   jsCode?: string;
+  icon?: ReactNode;
   onReset?: () => void;
 }
 
@@ -27,6 +28,7 @@ export function GeneratorLayout({
   tailwindCode,
   htmlCode,
   jsCode,
+  icon,
   onReset
 }: GeneratorLayoutProps) {
   const [copied, setCopied] = useState(false);
@@ -58,8 +60,11 @@ export function GeneratorLayout({
             Back to Hub
           </Link>
           <div className="space-y-2">
-            <h1 className="text-4xl font-black tracking-tighter text-white">
-              {title.split(' ')[0]} <span className="text-brand-primary">{title.split(' ').slice(1).join(' ')}</span>
+            <h1 className="text-4xl font-black tracking-tighter text-white flex items-center gap-3">
+              {icon && <div className="text-brand-primary">{icon}</div>}
+              <div>
+                {title.split(' ')[0]} <span className="text-brand-primary">{title.split(' ').slice(1).join(' ')}</span>
+              </div>
             </h1>
             <p className="text-slate-400 text-sm font-medium max-w-xl">
               {description}

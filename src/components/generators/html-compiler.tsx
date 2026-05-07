@@ -34,6 +34,11 @@ import { oneDark } from "@codemirror/theme-one-dark";
 import { autocompletion } from "@codemirror/autocomplete";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import * as prettier from "prettier/standalone";
+import * as htmlParser from "prettier/plugins/html";
+import * as cssParser from "prettier/plugins/postcss";
+import * as babelParser from "prettier/plugins/babel";
+import * as estreeParser from "prettier/plugins/estree";
 
 export function HtmlCompiler() {
   const [html, setHtml] = useState('<!-- Create something amazing -->\n<div class="card">\n  <h1>HTML Compiler</h1>\n  <p>Edit HTML, CSS, and JS to see live changes.</p>\n  <button id="sparkle">Sparkle!</button>\n</div>');
@@ -195,6 +200,38 @@ export function HtmlCompiler() {
     }
   };
 
+  const formatCode = async () => {
+    try {
+      if (activeTab === "html") {
+        const formatted = await prettier.format(html, {
+          parser: "html",
+          plugins: [htmlParser],
+          printWidth: 80,
+          tabWidth: 2,
+        });
+        setHtml(formatted);
+      } else if (activeTab === "css") {
+        const formatted = await prettier.format(css, {
+          parser: "css",
+          plugins: [cssParser],
+          printWidth: 80,
+          tabWidth: 2,
+        });
+        setCss(formatted);
+      } else if (activeTab === "js") {
+        const formatted = await prettier.format(js, {
+          parser: "babel",
+          plugins: [babelParser, estreeParser],
+          printWidth: 80,
+          tabWidth: 2,
+        });
+        setJs(formatted);
+      }
+    } catch (error) {
+      console.error("Prettier formatting failed:", error);
+    }
+  };
+
   return (
     <div className="space-y-8 animate-in fade-in duration-700">
       {/* Header */}
@@ -205,7 +242,8 @@ export function HtmlCompiler() {
             Back to Hub
           </Link>
           <div className="space-y-2">
-            <h1 className="text-4xl font-black tracking-tighter text-white">
+            <h1 className="text-4xl font-black tracking-tighter text-white flex items-center gap-3">
+              <Code className="w-8 h-8 text-brand-primary" />
               HTML Compiler <span className="text-brand-primary">Online</span>
             </h1>
             <p className="text-slate-400 text-sm font-medium max-w-xl">
@@ -239,63 +277,71 @@ export function HtmlCompiler() {
         <div className="lg:col-span-6 space-y-6">
           <div className="rounded-[2.5rem] bg-[#020617] border border-white/5 overflow-hidden shadow-2xl flex flex-col h-[650px]">
             {/* Tabs */}
-            <div className="flex items-center justify-between px-8 py-4 bg-white/[0.02] border-b border-white/5">
-              <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between bg-white/[0.02] border-b border-white/5">
+              <div className="flex overflow-x-auto no-scrollbar border-b sm:border-b-0 border-white/5 px-4 sm:px-8 py-4 gap-6 flex-shrink-0">
                 <button
                   onClick={() => setActiveTab("html")}
                   className={cn(
-                    "flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all",
+                    "flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap",
                     activeTab === "html" ? "text-brand-primary" : "text-slate-500 hover:text-slate-300"
                   )}
                 >
                   <FileCode className="w-3.5 h-3.5" />
-                  HTML5
+                  <span className="hidden xs:inline">HTML5</span>
                 </button>
                 <button
                   onClick={() => setActiveTab("css")}
                   className={cn(
-                    "flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all",
+                    "flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap",
                     activeTab === "css" ? "text-brand-primary" : "text-slate-500 hover:text-slate-300"
                   )}
                 >
                   <Layers className="w-3.5 h-3.5" />
-                  CSS
+                  <span className="hidden xs:inline">CSS</span>
                 </button>
                 <button
                   onClick={() => setActiveTab("js")}
                   className={cn(
-                    "flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all",
+                    "flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap",
                     activeTab === "js" ? "text-brand-primary" : "text-slate-500 hover:text-slate-300"
                   )}
                 >
                   <Zap className="w-3.5 h-3.5" />
-                  JS Core
+                  <span className="hidden xs:inline">JS Core</span>
                 </button>
               </div>
               
-                <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 px-4 sm:px-8 py-3 sm:py-0 overflow-x-auto no-scrollbar">
+                <button
+                  onClick={() => setAutoCompleteEnabled(!autoCompleteEnabled)}
+                  className={cn(
+                    "flex items-center gap-2 px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all whitespace-nowrap",
+                    autoCompleteEnabled ? "bg-emerald-500/10 text-emerald-500" : "bg-white/5 text-slate-500 hover:text-slate-300"
+                  )}
+                  title={autoCompleteEnabled ? "Autocompletion Active" : "Autocompletion Disabled"}
+                >
+                  {autoCompleteEnabled ? <Settings className="w-3 h-3 animate-spin-slow" /> : <ZapOff className="w-3 h-3" />}
+                  <span className="hidden lg:inline">Suggest</span>
+                </button>
+                <button
+                  onClick={formatCode}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/5 text-[9px] font-black uppercase tracking-widest text-slate-500 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap"
+                >
+                  <Palette className="w-3 h-3 text-brand-primary" />
+                  <span className="hidden lg:inline">Format</span>
+                </button>
+                <div className="relative">
                   <button
-                    onClick={() => setAutoCompleteEnabled(!autoCompleteEnabled)}
+                    onClick={() => setShowSnippets(!showSnippets)}
                     className={cn(
-                      "flex items-center gap-2 px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all",
-                      autoCompleteEnabled ? "bg-emerald-500/10 text-emerald-500" : "bg-white/5 text-slate-500 hover:text-slate-300"
+                      "flex items-center gap-2 px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all whitespace-nowrap",
+                      showSnippets ? "bg-brand-primary text-white" : "bg-white/5 text-slate-400 hover:text-white"
                     )}
-                    title={autoCompleteEnabled ? "Autocompletion Active" : "Autocompletion Disabled"}
                   >
-                    {autoCompleteEnabled ? <Settings className="w-3 h-3 animate-spin-slow" /> : <ZapOff className="w-3 h-3" />}
-                    Suggest
+                    <Layout className="w-3 h-3" />
+                    <span className="hidden lg:inline">Snippets</span>
                   </button>
-                  <div className="relative">
-                    <button
-                      onClick={() => setShowSnippets(!showSnippets)}
-                      className={cn(
-                        "flex items-center gap-2 px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all",
-                        showSnippets ? "bg-brand-primary text-white" : "bg-white/5 text-slate-400 hover:text-white"
-                      )}
-                    >
-                      <Layout className="w-3 h-3" />
-                      Snippets
-                    </button>
+                  {/* ... snippets menu ... */}
 
                     {showSnippets && (
                       <>
@@ -325,6 +371,17 @@ export function HtmlCompiler() {
                       </>
                     )}
                   </div>
+                  <button
+                    onClick={() => {
+                      if (activeTab === "html") setHtml("");
+                      else if (activeTab === "css") setCss("");
+                      else setJs("");
+                    }}
+                    className="p-1.5 rounded-lg bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white transition-all ml-2"
+                    title="Clear Current Editor"
+                  >
+                    <RefreshCcw className="w-3 h-3" />
+                  </button>
                 </div>
             </div>
 

@@ -18,9 +18,10 @@ export function VariablesGenerator() {
     { name: "card-blur", value: "12px" },
   ]);
 
-  const cssCode = `:root {\n${vars.map(v => `  --${v.name}: ${v.value};`).join('\n')}\n}\n\n.my-element {\n  background: var(--brand-primary);\n  border-radius: var(--main-radius);\n  backdrop-filter: blur(var(--card-blur));\n}`;
-  const tailwindCode = `// In tailwind.config.js\ntheme: {\n  extend: {\n    colors: {\n      brand: 'var(--brand-primary)',\n    }\n  }\n}`;
-  const htmlCode = `<div style="--brand-primary: ${vars[0].value}; background: var(--brand-primary);"></div>`;
+  const cssCode = `:root {\n${vars.map(v => `  --${v.name}: ${v.value};`).join('\n')}\n}\n\n.my-element {\n  background: var(--${vars[0]?.name || 'primary'});\n  border-radius: var(--${vars.find(v => v.name.includes('radius'))?.name || 'radius'});\n}`;
+  const tailwindCode = `// tailwind.config.js\nmodule.exports = {\n  theme: {\n    extend: {\n      colors: {\n        brand: 'var(--${vars[0]?.name})',\n      }\n    }\n  }\n}`;
+  const htmlCode = `<div style="${vars.map(v => `--${v.name}: ${v.value}`).join('; ')}"></div>`;
+  const jsCode = `// Dynamically update tokens\nconst setToken = (name, value) => {\n  document.documentElement.style.setProperty(\`--\${name}\`, value);\n};`;
 
   const reset = () => {
     setVars([
@@ -124,6 +125,7 @@ export function VariablesGenerator() {
       cssCode={cssCode}
       tailwindCode={tailwindCode}
       htmlCode={htmlCode}
+      jsCode={jsCode}
       onReset={reset}
     />
   );

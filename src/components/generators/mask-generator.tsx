@@ -21,9 +21,10 @@ export function MaskGenerator() {
   };
 
   const maskImage = getMaskImage();
-  const cssCode = `.masked-element {\n  ${maskType === "inset" ? `clip-path: ${maskImage};` : `mask-image: ${maskImage};\n  -webkit-mask-image: ${maskImage};`}\n}`;
-  const tailwindCode = `<div class="${maskType === "inset" ? `clip-path-[${maskImage}]` : `mask-[${maskImage}]`}">...</div>`;
-  const htmlCode = `<div style="${maskType === "inset" ? `clip-path: ${maskImage}` : `mask-image: ${maskImage}; -webkit-mask-image: ${maskImage}`}; width: 300px; height: 300px; background: url(...)"></div>`;
+  const cssCode = `.masked-element {\n  ${maskType === "inset" ? `clip-path: ${maskImage};` : `mask-image: ${maskImage};\n  -webkit-mask-image: ${maskImage};`}\n  width: 100%;\n  height: 100%;\n}`;
+  const tailwindCode = `<div class="${maskType === "inset" ? `clip-path-[${maskImage.replace(/\s+/g, '_')}]` : `mask-[${maskImage.replace(/\s+/g, '_')}]`} w-full h-full"></div>`;
+  const htmlCode = `<div style="${maskType === "inset" ? `clip-path: ${maskImage}` : `mask-image: ${maskImage}; -webkit-mask-image: ${maskImage}`}; width: 100%; height: 100%; background: #6366f1;"></div>`;
+  const jsCode = `const applyMask = (element) => {\n  const mask = "${maskImage}";\n  ${maskType === "inset" ? `element.style.clipPath = mask;` : `element.style.maskImage = mask;\n  element.style.webkitMaskImage = mask;`}\n};`;
 
   const reset = () => {
     setMaskType("radial");
@@ -116,6 +117,7 @@ export function MaskGenerator() {
       cssCode={cssCode}
       tailwindCode={tailwindCode}
       htmlCode={htmlCode}
+      jsCode={jsCode}
       onReset={reset}
     />
   );

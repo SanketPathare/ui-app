@@ -459,13 +459,16 @@ const tools = [
     color: "from-indigo-400 to-blue-600",
     shadow: "shadow-indigo-400/20",
   },
+];
+
+const compilers = [
   {
-    title: "Online Compiler",
+    title: "HTML Compiler Online",
     description: "Real-time HTML, CSS, and JS editor with live preview and edge rendering.",
     href: "/compiler",
     icon: Terminal,
-    color: "from-slate-600 to-slate-800",
-    shadow: "shadow-slate-600/20",
+    color: "from-indigo-600 to-slate-900",
+    shadow: "shadow-indigo-600/20",
   },
 ];
 
@@ -514,6 +517,42 @@ export default function Home() {
                 </div>
               </Link>
             ))}
+          </div>
+
+          {/* Online Compilers Section */}
+          <div className="space-y-8 pt-12 border-t border-white/5">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-brand-primary/10 flex items-center justify-center text-brand-primary">
+                <Cpu className="w-5 h-5" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-black text-white tracking-tighter uppercase">Developer Engines</h2>
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Full-Stack Sandboxing</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {compilers.map((tool) => (
+                <Link 
+                  key={tool.href} 
+                  href={tool.href}
+                  className="group relative p-8 rounded-[2.5rem] bg-brand-primary/5 border border-brand-primary/10 hover:border-brand-primary/50 transition-all duration-500 hover:shadow-2xl hover:-translate-y-1.5 overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  
+                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${tool.color} flex items-center justify-center text-white mb-8 shadow-xl ${tool.shadow} group-hover:scale-110 transition-transform duration-500`}>
+                    <tool.icon className="w-7 h-7" />
+                  </div>
+                  
+                  <h3 className="text-2xl font-black text-white mb-3 group-hover:text-brand-primary transition-colors">{tool.title}</h3>
+                  <p className="text-sm text-slate-400 mb-8 leading-relaxed font-medium">{tool.description}</p>
+                  
+                  <div className="flex items-center text-[11px] font-black text-brand-primary uppercase tracking-widest group-hover:gap-4 gap-2 transition-all">
+                    Initialize Workspace <ArrowRight className="w-4 h-4" />
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
 
           <div className="relative rounded-[2.5rem] bg-indigo-950/40 p-6 md:p-12 text-center space-y-6 overflow-hidden border border-white/5">

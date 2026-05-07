@@ -10,6 +10,8 @@ export function CursorGenerator() {
   const [color, setColor] = useState("#8b5cf6");
   const [blur, setBlur] = useState(20);
   const [opacity, setOpacity] = useState(0.5);
+  const [preset, setPreset] = useState<"blob" | "ring" | "cyber" | "spotlight">("blob");
+  const [isHovering, setIsHovering] = useState(false);
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const previewRef = useRef<HTMLDivElement>(null);
 
@@ -70,7 +72,15 @@ const CustomCursor = ({ pos }) => (
     setColor("#8b5cf6");
     setBlur(20);
     setOpacity(0.5);
+    setPreset("blob");
   };
+
+  const PRESETS = [
+    { id: "blob", name: "Neural Blob", icon: <Sparkles className="w-4 h-4" /> },
+    { id: "ring", name: "Modern Ring", icon: <Target className="w-4 h-4" /> },
+    { id: "cyber", name: "Cyber Trail", icon: <Move className="w-4 h-4" /> },
+    { id: "spotlight", name: "Spotlight", icon: <MousePointer2 className="w-4 h-4" /> },
+  ];
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (previewRef.current) {
@@ -85,6 +95,27 @@ const CustomCursor = ({ pos }) => (
   const controls = (
     <div className="space-y-6">
       <div className="space-y-4">
+        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Cursor Preset</label>
+        <div className="grid grid-cols-2 gap-2">
+          {PRESETS.map((p) => (
+            <button
+              key={p.id}
+              onClick={() => setPreset(p.id as any)}
+              className={cn(
+                "flex items-center gap-2 px-3 py-2.5 rounded-xl border text-[10px] font-bold uppercase transition-all",
+                preset === p.id 
+                  ? "bg-brand-primary/10 border-brand-primary text-brand-primary shadow-lg shadow-brand-primary/10" 
+                  : "bg-white/5 border-white/5 text-slate-400 hover:border-white/10"
+              )}
+            >
+              {p.icon}
+              {p.name}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="space-y-4">
         <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Cursor Color</label>
         <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
            <input type="color" value={color} onChange={(e) => setColor(e.target.value)} className="w-10 h-10 rounded-lg bg-transparent border-none cursor-pointer" />
@@ -92,26 +123,28 @@ const CustomCursor = ({ pos }) => (
         </div>
       </div>
 
-      <div className="space-y-4">
-        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500 flex justify-between">
-           Cursor Size <span>{size}px</span>
-        </label>
-        <input 
-          type="range" min="10" max="200" value={size} 
-          onChange={(e) => setSize(parseInt(e.target.value))}
-          className="w-full accent-brand-primary"
-        />
-      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-4">
+          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500 flex justify-between">
+             Size <span>{size}px</span>
+          </label>
+          <input 
+            type="range" min="10" max="150" value={size} 
+            onChange={(e) => setSize(parseInt(e.target.value))}
+            className="w-full accent-brand-primary"
+          />
+        </div>
 
-      <div className="space-y-4">
-        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500 flex justify-between">
-           Blur Intensity <span>{blur}px</span>
-        </label>
-        <input 
-          type="range" min="0" max="100" value={blur} 
-          onChange={(e) => setBlur(parseInt(e.target.value))}
-          className="w-full accent-brand-primary"
-        />
+        <div className="space-y-4">
+          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500 flex justify-between">
+             Blur <span>{blur}px</span>
+          </label>
+          <input 
+            type="range" min="0" max="80" value={blur} 
+            onChange={(e) => setBlur(parseInt(e.target.value))}
+            className="w-full accent-brand-primary"
+          />
+        </div>
       </div>
 
       <div className="space-y-4">
@@ -131,39 +164,72 @@ const CustomCursor = ({ pos }) => (
     <div 
       ref={previewRef}
       onMouseMove={handleMouseMove}
-      className="w-full h-80 rounded-[2.5rem] bg-slate-900 border border-white/5 overflow-hidden relative cursor-none flex items-center justify-center group"
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+      className="w-full h-80 rounded-[2.5rem] bg-[#020617] border border-white/5 overflow-hidden relative cursor-none flex items-center justify-center group select-none"
     >
-       <div className="text-center space-y-3 opacity-30 group-hover:opacity-100 transition-opacity">
-          <MousePointer2 className="w-8 h-8 text-slate-500 mx-auto" />
-          <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Hover to Test Cursor</p>
+       <div className="grid grid-cols-2 gap-4 relative z-10 w-full px-12">
+          {[1, 2, 3, 4].map((i) => (
+            <div 
+              key={i}
+              className="h-20 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center justify-center transition-all hover:bg-white/5 hover:border-brand-primary/20 hover:scale-[1.02] group/target"
+              onMouseEnter={() => setIsHovering(true)}
+            >
+              <span className="text-[9px] font-black uppercase tracking-widest text-slate-600 group-hover/target:text-brand-primary transition-colors">Target Area</span>
+            </div>
+          ))}
+       </div>
+
+       <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
+          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Interactive Canvas</p>
        </div>
        
        {/* Custom Follower */}
        <div 
-         className="absolute pointer-events-none transition-all duration-75 ease-out rounded-full"
+         className={cn(
+           "absolute pointer-events-none transition-all duration-300 ease-out",
+           preset === "ring" ? "border-2" : "rounded-full"
+         )}
          style={{ 
            left: cursorPos.x,
            top: cursorPos.y,
-           width: `${size}px`,
-           height: `${size}px`,
-           backgroundColor: color,
+           width: `${isHovering ? size * 1.5 : size}px`,
+           height: `${isHovering ? size * 1.5 : size}px`,
+           backgroundColor: preset === "ring" ? "transparent" : color,
+           borderColor: color,
            filter: `blur(${blur}px)`,
            opacity: opacity,
-           transform: 'translate(-50%, -50%)'
+           borderRadius: preset === "cyber" ? "4px" : "50%",
+           transform: `translate(-50%, -50%) rotate(${preset === "cyber" ? "45deg" : "0deg"})`,
+           boxShadow: preset === "spotlight" ? `0 0 0 2000px rgba(0,0,0,0.8)` : 'none'
          }}
        />
 
+       {/* Precision Dot */}
+       {preset !== "spotlight" && (
+         <div 
+           className="absolute pointer-events-none w-1 h-1 bg-white rounded-full z-20"
+           style={{ 
+             left: cursorPos.x,
+             top: cursorPos.y,
+             transform: 'translate(-50%, -50%)'
+           }}
+         />
+       )}
+
        {/* Outer Ring */}
-       <div 
-         className="absolute pointer-events-none transition-all duration-300 ease-out border border-white/20 rounded-full"
-         style={{ 
-           left: cursorPos.x,
-           top: cursorPos.y,
-           width: `${size + 20}px`,
-           height: `${size + 20}px`,
-           transform: 'translate(-50%, -50%)'
-         }}
-       />
+       {(preset === "ring" || preset === "blob") && (
+         <div 
+           className="absolute pointer-events-none transition-all duration-500 ease-out border border-white/10 rounded-full"
+           style={{ 
+             left: cursorPos.x,
+             top: cursorPos.y,
+             width: `${(isHovering ? size * 2 : size + 20)}px`,
+             height: `${(isHovering ? size * 2 : size + 20)}px`,
+             transform: 'translate(-50%, -50%)'
+           }}
+         />
+       )}
     </div>
   );
 

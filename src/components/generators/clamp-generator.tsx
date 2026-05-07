@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { GeneratorLayout } from "@/components/generator-layout";
-import { Type, Smartphone, Tablet, Monitor } from "lucide-react";
+import { Type, Smartphone, Tablet, Monitor, Maximize2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function ClampGenerator() {
@@ -10,52 +10,97 @@ export function ClampGenerator() {
   const [maxSize, setMaxSize] = useState(48);
   const [minViewport, setMinViewport] = useState(320);
   const [maxViewport, setMaxViewport] = useState(1280);
-  const [unit, setUnit] = useState<"px" | "rem">("px");
+  const [outputUnit, setOutputUnit] = useState<"px" | "rem">("rem");
   const [clampValue, setClampValue] = useState("");
+  const [simulatedWidth, setSimulatedWidth] = useState(768);
+  const [currentSize, setCurrentSize] = useState(16);
 
   useEffect(() => {
-    const minVal = unit === "rem" ? minSize : minSize / 16;
-    const maxVal = unit === "rem" ? maxSize : maxSize / 16;
-    const minVW = minViewport / 16;
-    const maxVW = maxViewport / 16;
+    if (maxViewport === minViewport) return;
 
-    const slope = (maxVal - minVal) / (maxVW - minVW);
-    const yAxisIntersection = -minVW * slope + minVal;
+    // Convert inputs to REM for calculation (internal logic stays consistent)
+    const minValRem = minSize / 16;
+    const maxValRem = maxSize / 16;
+    const minVWRem = minViewport / 16;
+    const maxVWRem = maxViewport / 16;
 
-    const preferredValue = `${yAxisIntersection.toFixed(4)}rem + ${(slope * 100).toFixed(4)}vw`;
-    const clamp = `clamp(${minVal}rem, ${preferredValue}, ${maxVal}rem)`;
+    const slope = (maxValRem - minValRem) / (maxVWRem - minVWRem);
+    const yAxisIntersection = -minVWRem * slope + minValRem;
+
+    let clamp;
+    const intersectionFixed = yAxisIntersection.toFixed(4);
+    const slopeFixed = (slope * 100).toFixed(4);
+
+    if (outputUnit === "rem") {
+      // Compressed string for Tailwind compatibility (no spaces)
+      clamp = `clamp(${minValRem.toFixed(3)}rem,${intersectionFixed}rem+${slopeFixed}vw,${maxValRem.toFixed(3)}rem)`;
+    } else {
+      clamp = `clamp(${minSize}px,${(yAxisIntersection * 16).toFixed(2)}px+${slopeFixed}vw,${maxSize}px)`;
+    }
+    
+    // Clean up '+ -' to just '-'
+    clamp = clamp.replace(/\+\-/g, '-');
+    
     setClampValue(clamp);
-  }, [minSize, maxSize, minViewport, maxViewport, unit]);
+
+    // Calculate current simulated size
+    const currentPreferredRem = yAxisIntersection + (slope * (simulatedWidth / 16));
+    const finalSizeRem = Math.max(minValRem, Math.min(maxValRem, currentPreferredRem));
+    setCurrentSize(finalSizeRem * 16);
+  }, [minSize, maxSize, minViewport, maxViewport, outputUnit, simulatedWidth]);
 
   const cssCode = `.responsive-text {\n  font-size: ${clampValue};\n}`;
   const tailwindCode = `<p class="text-[${clampValue}]">Responsive Text</p>`;
   const htmlCode = `<p style="font-size: ${clampValue}">Fluid Typography</p>`;
+  const jsCode = `// Fluid Typography Calculation\nconst getFluidSize = (width) => {\n  const minSize = ${minSize};\n  const maxSize = ${maxSize};\n  const minViewport = ${minViewport};\n  const maxViewport = ${maxViewport};\n  \n  const slope = (maxSize - minSize) / (maxViewport - minViewport);\n  const intersection = minSize - slope * minViewport;\n  \n  const size = intersection + slope * width;\n  return Math.min(maxSize, Math.max(minSize, size));\n};`;
 
   const reset = () => {
     setMinSize(16);
     setMaxSize(48);
     setMinViewport(320);
     setMaxViewport(1280);
-    setUnit("px");
+    setOutputUnit("rem");
+    setSimulatedWidth(768);
   };
+
+  const PRESETS = [
+    { name: "Body", min: 16, max: 18 },
+    { name: "H2", min: 24, max: 48 },
+    { name: "H1", min: 32, max: 80 },
+  ];
 
   const controls = (
     <div className="space-y-6">
+      <div className="space-y-4">
+        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Typography Presets</label>
+        <div className="grid grid-cols-3 gap-2">
+          {PRESETS.map(p => (
+            <button 
+              key={p.name}
+              onClick={() => { setMinSize(p.min); setMaxSize(p.max); }}
+              className="py-2 rounded-xl bg-white/5 border border-white/5 text-[10px] font-black hover:border-pink-500/50 transition-all text-slate-400 hover:text-white"
+            >
+              {p.name}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-4">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500 flex justify-between">Min Size ({unit})</label>
+          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500 flex justify-between">Min Size (px)</label>
           <input 
             type="number" value={minSize} 
-            onChange={(e) => setMinSize(parseFloat(e.target.value))}
-            className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-2 text-xs text-white"
+            onChange={(e) => setMinSize(parseFloat(e.target.value) || 0)}
+            className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-2 text-xs text-white focus:border-pink-500/50 outline-none"
           />
         </div>
         <div className="space-y-4">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500 flex justify-between">Max Size ({unit})</label>
+          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500 flex justify-between">Max Size (px)</label>
           <input 
             type="number" value={maxSize} 
-            onChange={(e) => setMaxSize(parseFloat(e.target.value))}
-            className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-2 text-xs text-white"
+            onChange={(e) => setMaxSize(parseFloat(e.target.value) || 0)}
+            className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-2 text-xs text-white focus:border-pink-500/50 outline-none"
           />
         </div>
       </div>
@@ -65,32 +110,32 @@ export function ClampGenerator() {
           <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Min Viewport (px)</label>
           <input 
             type="number" value={minViewport} 
-            onChange={(e) => setMinViewport(parseFloat(e.target.value))}
-            className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-2 text-xs text-white"
+            onChange={(e) => setMinViewport(parseFloat(e.target.value) || 0)}
+            className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-2 text-xs text-white focus:border-pink-500/50 outline-none"
           />
         </div>
         <div className="space-y-4">
           <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Max Viewport (px)</label>
           <input 
             type="number" value={maxViewport} 
-            onChange={(e) => setMaxViewport(parseFloat(e.target.value))}
-            className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-2 text-xs text-white"
+            onChange={(e) => setMaxViewport(parseFloat(e.target.value) || 0)}
+            className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-2 text-xs text-white focus:border-pink-500/50 outline-none"
           />
         </div>
       </div>
 
       <div className="space-y-4">
-        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Unit Type</label>
+        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Output Unit</label>
         <div className="flex p-1 rounded-xl bg-white/5 border border-white/5">
           <button 
-            onClick={() => setUnit("px")}
-            className={cn("flex-1 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all", unit === "px" ? "bg-white/10 text-white" : "text-slate-500 hover:text-slate-300")}
+            onClick={() => setOutputUnit("px")}
+            className={cn("flex-1 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all", outputUnit === "px" ? "bg-pink-500 text-white" : "text-slate-500 hover:text-slate-300")}
           >
             Pixels (px)
           </button>
           <button 
-            onClick={() => setUnit("rem")}
-            className={cn("flex-1 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all", unit === "rem" ? "bg-white/10 text-white" : "text-slate-500 hover:text-slate-300")}
+            onClick={() => setOutputUnit("rem")}
+            className={cn("flex-1 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all", outputUnit === "rem" ? "bg-pink-500 text-white" : "text-slate-500 hover:text-slate-300")}
           >
             Relative (rem)
           </button>
@@ -100,23 +145,62 @@ export function ClampGenerator() {
   );
 
   const preview = (
-    <div className="w-full h-80 rounded-[2.5rem] bg-[#020617] border border-white/5 overflow-hidden flex flex-col items-center justify-center p-8 relative">
+    <div className="w-full h-full  rounded-[2.5rem] bg-[#020617] border border-white/5 overflow-hidden flex flex-col p-8 relative group">
        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
             style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '32px 32px' }} />
        
-       <div className="text-center space-y-6">
-          <p style={{ fontSize: clampValue }} className="font-black text-white leading-tight animate-in fade-in slide-in-from-bottom-4 duration-1000">
-            Fluid Typography
-          </p>
-          <div className="flex gap-4 justify-center">
-             <div className="px-3 py-1.5 rounded-full bg-white/5 border border-white/5 flex items-center gap-2">
-                <Smartphone className="w-3 h-3 text-slate-500" />
-                <span className="text-[9px] font-black text-slate-400">MIN: {minSize}{unit}</span>
-             </div>
-             <div className="px-3 py-1.5 rounded-full bg-white/5 border border-white/5 flex items-center gap-2">
-                <Monitor className="w-3 h-3 text-slate-500" />
-                <span className="text-[9px] font-black text-slate-400">MAX: {maxSize}{unit}</span>
-             </div>
+       <div className="flex-1 flex flex-col items-center justify-center space-y-12 relative z-10">
+          <div className="space-y-2 text-center">
+             <p className="text-[10px] font-black text-pink-500 uppercase tracking-widest">Live Simulation</p>
+             <h4 className="text-sm font-bold text-slate-500">{simulatedWidth}px Viewport</h4>
+          </div>
+
+          <div className="w-full max-w-xl mx-auto space-y-8">
+            <p style={{ fontSize: `${currentSize}px` }} className="font-black text-white leading-tight text-center break-words transition-all duration-300 ease-out">
+              Fluid Typography Scaling
+            </p>
+            
+            <div className="flex flex-col items-center gap-4">
+              <div className="w-full h-1.5 bg-white/5 rounded-full relative overflow-hidden">
+                <div 
+                  className="absolute inset-y-0 left-0 bg-pink-500/50 transition-all duration-300"
+                  style={{ width: `${((simulatedWidth - 320) / (1920 - 320)) * 100}%` }}
+                />
+              </div>
+              <input 
+                type="range" min="320" max="1920" value={simulatedWidth} 
+                onChange={(e) => setSimulatedWidth(parseInt(e.target.value))}
+                className="w-full h-1 opacity-0 absolute cursor-pointer"
+              />
+              <div className="flex justify-between w-full text-[9px] font-black text-slate-600 uppercase tracking-widest">
+                <span>320px</span>
+                <span>Current: {currentSize.toFixed(1)}px</span>
+                <span>1920px</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
+             {[
+               { icon: <Smartphone />, label: "Mobile", width: 375 },
+               { icon: <Tablet />, label: "Tablet", width: 768 },
+               { icon: <Monitor />, label: "Desktop", width: 1280 },
+               { icon: <Maximize2 className="w-4 h-4" />, label: "Wide", width: 1920 },
+             ].map((device) => (
+               <button 
+                 key={device.label}
+                 onClick={() => setSimulatedWidth(device.width)}
+                 className={cn(
+                   "flex flex-col items-center gap-2 p-4 rounded-2xl border transition-all",
+                   simulatedWidth === device.width ? "bg-pink-500/10 border-pink-500 text-pink-500" : "bg-white/5 border-white/5 text-slate-500 hover:border-white/10"
+                 )}
+               >
+                 <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center">
+                    {device.icon}
+                 </div>
+                 <span className="text-[9px] font-black uppercase tracking-widest">{device.label}</span>
+               </button>
+             ))}
           </div>
        </div>
     </div>
@@ -131,6 +215,7 @@ export function ClampGenerator() {
       cssCode={cssCode}
       tailwindCode={tailwindCode}
       htmlCode={htmlCode}
+      jsCode={jsCode}
       onReset={reset}
     />
   );

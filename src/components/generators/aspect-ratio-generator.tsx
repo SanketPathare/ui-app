@@ -9,6 +9,9 @@ export function AspectRatioGenerator() {
   const [ratioW, setRatioW] = useState(16);
   const [ratioH, setRatioH] = useState(9);
   const [preset, setPreset] = useState("16/9");
+  const [contentType, setContentType] = useState<"image" | "video" | "skeleton">("image");
+  const [objectFit, setObjectFit] = useState<"cover" | "contain" | "fill">("cover");
+  const [useLegacy, setUseLegacy] = useState(false);
 
   const PRESETS = [
     { name: "16:9", value: "16/9", w: 16, h: 9 },
@@ -18,14 +21,29 @@ export function AspectRatioGenerator() {
     { name: "9:16", value: "9/16", w: 9, h: 16 },
   ];
 
-  const cssCode = `.aspect-box {\n  aspect-ratio: ${ratioW} / ${ratioH};\n  width: 100%;\n  object-fit: cover;\n}`;
-  const tailwindCode = `<div class="aspect-[${ratioW}/${ratioH}] w-full"></div>`;
-  const htmlCode = `<div style="aspect-ratio: ${ratioW} / ${ratioH}; width: 100%; background: #333;"></div>`;
+  const paddingValue = ((ratioH / ratioW) * 100).toFixed(2);
+  
+  const cssCode = useLegacy 
+    ? `.aspect-container {\n  position: relative;\n  width: 100%;\n  padding-top: ${paddingValue}%;\n}\n.aspect-content {\n  position: absolute;\n  inset: 0;\n  width: 100%;\n  height: 100%;\n  object-fit: ${objectFit};\n}`
+    : `.aspect-box {\n  aspect-ratio: ${ratioW} / ${ratioH};\n  width: 100%;\n  object-fit: ${objectFit};\n}`;
+
+  const tailwindCode = useLegacy
+    ? `<div class="relative w-full pt-[${paddingValue}%]">\n  <div class="absolute inset-0 w-full h-full object-${objectFit}">...</div>\n</div>`
+    : `<div class="aspect-[${ratioW}/${ratioH}] w-full object-${objectFit}"></div>`;
+
+  const htmlCode = useLegacy
+    ? `<div style="position: relative; width: 100%; padding-top: ${paddingValue}%;">\n  <div style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: ${objectFit}; background: #333;"></div>\n</div>`
+    : `<div style="aspect-ratio: ${ratioW} / ${ratioH}; width: 100%; object-fit: ${objectFit}; background: #333;"></div>`;
+
+  const jsCode = `// Dynamic Aspect Ratio Application\nconst setAspectRatio = (element) => {\n  element.style.aspectRatio = "${ratioW} / ${ratioH}";\n  element.style.objectFit = "${objectFit}";\n  element.style.width = "100%";\n};`;
 
   const reset = () => {
     setRatioW(16);
     setRatioH(9);
     setPreset("16/9");
+    setContentType("image");
+    setObjectFit("cover");
+    setUseLegacy(false);
   };
 
   const handlePreset = (p: any) => {
@@ -62,10 +80,10 @@ export function AspectRatioGenerator() {
           <input 
             type="number" value={ratioW} 
             onChange={(e) => {
-              setRatioW(parseFloat(e.target.value));
+              setRatioW(parseFloat(e.target.value) || 1);
               setPreset("custom");
             }}
-            className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-3 text-sm text-white"
+            className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-500/50 outline-none"
           />
         </div>
         <div className="space-y-4">
@@ -73,28 +91,163 @@ export function AspectRatioGenerator() {
           <input 
             type="number" value={ratioH} 
             onChange={(e) => {
-              setRatioH(parseFloat(e.target.value));
+              setRatioH(parseFloat(e.target.value) || 1);
               setPreset("custom");
             }}
-            className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-3 text-sm text-white"
+            className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-500/50 outline-none"
           />
         </div>
+      </div>
+
+      <div className="space-y-4 border-t border-white/5 pt-6">
+        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Preview Content</label>
+        <div className="flex p-1 rounded-xl bg-white/5 border border-white/5">
+           {[
+             { id: "image", label: "Photo" },
+             { id: "video", label: "Cinema" },
+             { id: "skeleton", label: "UI Shell" }
+           ].map(t => (
+             <button
+               key={t.id}
+               onClick={() => setContentType(t.id as any)}
+               className={cn(
+                 "flex-1 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all",
+                 contentType === t.id ? "bg-amber-500 text-white shadow-lg" : "text-slate-500 hover:text-slate-300"
+               )}
+             >
+               {t.label}
+             </button>
+           ))}
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Object Fit Strategy</label>
+        <div className="flex p-1 rounded-xl bg-white/5 border border-white/5">
+           {["cover", "contain", "fill"].map(f => (
+             <button
+               key={f}
+               onClick={() => setObjectFit(f as any)}
+               className={cn(
+                 "flex-1 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all",
+                 objectFit === f ? "bg-amber-500/20 text-amber-500" : "text-slate-500 hover:text-slate-300"
+               )}
+             >
+               {f}
+             </button>
+           ))}
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/5 group cursor-pointer" onClick={() => setUseLegacy(!useLegacy)}>
+         <div className="space-y-1">
+            <p className="text-[10px] font-black text-white uppercase tracking-widest">Legacy Support</p>
+            <p className="text-[9px] font-bold text-slate-500">Use padding-top hack for older browsers</p>
+         </div>
+         <div className={cn(
+           "w-10 h-5 rounded-full relative transition-all",
+           useLegacy ? "bg-amber-500 shadow-lg shadow-amber-500/20" : "bg-white/10"
+         )}>
+            <div className={cn(
+              "absolute top-1 w-3 h-3 rounded-full bg-white transition-all",
+              useLegacy ? "left-6" : "left-1"
+            )} />
+         </div>
       </div>
     </div>
   );
 
   const preview = (
-    <div className="w-full h-80 rounded-[2.5rem] bg-[#020617] border border-white/5 overflow-hidden flex items-center justify-center p-12 relative">
+    <div className=" my-10 w-full h-[500px] rounded-[2.5rem] bg-[#020617] border border-white/5 overflow-hidden flex flex-col relative group">
        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
             style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '32px 32px' }} />
        
-       <div 
-         className="w-full max-w-[400px] max-h-[240px] bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl shadow-2xl flex items-center justify-center transition-all duration-500 border border-white/10 overflow-hidden group"
-         style={{ aspectRatio: `${ratioW} / ${ratioH}` }}
-       >
-          <div className="flex flex-col items-center gap-2 group-hover:scale-110 transition-transform duration-500">
-             <Maximize className="w-8 h-8 text-white/40" />
-             <span className="text-[10px] font-black text-white/60 uppercase tracking-widest">{ratioW}:{ratioH}</span>
+       <div className="p-6 border-b border-white/5 bg-white/[0.02] flex items-center justify-between relative z-10">
+          <div className="flex items-center gap-3">
+             <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+             <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Viewport Simulation</span>
+          </div>
+          <div className="px-3 py-1 rounded-full bg-white/5 border border-white/5 text-[9px] font-black text-amber-500 uppercase">
+             {useLegacy ? "Legacy Padding Mode" : "Native CSS Engine"}
+          </div>
+       </div>
+
+       <div className="flex-1 flex items-center justify-center p-12 overflow-auto">
+          <div 
+            className={cn(
+              "relative w-full max-w-[600px] shadow-2xl transition-all duration-700 rounded-2xl overflow-hidden group/box",
+              useLegacy ? "bg-slate-900" : "bg-transparent"
+            )}
+            style={!useLegacy ? { aspectRatio: `${ratioW} / ${ratioH}` } : { width: '100%', paddingTop: `${paddingValue}%` }}
+          >
+             <div className={cn(
+               "transition-all duration-500 w-full h-full",
+               useLegacy ? "absolute inset-0" : ""
+             )}>
+                {contentType === "image" && (
+                   <img 
+                     src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop" 
+                     className="w-full h-full transition-all duration-700"
+                     style={{ objectFit }}
+                   />
+                )}
+                {contentType === "video" && (
+                   <div className="w-full h-full bg-black flex items-center justify-center relative">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+                      <div className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center">
+                         <div className="w-0 h-0 border-t-[8px] border-t-transparent border-l-[12px] border-l-white border-b-[8px] border-b-transparent ml-1" />
+                      </div>
+                      <div className="absolute bottom-6 left-6 right-6 h-1 bg-white/10 rounded-full overflow-hidden">
+                         <div className="w-1/3 h-full bg-amber-500" />
+                      </div>
+                   </div>
+                )}
+                {contentType === "skeleton" && (
+                   <div className="w-full h-full bg-slate-900 p-8 space-y-6">
+                      <div className="flex items-center gap-4">
+                         <div className="w-12 h-12 rounded-full bg-white/5 animate-pulse" />
+                         <div className="flex-1 space-y-2">
+                            <div className="h-3 w-1/3 bg-white/10 rounded-full animate-pulse" />
+                            <div className="h-2 w-1/4 bg-white/5 rounded-full animate-pulse" />
+                         </div>
+                      </div>
+                      <div className="space-y-3">
+                         <div className="h-2 w-full bg-white/5 rounded-full animate-pulse" />
+                         <div className="h-2 w-5/6 bg-white/5 rounded-full animate-pulse" />
+                         <div className="h-2 w-4/6 bg-white/5 rounded-full animate-pulse" />
+                      </div>
+                   </div>
+                )}
+             </div>
+
+             <div className="absolute inset-0 border border-white/10 rounded-2xl pointer-events-none group-hover/box:border-amber-500/50 transition-colors" />
+             
+             {/* Info Badge */}
+             <div className="absolute top-4 right-4 px-3 py-1.5 rounded-xl bg-black/60 backdrop-blur-xl border border-white/10 flex items-center gap-3 opacity-0 group-hover/box:opacity-100 transition-opacity">
+                <div className="flex items-center gap-1.5">
+                   <Box className="w-3 h-3 text-amber-500" />
+                   <span className="text-[10px] font-black text-white">{ratioW}:{ratioH}</span>
+                </div>
+                <div className="w-px h-3 bg-white/20" />
+                <span className="text-[10px] font-black text-white/60 lowercase">{objectFit}</span>
+             </div>
+          </div>
+       </div>
+
+       <div className="p-6 bg-white/[0.02] border-t border-white/5 flex justify-center gap-8">
+          <div className="flex flex-col items-center gap-1">
+             <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Width Ratio</span>
+             <span className="text-sm font-black text-white">{ratioW}</span>
+          </div>
+          <div className="w-px h-8 bg-white/5" />
+          <div className="flex flex-col items-center gap-1">
+             <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Height Ratio</span>
+             <span className="text-sm font-black text-white">{ratioH}</span>
+          </div>
+          <div className="w-px h-8 bg-white/5" />
+          <div className="flex flex-col items-center gap-1">
+             <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Legacy Padding</span>
+             <span className="text-sm font-black text-amber-500">{paddingValue}%</span>
           </div>
        </div>
     </div>
@@ -109,6 +262,7 @@ export function AspectRatioGenerator() {
       cssCode={cssCode}
       tailwindCode={tailwindCode}
       htmlCode={htmlCode}
+      jsCode={jsCode}
       onReset={reset}
     />
   );

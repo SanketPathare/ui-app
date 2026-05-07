@@ -14,6 +14,7 @@ interface GeneratorLayoutProps {
   cssCode: string;
   tailwindCode?: string;
   htmlCode?: string;
+  jsCode?: string;
   onReset?: () => void;
 }
 
@@ -25,17 +26,19 @@ export function GeneratorLayout({
   cssCode,
   tailwindCode,
   htmlCode,
+  jsCode,
   onReset
 }: GeneratorLayoutProps) {
   const [copied, setCopied] = useState(false);
-  const [activeTab, setActiveTab] = useState<"react" | "css" | "html">("react");
+  const [activeTab, setActiveTab] = useState<"react" | "css" | "html" | "js">("react");
   const [previewMode, setPreviewMode] = useState<"dark" | "light">("dark");
 
   const copyToClipboard = () => {
     let codeToCopy = "";
     if (activeTab === "css") codeToCopy = cssCode;
     else if (activeTab === "react") codeToCopy = tailwindCode || "";
-    else codeToCopy = htmlCode || "";
+    else if (activeTab === "html") codeToCopy = htmlCode || "";
+    else codeToCopy = jsCode || "";
 
     navigator.clipboard.writeText(codeToCopy);
     setCopied(true);
@@ -213,6 +216,17 @@ export function GeneratorLayout({
                       HTML5
                     </button>
                   )}
+                  {jsCode && (
+                    <button
+                      onClick={() => setActiveTab("js")}
+                      className={cn(
+                        "text-[10px] font-black uppercase tracking-widest transition-colors",
+                        activeTab === "js" ? "text-brand-primary" : "text-slate-500 hover:text-slate-300"
+                      )}
+                    >
+                      JavaScript
+                    </button>
+                  )}
                 </div>
                 <span className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em]">
                   {activeTab.toUpperCase()}
@@ -220,7 +234,7 @@ export function GeneratorLayout({
               </div>
               <div className="p-8 font-mono text-[11px] leading-relaxed custom-scrollbar max-h-[400px] overflow-y-auto text-indigo-200/90 relative z-10">
                 <pre className="whitespace-pre-wrap">
-                  {activeTab === "react" ? tailwindCode : activeTab === "css" ? cssCode : htmlCode}
+                  {activeTab === "react" ? tailwindCode : activeTab === "css" ? cssCode : activeTab === "html" ? htmlCode : jsCode}
                 </pre>
               </div>
             </div>

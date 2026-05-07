@@ -495,34 +495,10 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {tools.map((tool, index) => (
-              <Link 
-                key={tool.href} 
-                href={tool.href}
-                className="group relative p-6 rounded-[2rem] bg-slate-900/50 border border-white/5 hover:border-brand-primary/50 transition-all duration-500 hover:shadow-2xl hover:-translate-y-1.5 overflow-hidden"
-              >
-                {/* Hover Glow */}
-                <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                
-                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${tool.color} flex items-center justify-center text-white mb-6 shadow-lg ${tool.shadow} group-hover:scale-110 transition-transform duration-500`}>
-                  <tool.icon className="w-6 h-6" />
-                </div>
-                
-                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-brand-primary transition-colors">{tool.title}</h3>
-                <p className="text-sm text-slate-400 mb-6 leading-relaxed font-medium">{tool.description}</p>
-                
-                <div className="flex items-center text-[10px] font-black text-brand-primary uppercase tracking-widest group-hover:gap-3 gap-1.5 transition-all">
-                  Launch Engine <ArrowRight className="w-3.5 h-3.5" />
-                </div>
-              </Link>
-            ))}
-          </div>
-
-          {/* Online Compilers Section */}
-          <div className="space-y-8 pt-12 border-t border-white/5">
+          {/* Online Compilers Section (Primary) */}
+          <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-1000 delay-200">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-brand-primary/10 flex items-center justify-center text-brand-primary">
+              <div className="w-10 h-10 rounded-2xl bg-brand-primary/10 flex items-center justify-center text-brand-primary shadow-xl shadow-brand-primary/5">
                 <Cpu className="w-5 h-5" />
               </div>
               <div>
@@ -549,6 +525,42 @@ export default function Home() {
                   
                   <div className="flex items-center text-[11px] font-black text-brand-primary uppercase tracking-widest group-hover:gap-4 gap-2 transition-all">
                     Initialize Workspace <ArrowRight className="w-4 h-4" />
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div className="pt-12 border-t border-white/5 space-y-8">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-brand-secondary/10 flex items-center justify-center text-brand-secondary">
+                <Layout className="w-5 h-5" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-black text-white tracking-tighter uppercase">Design Utility Tools</h2>
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Rapid Component Prototyping</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {tools.map((tool, index) => (
+                <Link 
+                  key={tool.href} 
+                  href={tool.href}
+                  className="group relative p-6 rounded-[2rem] bg-slate-900/50 border border-white/5 hover:border-brand-primary/50 transition-all duration-500 hover:shadow-2xl hover:-translate-y-1.5 overflow-hidden"
+                >
+                  {/* Hover Glow */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${tool.color} flex items-center justify-center text-white mb-6 shadow-lg ${tool.shadow} group-hover:scale-110 transition-transform duration-500`}>
+                    <tool.icon className="w-6 h-6" />
+                  </div>
+                  
+                  <h3 className="text-xl font-bold text-white mb-2 group-hover:text-brand-primary transition-colors">{tool.title}</h3>
+                  <p className="text-sm text-slate-400 mb-6 leading-relaxed font-medium">{tool.description}</p>
+                  
+                  <div className="flex items-center text-[10px] font-black text-brand-primary uppercase tracking-widest group-hover:gap-3 gap-1.5 transition-all">
+                    Launch Engine <ArrowRight className="w-3.5 h-3.5" />
                   </div>
                 </Link>
               ))}

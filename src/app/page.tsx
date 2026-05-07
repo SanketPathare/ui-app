@@ -428,6 +428,14 @@ const tools = [
     shadow: "shadow-blue-600/20",
   },
   {
+    title: "Color Palette",
+    description: "Professional Tailwind-inspired color system with multi-format export.",
+    href: "/color-palette",
+    icon: Palette,
+    color: "from-blue-500 via-indigo-500 to-purple-600",
+    shadow: "shadow-indigo-500/20",
+  },
+  {
     title: "Shimmer Effect",
     description: "Add skeletal loading and shiny shimmer animations.",
     href: "/fx-shimmer",

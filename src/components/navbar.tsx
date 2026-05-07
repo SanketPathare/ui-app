@@ -95,6 +95,7 @@ const toolCategories = [
       { title: "Pattern Engine", href: "/pattern", icon: Grid },
       { title: "Text Shadow", href: "/text-shadow", icon: Type },
       { title: "Gradient Border", href: "/gradient-border", icon: Square },
+      { title: "Color Palette", href: "/color-palette", icon: Palette },
     ]
   },
   {

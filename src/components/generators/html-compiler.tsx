@@ -48,6 +48,9 @@ export function HtmlCompiler() {
   const [showSnippets, setShowSnippets] = useState(false);
   const [autoCompleteEnabled, setAutoCompleteEnabled] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isCompiling, setIsCompiling] = useState(false);
+  const [executionTime, setExecutionTime] = useState<number | null>(null);
+  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const SNIPPETS = [
@@ -112,6 +115,8 @@ export function HtmlCompiler() {
   }, []);
 
   useEffect(() => {
+    setIsCompiling(true);
+    const start = performance.now();
     const timeout = setTimeout(() => {
       const consoleInterceptScript = `
         (function() {
@@ -164,10 +169,14 @@ export function HtmlCompiler() {
         </html>
       `;
       setSrcDoc(combined);
-      // Optional: setLogs([]); // Clear logs on refresh if desired
+      setIsCompiling(false);
+      setExecutionTime(Math.round(performance.now() - start));
+      setLastUpdated(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
     }, 500);
 
-    return () => clearTimeout(timeout);
+    return () => {
+      clearTimeout(timeout);
+    };
   }, [html, css, js]);
 
   const handleCopy = () => {
@@ -413,9 +422,16 @@ export function HtmlCompiler() {
                 <div className="w-10 h-10 rounded-2xl bg-brand-primary/10 flex items-center justify-center text-brand-primary shadow-xl shadow-brand-primary/5">
                   <Eye className="w-5 h-5" />
                 </div>
-                <div>
+                <div className="space-y-1">
                   <h4 className="text-sm font-black uppercase tracking-widest text-white">Simulation Lab</h4>
-                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">High-Fidelity Preview</p>
+                  <div className="flex items-center gap-3">
+                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">High-Fidelity Preview</p>
+                    {executionTime !== null && (
+                      <span className="text-[9px] font-black text-brand-primary uppercase tracking-tighter bg-brand-primary/10 px-2 py-0.5 rounded-full">
+                        Sync: {executionTime}ms
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
               <div className="flex items-center gap-3">
@@ -459,13 +475,29 @@ export function HtmlCompiler() {
                   </div>
                 </div>
 
-                <iframe
-                  ref={iframeRef}
-                  srcDoc={srcDoc}
-                  title="Compiler Preview"
-                  className="flex-1 w-full border-none"
-                  sandbox="allow-scripts"
-                />
+                  <iframe
+                    ref={iframeRef}
+                    srcDoc={srcDoc}
+                    title="Compiler Preview"
+                    className="flex-1 w-full border-none"
+                    sandbox="allow-scripts"
+                  />
+
+                  {/* Loading Overlay */}
+                  {isCompiling && (
+                    <div className="absolute inset-0 bg-white/60 backdrop-blur-sm z-20 flex flex-col items-center justify-center animate-in fade-in duration-300">
+                      <div className="relative">
+                        <div className="w-12 h-12 rounded-full border-2 border-brand-primary/20 border-t-brand-primary animate-spin" />
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <Cpu className="w-4 h-4 text-brand-primary animate-pulse" />
+                        </div>
+                      </div>
+                      <div className="mt-4 flex flex-col items-center">
+                        <span className="text-[9px] font-black uppercase tracking-widest text-brand-primary animate-pulse">Rendering Engine...</span>
+                        <span className="text-[8px] font-bold text-slate-500 uppercase mt-1">Estimating Latency</span>
+                      </div>
+                    </div>
+                  )}
               </div>
             </div>
 
@@ -555,6 +587,19 @@ export function HtmlCompiler() {
               className="flex-1 w-full border-none bg-white"
               sandbox="allow-scripts"
             />
+
+            {/* Loading Overlay */}
+            {isCompiling && (
+              <div className="absolute inset-0 bg-white/60 backdrop-blur-md z-20 flex flex-col items-center justify-center animate-in fade-in duration-300">
+                <div className="relative">
+                  <div className="w-16 h-16 rounded-full border-4 border-brand-primary/20 border-t-brand-primary animate-spin" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <Cpu className="w-6 h-6 text-brand-primary animate-pulse" />
+                  </div>
+                </div>
+                <span className="mt-6 text-xs font-black uppercase tracking-[0.3em] text-brand-primary animate-pulse">Synchronizing Edge...</span>
+              </div>
+            )}
           </div>
         </div>
       )}

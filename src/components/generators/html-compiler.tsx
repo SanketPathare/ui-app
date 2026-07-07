@@ -1,665 +1,1468 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import {
-  Code,
-  Eye,
-  RefreshCcw,
-  Copy,
-  Check,
-  Monitor,
-  Smartphone,
-  Tablet,
-  ArrowLeft,
-  Cpu,
-  FileCode,
-  Layers,
-  Zap,
-  Terminal,
-  Maximize2,
-  ChevronRight,
-  Layout,
-  Sparkles,
-  Palette,
-  Box,
-  MousePointer2,
-  Settings,
-  ZapOff
+  Eye, Monitor, Smartphone, Tablet,
+  ArrowLeft, Cpu, FileCode, Terminal, Maximize2,
+  Search, Settings, FolderTree, Download,
+  ChevronDown, ChevronUp, X, Save,
+  FileType, Brackets,
+  Braces, File, Command,
+  AlertCircle, Pencil, Check,
+  Trash2, FilePlus
 } from "lucide-react";
-import CodeMirror from "@uiw/react-codemirror";
-import { html as htmlLang } from "@codemirror/lang-html";
-import { css as cssLang } from "@codemirror/lang-css";
-import { javascript as jsLang } from "@codemirror/lang-javascript";
-import { oneDark } from "@codemirror/theme-one-dark";
-import { autocompletion } from "@codemirror/autocomplete";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
 import * as prettier from "prettier/standalone";
 import * as htmlParser from "prettier/plugins/html";
 import * as cssParser from "prettier/plugins/postcss";
 import * as babelParser from "prettier/plugins/babel";
 import * as estreeParser from "prettier/plugins/estree";
 
-export function HtmlCompiler() {
-  const [html, setHtml] = useState('<!-- Create something amazing -->\n<div class="card">\n  <h1>HTML Compiler</h1>\n  <p>Edit HTML, CSS, and JS to see live changes.</p>\n  <button id="sparkle">Sparkle!</button>\n</div>');
-  const [css, setCss] = useState('body {\n  background: #020617;\n  font-family: system-ui, sans-serif;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100vh;\n  margin: 0;\n}\n\n.card {\n  background: rgba(255, 255, 255, 0.05);\n  backdrop-filter: blur(10px);\n  border: 1px solid rgba(255, 255, 255, 0.1);\n  padding: 3rem;\n  border-radius: 2rem;\n  text-align: center;\n  color: white;\n  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);\n}\n\nh1 {\n  margin: 0 0 1rem;\n  font-size: 3rem;\n  font-weight: 900;\n  background: linear-gradient(to right, #8b5cf6, #ec4899);\n  -webkit-background-clip: text;\n  -webkit-text-fill-color: transparent;\n}\n\np {\n  color: #94a3b8;\n  margin-bottom: 2rem;\n}\n\nbutton {\n  background: #8b5cf6;\n  color: white;\n  border: none;\n  padding: 0.75rem 2rem;\n  border-radius: 1rem;\n  font-weight: 700;\n  cursor: pointer;\n  transition: all 0.3s;\n}\n\nbutton:hover {\n  transform: scale(1.05);\n  box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);\n}');
-  const [js, setJs] = useState('document.getElementById("sparkle").addEventListener("click", () => {\n  alert("✨ UI Engine is Awesome! ✨");\n});');
+const MonacoEditor = dynamic(() => import("@monaco-editor/react"), { ssr: false });
 
-  const [activeTab, setActiveTab] = useState<"html" | "css" | "js">("html");
-  const [viewport, setViewport] = useState<"desktop" | "tablet" | "mobile" | "wide">("desktop");
+// ─── Types ───
+
+type Viewport = "desktop" | "tablet" | "mobile" | "wide";
+type SidebarTab = "files" | "search" | "settings";
+type BottomTab = "console" | "problems";
+type LogType = "log" | "error" | "warn";
+
+interface FileData {
+  id: string;
+  name: string;
+  content: string;
+  savedContent: string;
+  language: string;
+}
+
+
+interface ConsoleLog {
+  type: LogType;
+  message: string;
+  timestamp: string;
+}
+
+interface Problem {
+  fileId: string;
+  line: number;
+  column: number;
+  message: string;
+  severity: "error" | "warning" | "info";
+}
+
+interface EditorSettings {
+  fontSize: number;
+  tabSize: number;
+  wordWrap: "on" | "off";
+  minimap: boolean;
+  formatOnSave: boolean;
+}
+
+interface CommandItem {
+  id: string;
+  label: string;
+  shortcut: string;
+  action: () => void;
+}
+
+// ─── Constants ───
+
+const THEME_STORAGE_KEY = "compiler-theme";
+const SETTINGS_STORAGE_KEY = "compiler-settings";
+
+const DEFAULT_SETTINGS: EditorSettings = {
+  fontSize: 13,
+  tabSize: 2,
+  wordWrap: "on",
+  minimap: false,
+  formatOnSave: false,
+};
+
+const EXTENSION_LANGUAGE_MAP: Record<string, string> = {
+  html: "html", htm: "html",
+  css: "css", scss: "scss", less: "less",
+  js: "javascript", jsx: "javascript",
+  ts: "typescript", tsx: "typescript",
+  json: "json", md: "markdown",
+  xml: "xml", svg: "xml",
+  txt: "plaintext", py: "python",
+  rb: "ruby", java: "java",
+  go: "go", rs: "rust",
+  sh: "shell", bash: "shell",
+  yml: "yaml", yaml: "yaml",
+  toml: "toml", sql: "sql",
+};
+
+const VIEWPORT_WIDTHS: Record<Viewport, string> = {
+  wide: "w-full max-w-7xl",
+  desktop: "w-full max-w-5xl",
+  tablet: "w-[450px]",
+  mobile: "w-[320px]",
+};
+
+const ACTIVITY_ITEMS: { tab: SidebarTab; icon: React.ReactNode; label: string }[] = [
+  { tab: "files", icon: <FolderTree className="w-5 h-5" />, label: "Files" },
+  { tab: "search", icon: <Search className="w-5 h-5" />, label: "Search" },
+  { tab: "settings", icon: <Settings className="w-5 h-5" />, label: "Settings" },
+];
+
+const DEFAULT_HTML_CONTENT = `<!-- HTML Compiler Online -->
+<div class="card">
+  <h1>HTML Compiler</h1>
+  <p>Edit HTML, CSS, and JS with live preview.</p>
+  <button id="action-btn">Click Me</button>
+</div>`;
+
+const DEFAULT_CSS_CONTENT = `* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #1a1a1a;
+  color: #ededed;
+}
+
+.card {
+  background: #252525;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 3rem;
+  text-align: center;
+  max-width: 480px;
+  width: 100%;
+}
+
+h1 {
+  margin: 0 0 1rem;
+  font-size: 2.5rem;
+  font-weight: 600;
+}
+
+p {
+  color: #a0a0a0;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+button {
+  background: #ededed;
+  color: #000;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+button:hover {
+  opacity: 0.8;
+}`;
+
+const DEFAULT_JS_CONTENT = `document.getElementById("action-btn").addEventListener("click", () => {
+  console.log("Hello from HTML Compiler!");
+  alert("HTML Compiler Online - VS Code Edition");
+});`;
+
+function makeDefaultFiles(): FileData[] {
+  return [
+    { id: "index.html", name: "index.html", content: DEFAULT_HTML_CONTENT, savedContent: DEFAULT_HTML_CONTENT, language: "html" },
+    { id: "style.css", name: "style.css", content: DEFAULT_CSS_CONTENT, savedContent: DEFAULT_CSS_CONTENT, language: "css" },
+    { id: "app.js", name: "app.js", content: DEFAULT_JS_CONTENT, savedContent: DEFAULT_JS_CONTENT, language: "javascript" },
+  ];
+}
+
+
+// ─── Theme Colors ───
+
+const THEMES = {
+  dark: {
+    "--bg-primary": "#000000",
+    "--bg-secondary": "#000000",
+    "--bg-tertiary": "#111111",
+    "--bg-hover": "#1a1a1a",
+    "--bg-active": "#222222",
+    "--bg-title": "#000000",
+    "--bg-activity": "#000000",
+    "--border": "#333333",
+    "--border-light": "#111111",
+    "--text-primary": "#ffffff",
+    "--text-secondary": "#999999",
+    "--text-highlight": "#ffffff",
+    "--status-bar": "#ffffff",
+    "--console-bg": "#000000",
+    "--console-toolbar": "#111111",
+    "--problems-error": "#ffffff",
+    "--problems-warning": "#ffffff",
+    "--console-log": "#ffffff",
+    "--tab-active-bg": "#000000",
+    "--tab-inactive-bg": "#111111",
+    "--tab-border": "#000000",
+    "--preview-bg": "#000000",
+    "--preview-border": "#333333",
+    "--input-bg": "#1a1a1a",
+    "--input-text": "#ffffff",
+    "--input-placeholder": "#666666",
+    "--scrollbar-thumb": "#333333",
+    "--scrollbar-hover": "#555555",
+    "--overlay-bg": "rgba(0,0,0,0.7)",
+    "--text-danger": "#f48771",
+  },
+  light: {
+    "--bg-primary": "#ffffff",
+    "--bg-secondary": "#ffffff",
+    "--bg-tertiary": "#f5f5f5",
+    "--bg-hover": "#eeeeee",
+    "--bg-active": "#e0e0e0",
+    "--bg-title": "#ffffff",
+    "--bg-activity": "#ffffff",
+    "--border": "#cccccc",
+    "--border-light": "#eeeeee",
+    "--text-primary": "#000000",
+    "--text-secondary": "#666666",
+    "--text-highlight": "#000000",
+    "--status-bar": "#000000",
+    "--console-bg": "#ffffff",
+    "--console-toolbar": "#f5f5f5",
+    "--problems-error": "#000000",
+    "--problems-warning": "#000000",
+    "--console-log": "#000000",
+    "--tab-active-bg": "#ffffff",
+    "--tab-inactive-bg": "#f5f5f5",
+    "--tab-border": "#ffffff",
+    "--preview-bg": "#ffffff",
+    "--preview-border": "#cccccc",
+    "--input-bg": "#f5f5f5",
+    "--input-text": "#000000",
+    "--input-placeholder": "#999999",
+    "--scrollbar-thumb": "#cccccc",
+    "--scrollbar-hover": "#aaaaaa",
+    "--overlay-bg": "rgba(0,0,0,0.3)",
+    "--text-danger": "#c53030",
+  },
+};
+
+// ─── Helpers ───
+
+function detectLanguage(filename: string): string {
+  const ext = filename.split(".").pop()?.toLowerCase() || "";
+  return EXTENSION_LANGUAGE_MAP[ext] || "plaintext";
+}
+
+function getStoredTheme(): "dark" | "light" {
+  try {
+    const stored = localStorage.getItem(THEME_STORAGE_KEY);
+    if (stored === "light" || stored === "dark") return stored;
+  } catch {}
+  return "dark";
+}
+
+function getInitialSettings(): EditorSettings {
+  if (typeof window === "undefined") return DEFAULT_SETTINGS;
+  try {
+    const stored = localStorage.getItem(SETTINGS_STORAGE_KEY);
+    if (stored) return { ...DEFAULT_SETTINGS, ...JSON.parse(stored) };
+  } catch {}
+  return DEFAULT_SETTINGS;
+}
+
+function getFileIcon(name: string, className?: string): React.ReactNode {
+  const ext = name.split(".").pop()?.toLowerCase() || "";
+  const cls = className || "w-4 h-4";
+  const colorClass = "text-[var(--text-secondary)]";
+  switch (ext) {
+    case "html":
+    case "htm":
+      return <FileType className={`${cls} ${colorClass}`} />;
+    case "css":
+    case "scss":
+    case "less":
+      return <Brackets className={`${cls} ${colorClass}`} />;
+    case "js":
+    case "jsx":
+      return <Braces className={`${cls} ${colorClass}`} />;
+    case "ts":
+    case "tsx":
+      return <Braces className={`${cls} ${colorClass}`} />;
+    case "json":
+      return <Braces className={`${cls} ${colorClass}`} />;
+    default:
+      return <File className={`${cls} text-[var(--text-secondary)]`} />;
+  }
+}
+
+// ─── Component ───
+
+export function HtmlCompiler() {
+  const [files, setFiles] = useState<FileData[]>(makeDefaultFiles);
+  const [activeFileId, setActiveFileId] = useState("index.html");
+  const [viewport, setViewport] = useState<Viewport>("desktop");
   const [copied, setCopied] = useState(false);
   const [srcDoc, setSrcDoc] = useState("");
-  const [logs, setLogs] = useState<{ type: string; message: string; timestamp: string }[]>([]);
-  const [showSnippets, setShowSnippets] = useState(false);
-  const [autoCompleteEnabled, setAutoCompleteEnabled] = useState(true);
-  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [logs, setLogs] = useState<ConsoleLog[]>([]);
+  const [problems, setProblems] = useState<Problem[]>([]);
   const [isCompiling, setIsCompiling] = useState(false);
   const [executionTime, setExecutionTime] = useState<number | null>(null);
-  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
-
-  const SNIPPETS = [
-    {
-      id: "glass",
-      name: "Glassmorphism",
-      icon: <Layers className="w-3.5 h-3.5" />,
-      html: `<div class="glass-container">\n  <div class="glass-card">\n    <h2>Frosted Glass</h2>\n    <p>A beautiful glassmorphic card effect using backdrop-filter.</p>\n    <button>Get Started</button>\n  </div>\n</div>`,
-      css: `body {\n  background: linear-gradient(135deg, #0f172a, #1e293b, #0f172a);\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100vh;\n  margin: 0;\n  font-family: 'Inter', sans-serif;\n}\n\n.glass-card {\n  background: rgba(255, 255, 255, 0.03);\n  backdrop-filter: blur(16px);\n  -webkit-backdrop-filter: blur(16px);\n  border: 1px solid rgba(255, 255, 255, 0.1);\n  border-radius: 32px;\n  padding: 60px;\n  color: white;\n  text-align: center;\n  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);\n  max-width: 400px;\n}\n\nh2 {\n  font-size: 2.5rem;\n  margin-bottom: 1rem;\n  font-weight: 800;\n}\n\np {\n  color: #94a3b8;\n  line-height: 1.6;\n  margin-bottom: 2rem;\n}\n\nbutton {\n  background: white;\n  color: black;\n  border: none;\n  padding: 12px 32px;\n  border-radius: 12px;\n  font-weight: 700;\n  cursor: pointer;\n  transition: 0.3s;\n}\n\nbutton:hover {\n  transform: scale(1.05);\n  background: #f8fafc;\n}`,
-      js: `console.log("Glassmorphism Snippet Loaded!");`
-    },
-    {
-      id: "neon",
-      name: "Neon Glow",
-      icon: <Zap className="w-3.5 h-3.5" />,
-      html: `<div class="container">\n  <button class="neon-btn">\n    Cyberpunk\n  </button>\n</div>`,
-      css: `body {\n  background: #020617;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100vh;\n  margin: 0;\n}\n\n.neon-btn {\n  background: transparent;\n  color: #c026d3;\n  border: 2px solid #c026d3;\n  padding: 20px 40px;\n  font-size: 24px;\n  font-weight: 900;\n  border-radius: 12px;\n  cursor: pointer;\n  transition: 0.4s;\n  box-shadow: 0 0 15px rgba(192, 38, 211, 0.3);\n  text-transform: uppercase;\n  letter-spacing: 4px;\n  position: relative;\n}\n\n.neon-btn:hover {\n  background: #c026d3;\n  color: white;\n  box-shadow: 0 0 50px #c026d3, 0 0 100px #c026d3;\n  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);\n}`,
-      js: `document.querySelector(".neon-btn").addEventListener("click", () => {\n  console.log("Neon pulse activated!");\n});`
-    },
-    {
-      id: "particles",
-      name: "Particles JS",
-      icon: <Sparkles className="w-3.5 h-3.5" />,
-      html: `<canvas id="canvas"></canvas>\n<div class="overlay">\n  <h1>Neural Network</h1>\n  <p>Interactive Particle System</p>\n</div>`,
-      css: `body { margin: 0; background: #000; overflow: hidden; color: white; font-family: sans-serif; }\n#canvas { position: absolute; top: 0; left: 0; }\n.overlay {\n  position: relative;\n  z-index: 1;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  height: 100vh;\n  pointer-events: none;\n  text-align: center;\n}\nh1 { font-size: 4rem; font-weight: 900; margin: 0; letter-spacing: -2px; }\np { color: #4f46e5; font-weight: 700; text-transform: uppercase; letter-spacing: 4px; }`,
-      js: `const canvas = document.getElementById('canvas');\nconst ctx = canvas.getContext('2d');\ncanvas.width = window.innerWidth;\ncanvas.height = window.innerHeight;\nconst particles = [];\n\nclass Particle {\n  constructor() {\n    this.x = Math.random() * canvas.width;\n    this.y = Math.random() * canvas.height;\n    this.size = Math.random() * 2 + 1;\n    this.speedX = Math.random() * 2 - 1;\n    this.speedY = Math.random() * 2 - 1;\n  }\n  update() {\n    this.x += this.speedX;\n    this.y += this.speedY;\n    if (this.x > canvas.width || this.x < 0) this.speedX *= -1;\n    if (this.y > canvas.height || this.y < 0) this.speedY *= -1;\n  }\n  draw() {\n    ctx.fillStyle = '#4f46e5';\n    ctx.beginPath();\n    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);\n    ctx.fill();\n  }\n}\n\nfunction init() {\n  for (let i = 0; i < 150; i++) particles.push(new Particle());\n}\n\nfunction animate() {\n  ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';\n  ctx.fillRect(0, 0, canvas.width, canvas.height);\n  particles.forEach(p => {\n    p.update();\n    p.draw();\n  });\n  requestAnimationFrame(animate);\n}\n\ninit();\nanimate();\nconsole.log("Neural particles initialized.");`
-    }
-  ];
-
-  const loadSnippet = (snippet: typeof SNIPPETS[0]) => {
-    if (confirm(`Load "${snippet.name}" snippet? This will overwrite your current code.`)) {
-      setHtml(snippet.html);
-      setCss(snippet.css);
-      setJs(snippet.js);
-      setLogs([]);
-      setShowSnippets(false);
-    }
-  };
-
-  const openPreview = () => {
-    const blob = new Blob([srcDoc], { type: "text/html" });
-    const url = URL.createObjectURL(blob);
-    window.open(url, "_blank");
-  };
+  const [showSidebar, setShowSidebar] = useState(true);
+  const [showConsole, setShowConsole] = useState(true);
+  const [sidebarTab, setSidebarTab] = useState<SidebarTab>("files");
+  const [bottomTab, setBottomTab] = useState<BottomTab>("console");
+  const [cursorPos, setCursorPos] = useState({ line: 1, column: 1 });
+  const [logFilter, setLogFilter] = useState<LogType | "all">("all");
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
 
   useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      if (event.data && ["log", "error", "warn"].includes(event.data.type)) {
-        setLogs((prev) => [
-          ...prev,
-          {
-            type: event.data.type,
-            message: event.data.content,
-            timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" }),
-          },
-        ].slice(-100));
-      }
-    };
-
-    window.addEventListener("message", handleMessage);
-    return () => window.removeEventListener("message", handleMessage);
+    setTheme(getStoredTheme());
   }, []);
+  const [settings, setSettings] = useState<EditorSettings>(getInitialSettings);
+  const [showCommandPalette, setShowCommandPalette] = useState(false);
+  const [commandQuery, setCommandQuery] = useState("");
+  const [commandIndex, setCommandIndex] = useState(0);
+  const [contextMenu, setContextMenu] = useState<{ x: number; y: number; fileId?: string } | null>(null);
+  const [renamingFileId, setRenamingFileId] = useState<string | null>(null);
+  const [renameValue, setRenameValue] = useState("");
+  const [showNewFile, setShowNewFile] = useState(false);
+  const [newFileName, setNewFileName] = useState("");
+
+  const consoleRef = useRef<HTMLDivElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const monacoRef = useRef<any>(null);
+  const monacoInstanceRef = useRef<any>(null);
+  const markerListenerRef = useRef<{ dispose: () => void } | null>(null);
+  const cursorListenerRef = useRef<{ dispose: () => void } | null>(null);
+  const modelListenerRef = useRef<{ dispose: () => void } | null>(null);
+  const renameInputRef = useRef<HTMLInputElement>(null);
+  const newFileInputRef = useRef<HTMLInputElement>(null);
+  const commandInputRef = useRef<HTMLInputElement>(null);
+  const activeFileIdRef = useRef(activeFileId);
+
+  useEffect(() => { activeFileIdRef.current = activeFileId; }, [activeFileId]);
+
+  // Cleanup Monaco listeners on unmount
+  useEffect(() => {
+    return () => {
+      markerListenerRef.current?.dispose();
+      cursorListenerRef.current?.dispose();
+      modelListenerRef.current?.dispose();
+    };
+  }, []);
+
+  const colors = THEMES[theme];
+
+  // ─── Derived ───
+
+  const activeFile = files.find(f => f.id === activeFileId) || files[0];
+  const isDirty = (f: FileData) => f.content !== f.savedContent;
+  const openFiles = files; // all files are always open
+
+  // ─── File Operations ───
+
+  const updateFileContent = useCallback((id: string, content: string) => {
+    setFiles(prev => prev.map(f => f.id === id ? { ...f, content } : f));
+  }, []);
+
+  const switchFile = useCallback((id: string) => {
+    setActiveFileId(id);
+  }, []);
+
+  const saveFile = useCallback((id: string) => {
+    setFiles(prev => prev.map(f => f.id === id ? { ...f, savedContent: f.content } : f));
+  }, []);
+
+  const createFile = useCallback((name: string) => {
+    const trimmed = name.trim();
+    if (!trimmed || files.some(f => f.name === trimmed)) return;
+    const id = `file_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
+    const newFile: FileData = {
+      id,
+      name: trimmed,
+      content: "",
+      savedContent: "",
+      language: detectLanguage(trimmed),
+    };
+    setFiles(prev => [...prev, newFile]);
+    setActiveFileId(id);
+    setShowNewFile(false);
+    setNewFileName("");
+  }, [files]);
+
+  const deleteFileById = useCallback((id: string) => {
+    if (files.length <= 1) return;
+    setFiles(prev => prev.filter(f => f.id !== id));
+    if (activeFileId === id) {
+      const remaining = files.filter(f => f.id !== id);
+      setActiveFileId(remaining[0]?.id || "");
+    }
+    setContextMenu(null);
+  }, [files, activeFileId]);
+
+  const renameFileById = useCallback((id: string, newName: string) => {
+    const trimmed = newName.trim();
+    if (!trimmed || files.some(f => f.name === trimmed && f.id !== id)) return;
+    const newId = `file_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
+    setFiles(prev => prev.map(f => f.id === id ? {
+      ...f, id: newId, name: trimmed, language: detectLanguage(trimmed)
+    } : f));
+    if (activeFileId === id) setActiveFileId(newId);
+    setRenamingFileId(null);
+    setRenameValue("");
+  }, [files, activeFileId]);
+
+  const handleContextMenu = useCallback((e: React.MouseEvent, fileId?: string) => {
+    e.preventDefault();
+    setContextMenu({ x: e.clientX, y: e.clientY, fileId });
+  }, []);
+
+  const closeContextMenu = useCallback(() => {
+    setContextMenu(null);
+  }, []);
+
+  useEffect(() => {
+    if (contextMenu) {
+      const handler = () => closeContextMenu();
+      window.addEventListener("click", handler);
+      return () => window.removeEventListener("click", handler);
+    }
+  }, [contextMenu, closeContextMenu]);
+
+  const startRename = useCallback((id: string) => {
+    const file = files.find(f => f.id === id);
+    if (file) {
+      setRenamingFileId(id);
+      setRenameValue(file.name);
+      setTimeout(() => renameInputRef.current?.select(), 50);
+    }
+    setContextMenu(null);
+  }, [files]);
+
+  const commitRename = useCallback(() => {
+    if (renamingFileId) renameFileById(renamingFileId, renameValue);
+  }, [renamingFileId, renameValue, renameFileById]);
+
+  // ─── Preview Compilation ───
 
   useEffect(() => {
     setIsCompiling(true);
     const start = performance.now();
     const timeout = setTimeout(() => {
-      const consoleInterceptScript = `
+      const htmlFile = files.find(f => f.name.endsWith(".html") || f.id.endsWith(".html"));
+      const cssFiles = files.filter(f => f.name.endsWith(".css"));
+      const jsFiles = files.filter(f => f.name.endsWith(".js"));
+      const htmlContent = htmlFile?.content || "";
+      const cssContent = cssFiles.map(f => f.content).join("\n");
+      const jsContent = jsFiles.map(f => f.content).join("\n");
+      const intercept = `
         (function() {
-          const originalLog = console.log;
-          const originalError = console.error;
-          const originalWarn = console.warn;
-
-          function formatMessage(args) {
-            return args.map(arg => {
-              if (typeof arg === 'object') {
-                try {
-                  return JSON.stringify(arg, null, 2);
-                } catch (e) {
-                  return String(arg);
-                }
-              }
-              return String(arg);
-            }).join(' ');
-          }
-
-          console.log = function(...args) {
-            window.parent.postMessage({ type: 'log', content: formatMessage(args) }, '*');
-            originalLog.apply(console, args);
-          };
-          console.error = function(...args) {
-            window.parent.postMessage({ type: 'error', content: formatMessage(args) }, '*');
-            originalError.apply(console, args);
-          };
-          console.warn = function(...args) {
-            window.parent.postMessage({ type: 'warn', content: formatMessage(args) }, '*');
-            originalWarn.apply(console, args);
-          };
-
-          window.onerror = function(message, source, lineno, colno, error) {
-            window.parent.postMessage({ type: 'error', content: message + ' (line ' + lineno + ')' }, '*');
-          };
+          const origLog = console.log;
+          const origError = console.error;
+          const origWarn = console.warn;
+          function fmt(args) { return Array.from(args).map(a => typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a)).join(' '); }
+          console.log = function(...a) { window.parent.postMessage({type:'log',content:fmt(a)},'*'); origLog.apply(console,a); };
+          console.error = function(...a) { window.parent.postMessage({type:'error',content:fmt(a)},'*'); origError.apply(console,a); };
+          console.warn = function(...a) { window.parent.postMessage({type:'warn',content:fmt(a)},'*'); origWarn.apply(console,a); };
+          window.onerror = function(m,src,line) { window.parent.postMessage({type:'error',content:m+' (line '+line+')'},'*'); };
         })();
       `;
-
-      const combined = `
-        <html>
-          <head>
-            <style>${css}</style>
-            <script>${consoleInterceptScript}<\/script>
-          </head>
-          <body>
-            ${html}
-            <script>${js}<\/script>
-          </body>
-        </html>
-      `;
+      const combined = `<!DOCTYPE html><html><head><style>${cssContent}</style><script>${intercept}<\/script></head><body>${htmlContent}<script>${jsContent}<\/script></body></html>`;
       setSrcDoc(combined);
       setIsCompiling(false);
       setExecutionTime(Math.round(performance.now() - start));
-      setLastUpdated(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
-    }, 500);
+    }, 400);
+    return () => clearTimeout(timeout);
+  }, [files]);
 
-    return () => {
-      clearTimeout(timeout);
+  // Update iframe srcdoc directly to avoid React parsing script tags
+  useEffect(() => {
+    if (iframeRef.current) {
+      iframeRef.current.srcdoc = srcDoc;
+    }
+  }, [srcDoc]);
+
+  // ─── Console Listener ───
+
+  useEffect(() => {
+    const handler = (event: MessageEvent) => {
+      if (event.data && ["log", "error", "warn"].includes(event.data.type)) {
+        setLogs(prev => [...prev, {
+          type: event.data.type,
+          message: event.data.content,
+          timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })
+        }].slice(-200));
+        setTimeout(() => {
+          if (consoleRef.current) {
+            consoleRef.current.scrollTop = consoleRef.current.scrollHeight;
+          }
+        }, 50);
+      }
     };
-  }, [html, css, js]);
+    window.addEventListener("message", handler);
+    return () => window.removeEventListener("message", handler);
+  }, []);
 
-  const handleCopy = () => {
-    const code = `<!-- HTML -->\n${html}\n\n/* CSS */\n${css}\n\n// JS\n${js}`;
-    navigator.clipboard.writeText(code);
+  // ─── Keyboard Shortcuts ───
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === "p") {
+        e.preventDefault();
+        setShowCommandPalette(prev => !prev);
+        return;
+      }
+      if (showCommandPalette) return;
+      if ((e.metaKey || e.ctrlKey) && e.key === "s") {
+        e.preventDefault();
+        if (activeFile) {
+          saveFile(activeFile.id);
+          if (settings.formatOnSave) formatCode();
+        }
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === "b") {
+        e.preventDefault();
+        setShowSidebar(prev => !prev);
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === "`") {
+        e.preventDefault();
+        setShowConsole(prev => !prev);
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === "d") {
+        e.preventDefault();
+        if (activeFile) deleteFileById(activeFile.id);
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [showCommandPalette, activeFile, settings.formatOnSave]);
+
+  // ─── Monaco ───
+
+  const handleEditorMount = useCallback((editor: any, monaco: any) => {
+    monacoRef.current = editor;
+    monacoInstanceRef.current = monaco;
+
+    if (monaco) {
+      monaco.editor.defineTheme("compiler-dark", {
+        base: "vs-dark",
+        inherit: true,
+        rules: [],
+        colors: {
+          "editor.background": "#000000",
+          "editor.foreground": "#ffffff",
+          "editor.lineHighlightBackground": "#1a1a1a",
+          "editor.selectionBackground": "#333333",
+          "editor.inactiveSelectionBackground": "#222222",
+          "editorCursor.foreground": "#ffffff",
+          "editorLineNumber.foreground": "#555555",
+          "editorLineNumber.activeForeground": "#ffffff",
+          "editorBracketMatch.background": "#222222",
+          "editorBracketMatch.border": "#ffffff",
+        }
+      });
+      monaco.editor.defineTheme("compiler-light", {
+        base: "vs",
+        inherit: true,
+        rules: [],
+        colors: {
+          "editor.background": "#ffffff",
+          "editor.foreground": "#000000",
+          "editor.lineHighlightBackground": "#f5f5f5",
+          "editor.selectionBackground": "#e0e0e0",
+          "editor.inactiveSelectionBackground": "#eeeeee",
+          "editorCursor.foreground": "#000000",
+          "editorLineNumber.foreground": "#999999",
+          "editorLineNumber.activeForeground": "#000000",
+          "editorBracketMatch.background": "#f0f0f0",
+          "editorBracketMatch.border": "#000000",
+        }
+      });
+    }
+
+    cursorListenerRef.current?.dispose();
+    cursorListenerRef.current = editor.onDidChangeCursorPosition((e: any) => {
+      setCursorPos({ line: e.position.lineNumber, column: e.position.column });
+    });
+
+    if (monaco) {
+      modelListenerRef.current?.dispose();
+      modelListenerRef.current = editor.onDidChangeModel(() => {
+        const model = editor.getModel();
+        if (model) {
+          const markers = monaco.editor.getModelMarkers({ resource: model.uri });
+          setProblems(markers.map((m: any) => ({
+            fileId: activeFileIdRef.current,
+            line: m.startLineNumber,
+            column: m.startColumn,
+            message: m.message,
+            severity: m.severity === monaco.MarkerSeverity.Error ? "error" : m.severity >= monaco.MarkerSeverity.Warning ? "warning" : "info",
+          })));
+        }
+      });
+
+      markerListenerRef.current?.dispose();
+      markerListenerRef.current = monaco.editor.onDidChangeMarkers((resources: any[]) => {
+        const model = editor.getModel();
+        if (model && resources.some((r: any) => r.toString() === model.uri.toString())) {
+          const markers = monaco.editor.getModelMarkers({ resource: model.uri });
+          setProblems(markers.map((m: any) => ({
+            fileId: activeFileIdRef.current,
+            line: m.startLineNumber,
+            column: m.startColumn,
+            message: m.message,
+            severity: m.severity === monaco.MarkerSeverity.Error ? "error" : m.severity >= monaco.MarkerSeverity.Warning ? "warning" : "info",
+          })));
+        }
+      });
+    }
+  }, []);
+
+  // ─── Format ───
+
+  const formatCode = useCallback(async () => {
+    if (!activeFile) return;
+    try {
+      let formatted: string;
+      const lang = activeFile.language;
+      if (lang === "html") {
+        formatted = await prettier.format(activeFile.content, { parser: "html", plugins: [htmlParser], printWidth: 80, tabWidth: settings.tabSize });
+      } else if (["css", "scss", "less"].includes(lang)) {
+        formatted = await prettier.format(activeFile.content, { parser: "css", plugins: [cssParser], printWidth: 80, tabWidth: settings.tabSize });
+      } else if (lang === "javascript") {
+        formatted = await prettier.format(activeFile.content, { parser: "babel", plugins: [babelParser, estreeParser], printWidth: 80, tabWidth: settings.tabSize });
+      } else if (lang === "typescript") {
+        formatted = await prettier.format(activeFile.content, { parser: "typescript", plugins: [babelParser, estreeParser], printWidth: 80, tabWidth: settings.tabSize });
+      } else if (lang === "json") {
+        formatted = await prettier.format(activeFile.content, { parser: "json", plugins: [babelParser, estreeParser], printWidth: 80, tabWidth: settings.tabSize });
+      } else {
+        return;
+      }
+      updateFileContent(activeFile.id, formatted);
+    } catch (err) {
+      console.error("Format failed:", err);
+    }
+  }, [activeFile, settings.tabSize, updateFileContent]);
+
+  // ─── Handlers ───
+
+  const toggleTheme = useCallback(() => {
+    const next = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    try { localStorage.setItem(THEME_STORAGE_KEY, next); } catch {}
+  }, [theme]);
+
+  const handleCopy = useCallback(() => {
+    const text = files.map(f => `// ${f.name}\n${f.content}`).join("\n\n");
+    navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-  };
+  }, [files]);
 
-  const resetCode = () => {
-    if (confirm("Reset all editors to default?")) {
-      setHtml('<!-- Create something amazing -->\n<div class="card">\n  <h1>HTML Compiler</h1>\n  <p>Edit HTML, CSS, and JS to see live changes.</p>\n  <button id="sparkle">Sparkle!</button>\n</div>');
-      setCss('body {\n  background: #020617;\n  font-family: system-ui, sans-serif;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100vh;\n  margin: 0;\n}\n\n.card {\n  background: rgba(255, 255, 255, 0.05);\n  backdrop-filter: blur(10px);\n  border: 1px solid rgba(255, 255, 255, 0.1);\n  padding: 3rem;\n  border-radius: 2rem;\n  text-align: center;\n  color: white;\n  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);\n}\n\nh1 {\n  margin: 0 0 1rem;\n  font-size: 3rem;\n  font-weight: 900;\n  background: linear-gradient(to right, #8b5cf6, #ec4899);\n  -webkit-background-clip: text;\n  -webkit-text-fill-color: transparent;\n}\n\np {\n  color: #94a3b8;\n  margin-bottom: 2rem;\n}\n\nbutton {\n  background: #8b5cf6;\n  color: white;\n  border: none;\n  padding: 0.75rem 2rem;\n  border-radius: 1rem;\n  font-weight: 700;\n  cursor: pointer;\n  transition: all 0.3s;\n}\n\nbutton:hover {\n  transform: scale(1.05);\n  box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);\n}');
-      setJs('console.log("Welcome to HTML Compiler Online!");\ndocument.getElementById("sparkle").addEventListener("click", () => {\n  console.log("Sparkle button clicked!");\n  alert("✨ HTML Compiler is Awesome! ✨");\n});');
-      setLogs([]);
-    }
-  };
+  const downloadZip = useCallback(async () => {
+    const zip = new JSZip();
+    files.forEach(f => zip.file(f.name, f.content));
+    const blob = await zip.generateAsync({ type: "blob" });
+    saveAs(blob, "project.zip");
+  }, [files]);
 
-  const formatCode = async () => {
-    try {
-      if (activeTab === "html") {
-        const formatted = await prettier.format(html, {
-          parser: "html",
-          plugins: [htmlParser],
-          printWidth: 80,
-          tabWidth: 2,
-        });
-        setHtml(formatted);
-      } else if (activeTab === "css") {
-        const formatted = await prettier.format(css, {
-          parser: "css",
-          plugins: [cssParser],
-          printWidth: 80,
-          tabWidth: 2,
-        });
-        setCss(formatted);
-      } else if (activeTab === "js") {
-        const formatted = await prettier.format(js, {
-          parser: "babel",
-          plugins: [babelParser, estreeParser],
-          printWidth: 80,
-          tabWidth: 2,
-        });
-        setJs(formatted);
-      }
-    } catch (error) {
-      console.error("Prettier formatting failed:", error);
-    }
-  };
+  const downloadFile = useCallback(() => {
+    if (!activeFile) return;
+    const blob = new Blob([activeFile.content], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = activeFile.name;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [activeFile]);
+
+  const resetCode = useCallback(() => {
+    const defaults = makeDefaultFiles();
+    setFiles(defaults);
+    setLogs([]);
+    setProblems([]);
+    setActiveFileId("index.html");
+  }, []);
+
+
+  const openPreview = useCallback(() => {
+    const blob = new Blob([srcDoc], { type: "text/html" });
+    window.open(URL.createObjectURL(blob), "_blank");
+  }, [srcDoc]);
+
+  const clearConsole = useCallback(() => {
+    setLogs([]);
+  }, []);
+
+  const updateSetting = useCallback(<K extends keyof EditorSettings>(key: K, value: EditorSettings[K]) => {
+    setSettings(prev => {
+      const next = { ...prev, [key]: value };
+      try { localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(next)); } catch {}
+      return next;
+    });
+  }, []);
+
+  // ─── Editor Options ───
+
+  const editorOptions = useMemo(() => ({
+    fontSize: settings.fontSize,
+    fontFamily: "'Geist Mono', 'Cascadia Code', 'Fira Code', monospace",
+    minimap: { enabled: settings.minimap },
+    lineNumbers: "on" as const,
+    renderLineHighlight: "all" as const,
+    scrollBeyondLastLine: false,
+    automaticLayout: true,
+    tabSize: settings.tabSize,
+    wordWrap: settings.wordWrap,
+    padding: { top: 12 },
+    cursorBlinking: "smooth" as const,
+    smoothScrolling: true,
+    bracketPairColorization: { enabled: true },
+    folding: true,
+    foldingHighlight: true,
+    foldingStrategy: "indentation" as const,
+    autoClosingBrackets: "always" as const,
+    autoClosingQuotes: "always" as const,
+    formatOnPaste: true,
+    suggestOnTriggerCharacters: true,
+    quickSuggestions: true,
+    stickyScroll: { enabled: true },
+    scrollbar: {
+      verticalScrollbarSize: 8,
+      horizontalScrollbarSize: 8,
+    },
+  }), [settings]);
+
+  // ─── Commands ───
+
+  const commands: CommandItem[] = useMemo(() => [
+    { id: "format", label: "Format Code", shortcut: "Ctrl+S", action: () => { formatCode(); if (activeFile) saveFile(activeFile.id); } },
+    { id: "toggle-sidebar", label: "Toggle Sidebar", shortcut: "Ctrl+B", action: () => setShowSidebar(p => !p) },
+    { id: "toggle-console", label: "Toggle Console", shortcut: "Ctrl+`", action: () => setShowConsole(p => !p) },
+    { id: "create-file", label: "Create New File", shortcut: "", action: () => { setShowNewFile(true); setShowCommandPalette(false); setTimeout(() => newFileInputRef.current?.focus(), 50); } },
+    { id: "download-zip", label: "Download Project as ZIP", shortcut: "", action: () => { downloadZip(); setShowCommandPalette(false); } },
+    { id: "copy-all", label: "Copy All Code", shortcut: "", action: () => { handleCopy(); setShowCommandPalette(false); } },
+    { id: "reset", label: "Reset Workspace", shortcut: "", action: () => { resetCode(); setShowCommandPalette(false); } },
+    { id: "open-preview", label: "Open Preview in New Tab", shortcut: "", action: () => { openPreview(); setShowCommandPalette(false); } },
+    ...files.map(f => ({
+      id: `switch-${f.id}`,
+      label: `Switch to ${f.name}`,
+      shortcut: "",
+      action: () => { switchFile(f.id); setShowCommandPalette(false); },
+    })),
+    { id: "theme", label: `Switch to ${theme === "dark" ? "Light" : "Dark"} Theme`, shortcut: "", action: () => { toggleTheme(); setShowCommandPalette(false); } },
+  ], [formatCode, saveFile, activeFile, downloadZip, handleCopy, resetCode, openPreview, switchFile, files, toggleTheme, theme]);
+
+  const filteredCommands = useMemo(() => {
+    if (!commandQuery.trim()) return commands;
+    const q = commandQuery.toLowerCase();
+    return commands.filter(c => c.label.toLowerCase().includes(q));
+  }, [commandQuery, commands]);
+
+  const executeCommand = useCallback((cmd: CommandItem) => {
+    cmd.action();
+    setShowCommandPalette(false);
+    setCommandQuery("");
+    setCommandIndex(0);
+  }, []);
+
+  // ─── Filtered Logs ───
+
+  const filteredLogs = logFilter === "all" ? logs : logs.filter(l => l.type === logFilter);
+
+  // ─── Render ───
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-700">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div className="space-y-4">
-          <Link href="/" className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] uppercase tracking-widest transition-colors group">
-            <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
-            Back to Hub
-          </Link>
-          <div className="space-y-2">
-            <h1 className="text-4xl font-black tracking-tighter text-white flex items-center gap-3">
-              <Code className="w-8 h-8 text-[var(--text-primary)]" />
-              HTML Compiler <span className="text-[var(--text-primary)]">Online</span>
-            </h1>
-            <p className="text-[var(--text-secondary)] text-sm font-medium max-w-xl">
-              A high-performance live editing environment for rapid HTML5 prototyping and real-time visualization.
-            </p>
+    <>
+      <div
+        className="h-screen flex flex-col overflow-hidden select-none"
+        style={colors as React.CSSProperties}
+        onClick={closeContextMenu}
+      >
+        {/* ─── Title Bar ─── */}
+        <div className="flex items-center justify-between px-4 h-9 bg-[var(--bg-title)] border-b border-[var(--border)] shrink-0">
+          <div className="flex items-center gap-3">
+            <Link href="/" className="flex items-center gap-1.5 text-xs text-[var(--text-secondary)] hover:text-[var(--text-highlight)] transition-colors">
+              <ArrowLeft className="w-3 h-3" />
+              Back
+            </Link>
+            <span className="w-px h-4 bg-[var(--border)]" />
+            <span className="text-xs font-medium text-[var(--text-primary)]">HTML Compiler — VS Code Edition</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <button onClick={formatCode} className="px-2 py-0.5 rounded text-[11px] text-[var(--text-secondary)] hover:text-[var(--text-highlight)] hover:bg-[var(--bg-hover)] transition-colors flex items-center gap-1">
+              <Save className="w-3 h-3" /> Format
+            </button>
+            <button onClick={downloadFile} className="px-2 py-0.5 rounded text-[11px] text-[var(--text-secondary)] hover:text-[var(--text-highlight)] hover:bg-[var(--bg-hover)] transition-colors flex items-center gap-1">
+              <Download className="w-3 h-3" /> File
+            </button>
+            <button onClick={downloadZip} className="px-2 py-0.5 rounded text-[11px] text-[var(--text-secondary)] hover:text-[var(--text-highlight)] hover:bg-[var(--bg-hover)] transition-colors flex items-center gap-1">
+              <FileCode className="w-3 h-3" /> ZIP
+            </button>
           </div>
         </div>
-        <div className="flex gap-3">
-          <button
-            onClick={resetCode}
-            className="flex items-center gap-2 px-6 py-3 rounded-[8px] bg-[var(--bg-card)] border border-[var(--border)] text-xs font-black uppercase tracking-widest text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] transition-all active:scale-95"
-          >
-            <RefreshCcw className="w-3.5 h-3.5" />
-            Reset
-          </button>
-          <button
-            onClick={handleCopy}
-            className={cn(
-              "flex items-center gap-2 px-6 py-3 rounded-[8px] text-sm font-medium transition-all active:scale-95 shadow-2xl",
-              copied ? "bg-emerald-500 text-white" : "bg-[var(--text-primary)] text-[var(--bg)] hover:opacity-80"
-            )}
-          >
-            {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-            {copied ? 'Copied' : 'Export Bundle'}
-          </button>
-        </div>
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Editor Section */}
-        <div className="lg:col-span-6 space-y-6">
-          <div className="rounded-[12px] bg-[var(--bg)] border border-[var(--border)] overflow-hidden shadow-2xl flex flex-col h-[650px]">
-            {/* Tabs */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between bg-[var(--bg)] border-b border-[var(--border)]">
-              <div className="flex overflow-x-auto no-scrollbar border-b sm:border-b-0 border-[var(--border)] px-4 sm:px-8 py-4 gap-6 flex-shrink-0">
-                <button
-                  onClick={() => setActiveTab("html")}
-                  className={cn(
-                    "flex items-center gap-2 text-sm font-medium transition-all whitespace-nowrap",
-                    activeTab === "html" ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-                  )}
-                >
-                  <FileCode className="w-3.5 h-3.5" />
-                  <span className="hidden xs:inline">HTML5</span>
-                </button>
-                <button
-                  onClick={() => setActiveTab("css")}
-                  className={cn(
-                    "flex items-center gap-2 text-sm font-medium transition-all whitespace-nowrap",
-                    activeTab === "css" ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-                  )}
-                >
-                  <Layers className="w-3.5 h-3.5" />
-                  <span className="hidden xs:inline">CSS</span>
-                </button>
-                <button
-                  onClick={() => setActiveTab("js")}
-                  className={cn(
-                    "flex items-center gap-2 text-sm font-medium transition-all whitespace-nowrap",
-                    activeTab === "js" ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-                  )}
-                >
-                  <Zap className="w-3.5 h-3.5" />
-                  <span className="hidden xs:inline">JS Core</span>
+        {/* ─── Main Area ─── */}
+        <div className="flex-1 flex min-h-0">
+          {/* Activity Bar */}
+          <div className="w-12 flex flex-col items-center py-2 gap-2 bg-[var(--bg-activity)] border-r border-[var(--border-light)] shrink-0 z-10">
+            {ACTIVITY_ITEMS.map(({ tab, icon, label }) => (
+              <button
+                key={tab}
+                onClick={() => { setSidebarTab(tab); if (sidebarTab === tab && showSidebar) setShowSidebar(false); else { setSidebarTab(tab); setShowSidebar(true); } }}
+                className={cn(
+                  "w-10 h-10 flex items-center justify-center rounded transition-colors relative",
+                  sidebarTab === tab && showSidebar ? "text-[var(--text-highlight)] before:absolute before:left-0 before:w-0.5 before:h-6 before:bg-[var(--text-highlight)] before:rounded-r" : "text-[var(--text-secondary)] hover:text-[var(--text-highlight)]"
+                )}
+                title={label}
+              >
+                {icon}
+              </button>
+            ))}
+            <div className="flex-1" />
+            <button
+              onClick={toggleTheme}
+              className="w-10 h-10 flex items-center justify-center rounded text-[var(--text-secondary)] hover:text-[var(--text-highlight)] transition-colors"
+              title={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
+            >
+              {theme === "dark" ? <Eye className="w-4 h-4" /> : <Monitor className="w-4 h-4" />}
+            </button>
+          </div>
+
+          {/* Sidebar */}
+          {showSidebar && (
+            <div className="w-60 flex flex-col bg-[var(--bg-secondary)] border-r border-[var(--border)] shrink-0 z-10">
+              <div className="flex items-center justify-between px-4 h-9 border-b border-[var(--border)]">
+                <span className="text-[11px] font-medium uppercase tracking-wider text-[var(--text-secondary)]">
+                  {sidebarTab === "files" ? "Explorer" : sidebarTab === "search" ? "Search" : "Settings"}
+                </span>
+                <button onClick={() => setShowSidebar(false)} className="text-[var(--text-secondary)] hover:text-[var(--text-highlight)] transition-colors">
+                  <X className="w-3.5 h-3.5" />
                 </button>
               </div>
-              
-              <div className="flex items-center gap-2 px-4 sm:px-8 py-3 sm:py-0 overflow-x-auto no-scrollbar">
-                <button
-                  onClick={() => setAutoCompleteEnabled(!autoCompleteEnabled)}
-                  className={cn(
-                    "flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-medium transition-all whitespace-nowrap",
-                    autoCompleteEnabled ? "bg-emerald-500/10 text-[var(--text-primary)]" : "bg-[var(--bg-card)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-                  )}
-                  title={autoCompleteEnabled ? "Autocompletion Active" : "Autocompletion Disabled"}
-                >
-                  {autoCompleteEnabled ? <Settings className="w-3 h-3 animate-spin-slow" /> : <ZapOff className="w-3 h-3" />}
-                  <span className="hidden lg:inline">Suggest</span>
-                </button>
-                <button
-                  onClick={formatCode}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[var(--bg-card)] text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-all whitespace-nowrap"
-                >
-                  <Palette className="w-3 h-3 text-[var(--text-primary)]" />
-                  <span className="hidden lg:inline">Format</span>
-                </button>
-                <div className="relative">
-                  <button
-                    onClick={() => setShowSnippets(!showSnippets)}
-                    className={cn(
-                      "flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-medium transition-all whitespace-nowrap",
-                      showSnippets ? "bg-[var(--text-primary)] text-[var(--bg)]" : "bg-[var(--bg-card)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-                    )}
-                  >
-                    <Layout className="w-3 h-3" />
-                    <span className="hidden lg:inline">Snippets</span>
-                  </button>
-                  {/* ... snippets menu ... */}
 
-                    {showSnippets && (
-                      <>
-                        <div 
-                          className="fixed inset-0 z-40" 
-                          onClick={() => setShowSnippets(false)} 
-                        />
-                        <div className="absolute right-0 mt-2 w-56 bg-[#0f172a] border border-[var(--border)] rounded-[8px] shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-                          <div className="px-4 py-3 border-b border-[var(--border)] bg-[var(--bg)]">
-                            <span className="text-xs font-medium tracking-[0.2em] text-[var(--text-secondary)]">Design Patterns</span>
-                          </div>
-                          <div className="p-2 space-y-1">
-                            {SNIPPETS.map((snippet) => (
-                              <button
-                                key={snippet.id}
-                                onClick={() => loadSnippet(snippet)}
-                                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[var(--bg-card)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all text-left group"
-                              >
-                                <div className="w-8 h-8 rounded-lg bg-[var(--bg-card)] flex items-center justify-center text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] group-hover:bg-[var(--bg-hover)] transition-all">
-                                  {snippet.icon}
-                                </div>
-                                <span className="text-[10px] font-bold uppercase tracking-wide">{snippet.name}</span>
-                              </button>
-                            ))}
-                          </div>
+              {/* ─── Files Tab ─── */}
+              {sidebarTab === "files" && (
+                <div className="flex-1 overflow-y-auto py-1 text-sm">
+                  <div className="flex items-center justify-between px-4 py-1.5 text-[11px] font-medium text-[var(--text-secondary)] uppercase tracking-wider">
+                    <span>Workspace</span>
+                    <button
+                      onClick={() => { setShowNewFile(true); setTimeout(() => newFileInputRef.current?.focus(), 50); }}
+                      className="p-0.5 rounded hover:bg-[var(--bg-hover)] transition-colors"
+                      title="New File"
+                    >
+                      <FilePlus className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                  {files.map((file, idx) => (
+                    <div key={file.id}>
+                      {renamingFileId === file.id ? (
+                        <div className="flex items-center gap-1 px-4 py-0.5">
+                          {getFileIcon(file.name, "w-4 h-4 shrink-0")}
+                          <input
+                            ref={renameInputRef}
+                            type="text"
+                            value={renameValue}
+                            onChange={e => setRenameValue(e.target.value)}
+                            onKeyDown={e => {
+                              if (e.key === "Enter") commitRename();
+                              if (e.key === "Escape") setRenamingFileId(null);
+                            }}
+                            className="flex-1 bg-[var(--input-bg)] text-[var(--input-text)] text-[13px] px-1.5 py-0.5 rounded border border-[var(--border)] outline-none"
+                            style={{ background: "var(--input-bg)", color: "var(--input-text)" }}
+                            autoFocus
+                          />
+                          <button onClick={commitRename} className="text-[var(--text-secondary)] hover:text-[var(--text-highlight)]">
+                            <Check className="w-3 h-3" />
+                          </button>
                         </div>
-                      </>
-                    )}
-                  </div>
-                  <button
-                    onClick={() => {
-                      if (activeTab === "html") setHtml("");
-                      else if (activeTab === "css") setCss("");
-                      else setJs("");
-                    }}
-                    className="p-1.5 rounded-lg bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-[var(--text-primary)] transition-all ml-2"
-                    title="Clear Current Editor"
-                  >
-                    <RefreshCcw className="w-3 h-3" />
-                  </button>
-                </div>
-            </div>
-
-            {/* Code Areas */}
-            <div className="flex-1 relative overflow-hidden">
-              <div className="absolute inset-0 custom-scrollbar overflow-y-auto">
-                {activeTab === "html" && (
-                  <CodeMirror
-                    value={html}
-                    height="100%"
-                    theme={oneDark}
-                    extensions={[
-                      htmlLang(),
-                      ...(autoCompleteEnabled ? [autocompletion()] : [])
-                    ]}
-                    onChange={(value) => setHtml(value)}
-                    className="text-[12px] h-full"
-                    basicSetup={{
-                      lineNumbers: true,
-                      foldGutter: true,
-                      highlightActiveLine: true,
-                    }}
-                  />
-                )}
-                {activeTab === "css" && (
-                  <CodeMirror
-                    value={css}
-                    height="100%"
-                    theme={oneDark}
-                    extensions={[
-                      cssLang(),
-                      ...(autoCompleteEnabled ? [autocompletion()] : [])
-                    ]}
-                    onChange={(value) => setCss(value)}
-                    className="text-[12px] h-full"
-                    basicSetup={{
-                      lineNumbers: true,
-                      foldGutter: true,
-                      highlightActiveLine: true,
-                    }}
-                  />
-                )}
-                {activeTab === "js" && (
-                  <CodeMirror
-                    value={js}
-                    height="100%"
-                    theme={oneDark}
-                    extensions={[
-                      jsLang(),
-                      ...(autoCompleteEnabled ? [autocompletion()] : [])
-                    ]}
-                    onChange={(value) => setJs(value)}
-                    className="text-[12px] h-full"
-                    basicSetup={{
-                      lineNumbers: true,
-                      foldGutter: true,
-                      highlightActiveLine: true,
-                    }}
-                  />
-                )}
-              </div>
-            </div>
-
-            {/* Stats Footer */}
-            <div className="px-8 py-3 bg-white/[0.01] border-t border-[var(--border)] flex items-center justify-between text-[9px] font-bold text-[var(--text-tertiary)] uppercase tracking-widest">
-              <div className="flex items-center gap-4">
-                <span>UTF-8</span>
-                <span>Ready</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Terminal className="w-3 h-3" />
-                Live Sync Active
-              </div>
-            </div>
-          </div>
-
-          <div className="p-6 rounded-[12px] bg-[var(--bg-card)] border border-[var(--border)] flex items-start gap-4">
-            <div className="w-10 h-10 rounded-xl bg-[var(--bg-card)] flex items-center justify-center text-[var(--text-primary)] flex-shrink-0">
-              <Cpu className="w-5 h-5" />
-            </div>
-            <div className="space-y-1">
-              <h4 className="text-sm font-medium text-white">Edge Rendering</h4>
-              <p className="text-[10px] text-[var(--text-secondary)] font-medium leading-relaxed">
-                Low-latency execution environment optimized for modern web standards and rapid UI iteration.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Preview Section */}
-        <div className="lg:col-span-6 space-y-6">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-[8px] bg-[var(--bg-card)] flex items-center justify-center text-[var(--text-primary)] ">
-                  <Eye className="w-5 h-5" />
-                </div>
-                <div className="space-y-1">
-                  <h4 className="text-sm font-black uppercase tracking-widest text-white">Simulation Lab</h4>
-                  <div className="flex items-center gap-3">
-                    <p className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-widest">High-Fidelity Preview</p>
-                    {executionTime !== null && (
-                      <span className="text-xs font-medium text-[var(--text-primary)] uppercase tracking-tighter bg-[var(--bg-card)] px-2 py-0.5 rounded-full">
-                        Sync: {executionTime}ms
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="flex p-1 rounded-xl bg-[var(--bg-card)] border border-[var(--border)]">
-                  <button onClick={() => setViewport("wide")} className={cn("p-2 rounded-lg transition-all", viewport === "wide" ? "bg-[var(--bg-hover)] text-white" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]")} title="Ultra Wide (1440px)"><Box className="w-4 h-4" /></button>
-                  <button onClick={() => setViewport("desktop")} className={cn("p-2 rounded-lg transition-all", viewport === "desktop" ? "bg-[var(--bg-hover)] text-white" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]")} title="Desktop (100%)"><Monitor className="w-4 h-4" /></button>
-                  <button onClick={() => setViewport("tablet")} className={cn("p-2 rounded-lg transition-all", viewport === "tablet" ? "bg-[var(--bg-hover)] text-white" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]")} title="Tablet (450px)"><Tablet className="w-4 h-4" /></button>
-                  <button onClick={() => setViewport("mobile")} className={cn("p-2 rounded-lg transition-all", viewport === "mobile" ? "bg-[var(--bg-hover)] text-white" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]")} title="Mobile (320px)"><Smartphone className="w-4 h-4" /></button>
-                </div>
-                <button 
-                  onClick={() => setIsFullscreen(true)}
-                  className="p-3 rounded-[8px] bg-[var(--bg-card)] border border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--text-primary)] hover:text-[var(--text-primary)] transition-all shadow-xl"
-                  title="Fullscreen Preview"
-                >
-                  <Maximize2 className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-
-            <div className="h-[450px] rounded-[12px] bg-[var(--bg)] border border-[var(--border)] shadow-2xl relative overflow-hidden flex items-center justify-center transition-all group">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--color-brand-primary)_0%,_transparent_70%)] opacity-[0.03] pointer-events-none" />
-
-              <div className={cn(
-                "relative z-10 h-full transition-all duration-500 bg-white shadow-2xl overflow-hidden flex flex-col",
-                viewport === "wide" ? "w-[120%] scale-90" : viewport === "desktop" ? "w-full" : viewport === "tablet" ? "w-[450px] h-[400px] rounded-[12px]" : "w-[320px] h-[380px] rounded-[12px]"
-              )}>
-                {/* Browser Frame */}
-                <div className="flex items-center gap-3 px-4 py-3 bg-slate-100 border-b border-slate-200">
-                  <div className="flex gap-1.5">
-                    <div className="w-2.5 h-2.5 rounded-full bg-rose-400" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
-                  </div>
-                  <div className="flex-1 bg-white rounded-lg h-6 flex items-center px-3 gap-2 border border-slate-200 group/url cursor-pointer hover:border-[var(--border-hover)] transition-all" onClick={openPreview}>
-                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-[9px] font-bold text-[var(--text-secondary)] uppercase tracking-tight group-hover/url:text-[var(--text-primary)] transition-colors">localhost:3000/preview</span>
-                    <Maximize2 className="w-2.5 h-2.5 ml-auto text-[var(--text-primary)] group-hover/url:text-[var(--text-primary)] transition-colors" />
-                  </div>
-                  <div className="flex gap-2">
-                    <div className="w-4 h-4 rounded bg-slate-200" />
-                  </div>
-                </div>
-
-                  <iframe
-                    ref={iframeRef}
-                    srcDoc={srcDoc}
-                    title="Compiler Preview"
-                    className="flex-1 w-full border-none"
-                    sandbox="allow-scripts"
-                  />
-
-                  {/* Loading Overlay */}
-                  {isCompiling && (
-                    <div className="absolute inset-0 bg-white/60 backdrop-blur-sm z-20 flex flex-col items-center justify-center animate-in fade-in duration-300">
-                      <div className="relative">
-                        <div className="w-12 h-12 rounded-full border-2 border-[var(--border)] border-t-brand-primary animate-spin" />
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <Cpu className="w-4 h-4 text-[var(--text-primary)] animate-pulse" />
-                        </div>
-                      </div>
-                      <div className="mt-4 flex flex-col items-center">
-                        <span className="text-xs font-medium text-[var(--text-primary)] animate-pulse">Rendering Engine...</span>
-                        <span className="text-[8px] font-bold text-[var(--text-secondary)] uppercase mt-1">Estimating Latency</span>
-                      </div>
+                      ) : (
+                        <button
+                          onClick={() => switchFile(file.id)}
+                          onContextMenu={e => handleContextMenu(e, file.id)}
+                          className={cn(
+                            "w-full flex items-center gap-2 px-4 py-1 text-[13px] transition-colors",
+                            activeFileId === file.id ? "bg-[var(--bg-active)] text-[var(--text-highlight)]" : "text-[var(--text-secondary)] hover:text-[var(--text-highlight)] hover:bg-[var(--bg-hover)]"
+                          )}
+                        >
+                          {getFileIcon(file.name)}
+                          <span className="truncate">{file.name}</span>
+                          {isDirty(file) && <span className="w-1.5 h-1.5 rounded-full bg-[var(--text-highlight)] shrink-0 ml-auto" />}
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                  {showNewFile && (
+                    <div className="flex items-center gap-1 px-4 py-0.5">
+                      <File className="w-4 h-4 text-[var(--text-secondary)] shrink-0" />
+                      <input
+                        ref={newFileInputRef}
+                        type="text"
+                        value={newFileName}
+                        onChange={e => setNewFileName(e.target.value)}
+                        onKeyDown={e => {
+                          if (e.key === "Enter") createFile(newFileName);
+                          if (e.key === "Escape") { setShowNewFile(false); setNewFileName(""); }
+                        }}
+                        placeholder="filename.ext"
+                        className="flex-1 bg-[var(--input-bg)] text-[var(--input-text)] text-[13px] px-1.5 py-0.5 rounded border border-[var(--border)] outline-none placeholder:text-[var(--input-placeholder)]"
+                        style={{ background: "var(--input-bg)", color: "var(--input-text)" }}
+                        autoFocus
+                      />
+                      <button onClick={() => { setShowNewFile(false); setNewFileName(""); }} className="text-[var(--text-secondary)] hover:text-[var(--text-highlight)]">
+                        <X className="w-3 h-3" />
+                      </button>
                     </div>
                   )}
+
+                </div>
+              )}
+
+              {/* ─── Search Tab ─── */}
+              {sidebarTab === "search" && (
+                <SearchSidebar
+                  files={files}
+                  activeFileId={activeFileId}
+                  onSwitchFile={switchFile}
+                />
+              )}
+
+              {/* ─── Settings Tab ─── */}
+              {sidebarTab === "settings" && (
+                <div className="flex-1 p-4 space-y-4 text-xs overflow-y-auto">
+                  <SettingRow label="Font Size">
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="range"
+                        min="10"
+                        max="24"
+                        value={settings.fontSize}
+                        onChange={e => updateSetting("fontSize", parseInt(e.target.value))}
+                        className="w-20 accent-[var(--text-highlight)]"
+                      />
+                      <span className="text-[var(--text-secondary)] w-6 text-center">{settings.fontSize}</span>
+                    </div>
+                  </SettingRow>
+                  <SettingRow label="Tab Size">
+                    <select
+                      value={settings.tabSize}
+                      onChange={e => updateSetting("tabSize", parseInt(e.target.value))}
+                      className="bg-[var(--input-bg)] text-[var(--input-text)] text-xs px-2 py-1 rounded border border-[var(--border)] outline-none"
+                      style={{ background: "var(--input-bg)", color: "var(--input-text)" }}
+                    >
+                      <option value={2}>2</option>
+                      <option value={4}>4</option>
+                      <option value={8}>8</option>
+                    </select>
+                  </SettingRow>
+                  <SettingRow label="Word Wrap">
+                    <select
+                      value={settings.wordWrap}
+                      onChange={e => updateSetting("wordWrap", e.target.value as "on" | "off")}
+                      className="bg-[var(--input-bg)] text-[var(--input-text)] text-xs px-2 py-1 rounded border border-[var(--border)] outline-none"
+                      style={{ background: "var(--input-bg)", color: "var(--input-text)" }}
+                    >
+                      <option value="on">On</option>
+                      <option value="off">Off</option>
+                    </select>
+                  </SettingRow>
+                  <SettingRow label="Minimap">
+                    <input
+                      type="checkbox"
+                      checked={settings.minimap}
+                      onChange={e => updateSetting("minimap", e.target.checked)}
+                      className="accent-[var(--text-highlight)]"
+                    />
+                  </SettingRow>
+                  <SettingRow label="Format on Save">
+                    <input
+                      type="checkbox"
+                      checked={settings.formatOnSave}
+                      onChange={e => updateSetting("formatOnSave", e.target.checked)}
+                      className="accent-[var(--text-highlight)]"
+                    />
+                  </SettingRow>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Editor + Preview */}
+          <div className="flex-1 flex min-h-0">
+            {/* Editor Panel */}
+            <div className={cn("flex flex-col min-h-0", "flex-1")}>
+              {/* Tab Bar */}
+              <div className="flex items-center bg-[var(--bg-secondary)] border-b border-[var(--border)] shrink-0 overflow-x-auto">
+                {openFiles.map((file) => (
+                  <div
+                    key={file.id}
+                    className={cn(
+                      "flex items-center gap-2 px-3 py-2 text-[13px] border-r border-[var(--border)] transition-colors cursor-pointer relative group",
+                      activeFileId === file.id
+                        ? "bg-[var(--tab-active-bg)] text-[var(--text-highlight)]"
+                        : "bg-[var(--tab-inactive-bg)] text-[var(--text-secondary)] hover:text-[var(--text-highlight)]"
+                    )}
+                    onClick={() => switchFile(file.id)}
+                    onContextMenu={e => handleContextMenu(e, file.id)}
+                  >
+                    {getFileIcon(file.name, "w-3.5 h-3.5")}
+                    <span className="truncate max-w-[120px]">{file.name}</span>
+                    {isDirty(file) && (
+                      <span className="w-2 h-2 rounded-full bg-[var(--text-highlight)] shrink-0" />
+                    )}
+                    {files.length > 1 && (
+                      <button
+                        onClick={(e) => { e.stopPropagation(); deleteFileById(file.id); }}
+                        className="opacity-0 group-hover:opacity-100 transition-opacity text-[var(--text-secondary)] hover:text-[var(--text-highlight)] ml-0.5"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    )}
+                  </div>
+                ))}
+                <div className="flex-1 bg-[var(--bg-secondary)]" />
+              </div>
+
+              {/* Monaco Editor */}
+              <div className="flex-1 min-h-0">
+                <MonacoEditor
+                  key={theme}
+                  height="100%"
+                  language={activeFile?.language || "html"}
+                  theme={theme === "dark" ? "compiler-dark" : "compiler-light"}
+                  value={activeFile?.content || ""}
+                  onChange={(val) => {
+                    if (activeFile && val !== undefined) {
+                      updateFileContent(activeFile.id, val);
+                    }
+                  }}
+                  onMount={handleEditorMount}
+                  options={editorOptions}
+                  loading={
+                    <div className="h-full flex items-center justify-center text-[var(--text-secondary)] text-xs gap-2">
+                      <Cpu className="w-4 h-4 animate-pulse" />
+                      Loading editor...
+                    </div>
+                  }
+                />
               </div>
             </div>
 
-            {/* Production Console */}
-            <div className="rounded-[12px] bg-[var(--bg)] border border-[var(--border)] overflow-hidden shadow-2xl flex flex-col h-[180px]">
-              <div className="flex items-center justify-between px-6 py-3 bg-[var(--bg)] border-b border-[var(--border)]">
-                <div className="flex items-center gap-2">
-                  <Terminal className="w-3.5 h-3.5 text-[var(--text-primary)]" />
-                  <span className="text-sm font-medium text-[var(--text-primary)]">Production Console</span>
+            {/* Preview Panel */}
+            <div className="w-[45%] min-w-[320px] flex flex-col border-l border-[var(--border)] bg-[var(--preview-bg)]">
+              {/* Preview Toolbar */}
+              <div className="flex items-center justify-between px-3 h-9 bg-[var(--bg-tertiary)] border-b border-[var(--border)] shrink-0">
+                <div className="flex items-center gap-1.5">
+                  <Eye className="w-3.5 h-3.5 text-[var(--text-secondary)]" />
+                  <span className="text-xs text-[var(--text-secondary)] font-medium">Preview</span>
+                  {executionTime !== null && (
+                    <span className="text-[10px] text-[var(--text-secondary)] ml-2 opacity-60">{executionTime}ms</span>
+                  )}
                 </div>
+                <div className="flex items-center gap-1">
+                  <button onClick={() => setViewport("wide")} className={cn("p-1 rounded text-[var(--text-secondary)] hover:text-[var(--text-highlight)] hover:bg-[var(--bg-hover)] transition-colors", viewport === "wide" && "text-[var(--text-highlight)] bg-[var(--bg-hover)]")} title="Wide"><Monitor className="w-3.5 h-3.5" /></button>
+                  <button onClick={() => setViewport("desktop")} className={cn("p-1 rounded text-[var(--text-secondary)] hover:text-[var(--text-highlight)] hover:bg-[var(--bg-hover)] transition-colors", viewport === "desktop" && "text-[var(--text-highlight)] bg-[var(--bg-hover)]")} title="Desktop"><Monitor className="w-3.5 h-3.5" /></button>
+                  <button onClick={() => setViewport("tablet")} className={cn("p-1 rounded text-[var(--text-secondary)] hover:text-[var(--text-highlight)] hover:bg-[var(--bg-hover)] transition-colors", viewport === "tablet" && "text-[var(--text-highlight)] bg-[var(--bg-hover)]")} title="Tablet"><Tablet className="w-3.5 h-3.5" /></button>
+                  <button onClick={() => setViewport("mobile")} className={cn("p-1 rounded text-[var(--text-secondary)] hover:text-[var(--text-highlight)] hover:bg-[var(--bg-hover)] transition-colors", viewport === "mobile" && "text-[var(--text-highlight)] bg-[var(--bg-hover)]")} title="Mobile"><Smartphone className="w-3.5 h-3.5" /></button>
+                  <span className="w-px h-4 bg-[var(--border)] mx-1" />
+                  <button onClick={openPreview} className="p-1 rounded text-[var(--text-secondary)] hover:text-[var(--text-highlight)] hover:bg-[var(--bg-hover)] transition-colors" title="Open in new tab"><Maximize2 className="w-3.5 h-3.5" /></button>
+                </div>
+              </div>
+
+              {/* Iframe */}
+              <div className="flex-1 flex items-center justify-center bg-[var(--preview-bg)] p-4 min-h-0 relative overflow-hidden">
+                <div className={cn("h-full flex flex-col overflow-hidden shadow-lg", VIEWPORT_WIDTHS[viewport])}>
+                  <div className="flex items-center gap-2 px-3 py-2 bg-[#f5f5f5] border-b border-[#e0e0e0] shrink-0 rounded-t">
+                    <div className="flex gap-1.5">
+                      <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
+                    </div>
+                    <div className="flex-1 flex items-center justify-center">
+                      <div className="bg-white rounded h-5 flex items-center px-3 border border-[#e0e0e0] text-[9px] text-[#888] truncate max-w-[200px]">
+                        localhost/preview
+                      </div>
+                    </div>
+                  </div>
+                  <iframe
+                    ref={iframeRef}
+                    title="Preview"
+                    className="flex-1 w-full border-none bg-white"
+                    sandbox="allow-scripts"
+                  />
+                </div>
+                {isCompiling && (
+                  <div className="absolute inset-0 bg-[var(--overlay-bg)] flex items-center justify-center z-10">
+                    <div className="flex items-center gap-2 text-xs text-[var(--text-secondary)]">
+                      <Cpu className="w-4 h-4 animate-pulse" />
+                      Compiling...
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ─── Status Bar ─── */}
+        <div className="flex items-center justify-between px-4 h-5 bg-[var(--status-bar)] text-[var(--status-bar-text)] text-[11px] shrink-0 z-10" style={{ color: theme === "dark" ? "#000" : "#fff" }}>
+          <div className="flex items-center gap-4">
+            <span>Ln {cursorPos.line}, Col {cursorPos.column}</span>
+            <span className="w-px h-3" style={{ backgroundColor: theme === "dark" ? "rgba(0,0,0,0.25)" : "rgba(255,255,255,0.25)" }} />
+            <span>UTF-8</span>
+            <span className="w-px h-3" style={{ backgroundColor: theme === "dark" ? "rgba(0,0,0,0.25)" : "rgba(255,255,255,0.25)" }} />
+            <span>{activeFile?.language || ""}</span>
+            <span className="w-px h-3" style={{ backgroundColor: theme === "dark" ? "rgba(0,0,0,0.25)" : "rgba(255,255,255,0.25)" }} />
+            <span className="flex items-center gap-1">
+              <span className={cn("w-1.5 h-1.5 rounded-full", isCompiling ? "bg-[#ff0] animate-pulse" : "")} style={{ backgroundColor: theme === "dark" ? "#000" : "#fff" }} />
+              {isCompiling ? "Compiling..." : activeFile && isDirty(activeFile) ? "Unsaved" : "Ready"}
+            </span>
+          </div>
+          <div className="flex items-center gap-3">
+            {executionTime !== null && <span>Compiled: {executionTime}ms</span>}
+            <button
+              onClick={() => setShowConsole(prev => !prev)}
+              className="flex items-center gap-1 hover:opacity-70 px-1.5 py-0.5 rounded transition-opacity"
+              style={{ color: theme === "dark" ? "#000" : "#fff" }}
+            >
+              <Terminal className="w-3 h-3" />
+              Console
+              {logs.length > 0 && (
+                <span className="text-[10px] px-1 rounded" style={{ backgroundColor: theme === "dark" ? "rgba(0,0,0,0.2)" : "rgba(255,255,255,0.3)" }}>{logs.length}</span>
+              )}
+              {showConsole ? <ChevronDown className="w-3 h-3" /> : <ChevronUp className="w-3 h-3" />}
+            </button>
+            <button
+              onClick={() => setBottomTab("problems")}
+              className="flex items-center gap-1 hover:opacity-70 px-1.5 py-0.5 rounded transition-opacity"
+              style={{ color: theme === "dark" ? "#000" : "#fff", backgroundColor: bottomTab === "problems" ? (theme === "dark" ? "rgba(0,0,0,0.15)" : "rgba(255,255,255,0.2)") : "transparent" }}
+            >
+              <AlertCircle className="w-3 h-3" />
+              Problems
+              {problems.length > 0 && (
+                <span className="text-[10px] px-1 rounded" style={{ backgroundColor: theme === "dark" ? "rgba(0,0,0,0.2)" : "rgba(255,255,255,0.3)" }}>{problems.length}</span>
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* ─── Bottom Panel ─── */}
+        {showConsole && (
+          <div className="h-44 flex flex-col bg-[var(--bg-secondary)] border-t border-[var(--border)] shrink-0 z-10">
+            {/* Bottom Tab Bar */}
+            <div className="flex items-center justify-between px-4 h-8 bg-[var(--console-toolbar)] border-b border-[var(--border)] shrink-0">
+              <div className="flex items-center gap-1">
                 <button
-                  onClick={() => setLogs([])}
-                  className="text-[9px] font-bold text-[var(--text-secondary)] hover:text-[var(--text-primary)] uppercase tracking-widest transition-colors"
+                  onClick={() => setBottomTab("console")}
+                  className={cn("px-3 py-1 text-[11px] font-medium rounded-t transition-colors", bottomTab === "console" ? "text-[var(--text-highlight)] bg-[var(--bg-primary)]" : "text-[var(--text-secondary)] hover:text-[var(--text-highlight)]")}
                 >
-                  Clear
+                  <Terminal className="w-3 h-3 inline mr-1" />
+                  Console
+                </button>
+                <button
+                  onClick={() => setBottomTab("problems")}
+                  className={cn("px-3 py-1 text-[11px] font-medium rounded-t transition-colors", bottomTab === "problems" ? "text-[var(--text-highlight)] bg-[var(--bg-primary)]" : "text-[var(--text-secondary)] hover:text-[var(--text-highlight)]")}
+                >
+                  <AlertCircle className="w-3 h-3 inline mr-1" />
+                  Problems
+                  {problems.length > 0 && <span className="ml-1 text-[10px] opacity-60">({problems.length})</span>}
                 </button>
               </div>
-              <div className="flex-1 overflow-y-auto p-4 font-mono text-[10px] space-y-1.5 custom-scrollbar bg-[var(--bg)]">
-                {logs.length === 0 ? (
-                  <div className="h-full flex items-center justify-center text-[var(--text-tertiary)] italic">
-                    No logs recorded.
+              <button onClick={() => setShowConsole(false)} className="text-[var(--text-secondary)] hover:text-[var(--text-highlight)] transition-colors">
+                <X className="w-3 h-3" />
+              </button>
+            </div>
+
+            {/* Console Panel */}
+            {bottomTab === "console" && (
+              <>
+                <div className="flex items-center gap-2 px-4 py-1 bg-[var(--console-toolbar)] border-b border-[var(--border)] shrink-0">
+                  <div className="flex items-center gap-1">
+                    {(["all", "log", "warn", "error"] as const).map((f) => (
+                      <button
+                        key={f}
+                        onClick={() => setLogFilter(f)}
+                        className={cn(
+                          "px-2 py-0.5 rounded text-[10px] uppercase transition-colors",
+                          logFilter === f ? "bg-[var(--status-bar)] text-white" : "text-[var(--text-secondary)] hover:text-[var(--text-highlight)] hover:bg-[var(--bg-hover)]"
+                        )}
+                      >
+                        {f === "all" ? "All" : f}
+                        {f !== "all" && (
+                          <span className="ml-1 opacity-60">{logs.filter(l => l.type === f).length}</span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="flex-1" />
+                  <button onClick={clearConsole} className="text-[10px] text-[var(--text-secondary)] hover:text-[var(--text-highlight)] transition-colors flex items-center gap-1">
+                    <Trash2 className="w-3 h-3" /> Clear
+                  </button>
+                </div>
+                <div ref={consoleRef} className="flex-1 overflow-y-auto p-3 font-mono text-[12px] leading-relaxed space-y-1 bg-[var(--console-bg)]">
+                  {filteredLogs.length === 0 ? (
+                    <div className="h-full flex items-center justify-center text-[var(--text-secondary)] italic opacity-50">
+                      No {logFilter !== "all" ? logFilter : ""} messages
+                    </div>
+                  ) : (
+                    filteredLogs.map((log, i) => (
+                      <div key={i} className="flex gap-2">
+                        <span className="text-[var(--text-secondary)] shrink-0 opacity-50">[{log.timestamp}]</span>
+                        <span className={cn(
+                          "break-all",
+                          log.type === "error" ? "text-[var(--problems-error)]" : log.type === "warn" ? "text-[var(--problems-warning)]" : "text-[var(--console-log)]"
+                        )}>
+                          <span className="mr-1">{log.type === "error" ? "✖" : log.type === "warn" ? "⚠" : "›"}</span>
+                          {log.message}
+                        </span>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </>
+            )}
+
+            {/* Problems Panel */}
+            {bottomTab === "problems" && (
+              <div className="flex-1 overflow-y-auto p-3 font-mono text-[12px] leading-relaxed space-y-1 bg-[var(--console-bg)]">
+                {problems.length === 0 ? (
+                  <div className="h-full flex items-center justify-center text-[var(--text-secondary)] italic opacity-50">
+                    No problems detected
                   </div>
                 ) : (
-                  logs.map((log, index) => (
-                    <div key={index} className="flex gap-3 animate-in slide-in-from-left-2 duration-300">
-                      <span className="text-[var(--text-tertiary)] flex-shrink-0">[{log.timestamp}]</span>
+                  problems.map((p, i) => (
+                    <div key={i} className="flex gap-2 items-start">
                       <span className={cn(
-                        "break-all",
-                        log.type === "error" ? "text-rose-400" : log.type === "warn" ? "text-amber-400" : "text-indigo-200"
+                        "shrink-0 mt-0.5",
+                        p.severity === "error" ? "text-[var(--problems-error)]" : p.severity === "warning" ? "text-[var(--problems-warning)]" : "text-[var(--text-secondary)]"
                       )}>
-                        <span className="opacity-50 mr-1.5">{log.type === "error" ? "✖" : log.type === "warn" ? "⚠" : "›"}</span>
-                        {log.message}
+                        {p.severity === "error" ? "✖" : p.severity === "warning" ? "⚠" : "ℹ"}
+                      </span>
+                      <span className="text-[var(--text-secondary)] shrink-0">
+                        {p.fileId === activeFileId ? "" : files.find(f => f.id === p.fileId)?.name}:{p.line}:{p.column}
+                      </span>
+                      <span className={cn(
+                        p.severity === "error" ? "text-[var(--problems-error)]" : p.severity === "warning" ? "text-[var(--problems-warning)]" : "text-[var(--console-log)]"
+                      )}>
+                        {p.message}
                       </span>
                     </div>
                   ))
                 )}
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Fullscreen Preview Modal */}
-      {isFullscreen && (
-        <div className=" mt-10 fixed inset-0 z-[100] bg-[var(--bg)] p-8 md:p-16 flex flex-col animate-in fade-in duration-300">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--color-brand-primary)_0%,_transparent_40%)] opacity-20 pointer-events-none" />
-          
-          <div className="flex items-center justify-between mb-8 relative z-10">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-[8px] bg-[var(--bg-card)] flex items-center justify-center text-[var(--text-primary)]">
-                <Maximize2 className="w-6 h-6" />
-              </div>
-              <div>
-                <h2 className="text-2xl font-black text-white tracking-tighter uppercase">Expanded View</h2>
-                <p className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-widest">Full Canvas Visualization</p>
-              </div>
-            </div>
-            <button 
-              onClick={() => setIsFullscreen(false)}
-              className="px-6 py-3 rounded-[8px] bg-[var(--bg-card)] border border-[var(--border)] text-xs font-black text-[var(--text-secondary)] hover:bg-rose-500 hover:text-[var(--text-primary)] transition-all uppercase tracking-widest"
-            >
-              Close Preview
-            </button>
-          </div>
-
-          <div className="flex-1 w-7xl mx-auto rounded-[12px] bg-white shadow-[0_0_100px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col border border-[var(--border)] relative z-10">
-            {/* Browser Frame */}
-            <div className="flex items-center gap-3 px-6 py-4 bg-slate-100 border-b border-slate-200">
-              <div className="flex gap-1.5">
-                <div className="w-3 h-3 rounded-full bg-rose-400" />
-                <div className="w-3 h-3 rounded-full bg-amber-400" />
-                <div className="w-3 h-3 rounded-full bg-emerald-400" />
-              </div>
-              <div className="flex-1 bg-white rounded-xl h-8 flex items-center px-4 gap-3 border border-slate-200 mx-8 group/url cursor-pointer hover:border-[var(--border-hover)] transition-all" onClick={openPreview}>
-                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-sm font-medium text-[var(--text-secondary)] uppercase tracking-widest group-hover/url:text-[var(--text-primary)] transition-colors">localhost:3000/preview</span>
-                <Maximize2 className="w-3.5 h-3.5 ml-auto text-[var(--text-primary)] group-hover/url:text-[var(--text-primary)] transition-colors" />
-              </div>
-              <div className="flex gap-2">
-                <div className="w-6 h-6 rounded-lg bg-slate-200" />
-              </div>
-            </div>
-
-            <iframe
-              srcDoc={srcDoc}
-              title="Fullscreen Preview"
-              className="flex-1 w-full border-none bg-white"
-              sandbox="allow-scripts"
-            />
-
-            {/* Loading Overlay */}
-            {isCompiling && (
-              <div className="absolute inset-0 bg-white/60 backdrop-blur-md z-20 flex flex-col items-center justify-center animate-in fade-in duration-300">
-                <div className="relative">
-                  <div className="w-16 h-16 rounded-full border-4 border-[var(--border)] border-t-brand-primary animate-spin" />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <Cpu className="w-6 h-6 text-[var(--text-primary)] animate-pulse" />
-                  </div>
-                </div>
-                <span className="mt-6 text-xs font-black uppercase tracking-[0.3em] text-[var(--text-primary)] animate-pulse">Synchronizing Edge...</span>
-              </div>
             )}
+          </div>
+        )}
+      {/* ─── Context Menu ─── */}
+      {contextMenu && (
+        <div
+          className="fixed z-50 w-44 bg-[var(--bg-secondary)] border border-[var(--border)] rounded shadow-xl py-1 text-sm"
+          style={{ left: contextMenu.x, top: contextMenu.y }}
+          onClick={e => e.stopPropagation()}
+        >
+          <button
+            onClick={() => { setShowNewFile(true); setContextMenu(null); setTimeout(() => newFileInputRef.current?.focus(), 50); }}
+            className="w-full flex items-center gap-2 px-4 py-1.5 text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-colors text-left"
+          >
+            <FilePlus className="w-4 h-4" />
+            New File
+          </button>
+          {contextMenu.fileId && (
+            <>
+              <div className="h-px bg-[var(--border)] mx-2 my-1" />
+              <button
+                onClick={() => startRename(contextMenu.fileId!)}
+                className="w-full flex items-center gap-2 px-4 py-1.5 text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-colors text-left"
+              >
+                <Pencil className="w-4 h-4" />
+                Rename
+              </button>
+              <button
+                onClick={() => deleteFileById(contextMenu.fileId!)}
+                className="w-full flex items-center gap-2 px-4 py-1.5 text-[var(--text-danger)] hover:bg-[var(--bg-hover)] transition-colors text-left"
+              >
+                <Trash2 className="w-4 h-4" />
+                Delete
+              </button>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* ─── Command Palette ─── */}
+      {showCommandPalette && (
+        <div
+          className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh] bg-[var(--overlay-bg)]"
+          onClick={() => { setShowCommandPalette(false); setCommandQuery(""); setCommandIndex(0); }}
+        >
+          <div
+            className="w-[600px] max-w-[90vw] bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg shadow-2xl overflow-hidden"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex items-center gap-2 px-4 py-3 border-b border-[var(--border)]">
+              <Command className="w-4 h-4 text-[var(--text-secondary)] shrink-0" />
+              <input
+                ref={commandInputRef}
+                type="text"
+                value={commandQuery}
+                onChange={e => { setCommandQuery(e.target.value); setCommandIndex(0); }}
+                onKeyDown={e => {
+                  if (e.key === "ArrowDown") { e.preventDefault(); setCommandIndex(i => Math.min(i + 1, filteredCommands.length - 1)); }
+                  if (e.key === "ArrowUp") { e.preventDefault(); setCommandIndex(i => Math.max(i - 1, 0)); }
+                  if (e.key === "Enter" && filteredCommands[commandIndex]) executeCommand(filteredCommands[commandIndex]);
+                  if (e.key === "Escape") { setShowCommandPalette(false); setCommandQuery(""); setCommandIndex(0); }
+                }}
+                placeholder="Type a command..."
+                className="flex-1 bg-transparent text-[var(--text-primary)] outline-none border-none text-sm placeholder:text-[var(--input-placeholder)]"
+                autoFocus
+              />
+              <kbd className="text-[10px] text-[var(--text-secondary)] border border-[var(--border)] rounded px-1.5 py-0.5">↵</kbd>
+            </div>
+            <div className="max-h-[320px] overflow-y-auto">
+              {filteredCommands.map((cmd, i) => (
+                <div
+                  key={cmd.id}
+                  className={cn(
+                    "flex items-center justify-between px-4 py-2 cursor-pointer text-sm transition-colors",
+                    i === commandIndex
+                      ? "bg-[var(--bg-active)] text-[var(--text-highlight)]"
+                      : "text-[var(--text-primary)] hover:bg-[var(--bg-hover)]"
+                  )}
+                  onClick={() => executeCommand(cmd)}
+                  onMouseEnter={() => setCommandIndex(i)}
+                >
+                  <div className="flex items-center gap-2">
+                    {cmd.id.startsWith("switch-") ? getFileIcon(cmd.label.replace("Switch to ", ""), "w-4 h-4") : null}
+                    <span>{cmd.label}</span>
+                  </div>
+                  {cmd.shortcut && (
+                    <kbd className="text-[9px] text-[var(--text-secondary)] border border-[var(--border)] rounded px-1.5 py-0.5">{cmd.shortcut}</kbd>
+                  )}
+                </div>
+              ))}
+              {filteredCommands.length === 0 && (
+                <div className="px-4 py-8 text-center text-[var(--text-secondary)] text-sm">
+                  No matching commands
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
+      </div>
+    </>
+  );
+}
+
+// ─── Sub-components ───
+
+function SettingRow({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <label className="flex items-center justify-between text-[var(--text-primary)]">
+      <span className="text-xs text-[var(--text-secondary)]">{label}</span>
+      {children}
+    </label>
+  );
+}
+
+function SearchSidebar({
+  files,
+  activeFileId,
+  onSwitchFile,
+}: {
+  files: FileData[];
+  activeFileId: string;
+  onSwitchFile: (id: string) => void;
+}) {
+  const [query, setQuery] = useState("");
+  const [selectedIdx, setSelectedIdx] = useState(0);
+
+  const results = useMemo(() => {
+    if (!query.trim()) return [];
+    const q = query.toLowerCase();
+    const out: { fileId: string; fileName: string; line: number; content: string }[] = [];
+    files.forEach(f => {
+      const lines = f.content.split("\n");
+      lines.forEach((line, i) => {
+        if (line.toLowerCase().includes(q)) {
+          out.push({ fileId: f.id, fileName: f.name, line: i + 1, content: line.trim() });
+        }
+      });
+    });
+    return out;
+  }, [query, files]);
+
+  return (
+    <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="p-2">
+        <div className="flex items-center gap-2 bg-[var(--input-bg)] rounded border border-[var(--border)] px-2 py-1.5" style={{ background: "var(--input-bg)" }}>
+          <Search className="w-3.5 h-3.5 text-[var(--text-secondary)] shrink-0" />
+          <input
+            type="text"
+            value={query}
+            onChange={e => { setQuery(e.target.value); setSelectedIdx(0); }}
+            placeholder="Search across files..."
+            className="flex-1 bg-transparent text-[var(--input-text)] text-[13px] outline-none border-none placeholder:text-[var(--input-placeholder)]"
+            autoFocus
+          />
+          {query && (
+            <button onClick={() => setQuery("")} className="text-[var(--text-secondary)] hover:text-[var(--text-highlight)]">
+              <X className="w-3 h-3" />
+            </button>
+          )}
+        </div>
+      </div>
+      <div className="flex-1 overflow-y-auto text-[13px]">
+        <div className="px-4 py-1 text-[11px] text-[var(--text-secondary)] uppercase tracking-wider">
+          {query ? `${results.length} result${results.length !== 1 ? "s" : ""}` : "Search"}
+        </div>
+        {results.map((r, i) => (
+          <button
+            key={`${r.fileId}:${r.line}`}
+            onClick={() => onSwitchFile(r.fileId)}
+            onMouseEnter={() => setSelectedIdx(i)}
+            className={cn(
+              "w-full text-left px-4 py-1.5 transition-colors",
+              i === selectedIdx ? "bg-[var(--bg-active)]" : "hover:bg-[var(--bg-hover)]"
+            )}
+          >
+            <div className="flex items-center gap-1.5 text-xs text-[var(--text-secondary)] mb-0.5">
+              {getFileIcon(r.fileName, "w-3 h-3")}
+              <span className="truncate">{r.fileName}</span>
+              <span className="text-[10px] opacity-60">:{r.line}</span>
+            </div>
+            <div className="text-[12px] text-[var(--text-primary)] font-mono truncate pl-5">
+              {highlightMatch(r.content, query)}
+            </div>
+          </button>
+        ))}
+        {query && results.length === 0 && (
+          <div className="px-4 py-8 text-center text-[var(--text-secondary)] text-xs">
+            No results found
+          </div>
+        )}
+      </div>
     </div>
+  );
+}
+
+function highlightMatch(text: string, query: string): React.ReactNode {
+  if (!query.trim()) return text;
+  const qi = text.toLowerCase().indexOf(query.toLowerCase());
+  if (qi === -1) return text;
+  return (
+    <>
+      {text.slice(0, qi)}
+      <span className="bg-[var(--text-highlight)] text-[var(--bg-primary)] rounded px-0.5">{text.slice(qi, qi + query.length)}</span>
+      {text.slice(qi + query.length)}
+    </>
   );
 }

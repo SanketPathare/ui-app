@@ -55,12 +55,12 @@ ${showArrow ? `
 }` : ""}`;
 
   const tailwindCode = `<div class="group relative inline-block">
-  <button class="px-4 py-2 bg-white/5 rounded-lg border border-white/10 text-white">Hover me</button>
+  <button class="px-4 py-2 bg-[var(--bg-card)] rounded-lg border border-[var(--border)] text-white">Hover me</button>
   
   <div class="absolute invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-300 ${position === 'top' ? 'bottom-full left-1/2 -translate-x-1/2 mb-3' : position === 'bottom' ? 'top-full left-1/2 -translate-x-1/2 mt-3' : position === 'left' ? 'right-full top-1/2 -translate-y-1/2 mr-3' : 'left-full top-1/2 -translate-y-1/2 ml-3'}">
-    <div class="bg-slate-900/90 backdrop-blur-xl border border-white/10 p-[${padding}px] rounded-[${borderRadius}px] text-xs text-white whitespace-nowrap shadow-2xl">
+    <div class="bg-[var(--bg-card)]/90 backdrop-blur-xl border border-[var(--border)] p-[${padding}px] rounded-[${borderRadius}px] text-xs text-white whitespace-nowrap shadow-2xl">
       Tooltips provide context
-      ${showArrow ? `<div class="absolute w-2 h-2 bg-slate-900 border-white/10 ${position === 'top' ? 'top-full left-1/2 -translate-x-1/2 -mt-1 rotate-45 border-r border-b' : position === 'bottom' ? 'bottom-full left-1/2 -translate-x-1/2 -mb-1 rotate-45 border-l border-t' : position === 'left' ? 'left-full top-1/2 -translate-y-1/2 -ml-1 rotate-45 border-r border-t' : 'right-full top-1/2 -translate-y-1/2 -mr-1 rotate-45 border-l border-b'}"></div>` : ""}
+      ${showArrow ? `<div class="absolute w-2 h-2 bg-[var(--bg-card)] border-[var(--border)] ${position === 'top' ? 'top-full left-1/2 -translate-x-1/2 -mt-1 rotate-45 border-r border-b' : position === 'bottom' ? 'bottom-full left-1/2 -translate-x-1/2 -mb-1 rotate-45 border-l border-t' : position === 'left' ? 'left-full top-1/2 -translate-y-1/2 -ml-1 rotate-45 border-r border-t' : 'right-full top-1/2 -translate-y-1/2 -mr-1 rotate-45 border-l border-b'}"></div>` : ""}
     </div>
   </div>
 </div>`;
@@ -101,17 +101,17 @@ ${showArrow ? `
     <div className="space-y-6">
       <div className="space-y-4">
         <div className="space-y-2">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Position</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Position</label>
           <div className="grid grid-cols-4 gap-2">
             {(["top", "bottom", "left", "right"] as const).map((p) => (
               <button
                 key={p}
                 onClick={() => setPosition(p)}
                 className={cn(
-                  "px-2 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest border transition-all",
+                  "px-2 py-2 rounded-xl text-xs font-medium border transition-all",
                   position === p 
-                    ? "bg-brand-primary/20 border-brand-primary/50 text-brand-primary shadow-lg shadow-brand-primary/10" 
-                    : "bg-white/5 border-white/10 text-slate-500 hover:text-slate-300"
+                    ? "bg-[var(--bg-active)] border-[var(--border-hover)] text-[var(--text-primary)] " 
+                    : "bg-[var(--bg-card)] border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                 )}
               >
                 {p}
@@ -122,8 +122,8 @@ ${showArrow ? `
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Border Radius</label>
-            <span className="text-[10px] font-bold text-brand-primary font-mono">{borderRadius}px</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Border Radius</label>
+            <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{borderRadius}px</span>
           </div>
           <input 
             type="range"
@@ -132,12 +132,12 @@ ${showArrow ? `
             max={24} 
             step={1} 
             onChange={(e) => setBorderRadius(parseInt(e.target.value))} 
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
 
         <div className="space-y-2">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Accent Color</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Accent Color</label>
           <div className="flex gap-2">
             {["#8b5cf6", "#06b6d4", "#ec4899", "#10b981", "#f59e0b"].map((color) => (
               <button
@@ -153,14 +153,14 @@ ${showArrow ? `
           </div>
         </div>
 
-        <div className="pt-4 space-y-4 border-t border-white/5">
+        <div className="pt-4 space-y-4 border-t border-[var(--border)]">
           <label className="flex items-center justify-between group cursor-pointer">
-            <span className="text-[11px] font-black uppercase tracking-widest text-slate-400 group-hover:text-slate-300 transition-colors">Show Arrow</span>
+            <span className="text-sm font-medium text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] transition-colors">Show Arrow</span>
             <div 
               onClick={() => setShowArrow(!showArrow)}
               className={cn(
                 "w-10 h-5 rounded-full relative transition-all duration-300",
-                showArrow ? "bg-brand-primary shadow-lg shadow-brand-primary/20" : "bg-white/10"
+                showArrow ? "bg-[var(--text-primary)]" : "bg-[var(--bg-hover)]"
               )}
             >
               <div className={cn(
@@ -175,9 +175,9 @@ ${showArrow ? `
   );
 
   const preview = (
-    <div className="w-full h-[400px] flex items-center justify-center bg-black/20 rounded-[2rem] p-12">
+    <div className="w-full h-[400px] flex items-center justify-center bg-[var(--bg)] rounded-[12px] p-12">
       <div className="relative group">
-         <button className="px-8 py-3 rounded-2xl bg-white/5 border border-white/10 text-white font-bold hover:bg-white/10 hover:border-brand-primary/50 transition-all group/btn">
+         <button className="px-8 py-3 rounded-[8px] card text-white font-bold hover:bg-[var(--bg-hover)] hover:border-[var(--border-hover)] transition-all group/btn">
             Hover for Tooltip
          </button>
          
@@ -210,7 +210,7 @@ ${showArrow ? `
              </div>
              {showArrow && (
                <div 
-                 className="absolute w-2.5 h-2.5 rotate-45 border-white/10"
+                 className="absolute w-2.5 h-2.5 rotate-45 border-[var(--border)]"
                  style={{ 
                     background: 'rgba(15, 23, 42, 0.95)',
                     ... (position === 'top' ? { bottom: '-5.5px', left: '50%', transform: 'translateX(-50%) rotate(45deg)', borderRightWidth: '1px', borderBottomWidth: '1px' } :
@@ -225,8 +225,8 @@ ${showArrow ? `
       </div>
       
       <div className="absolute bottom-8 flex items-center gap-2 opacity-30">
-         <Sparkles className="w-3 h-3 text-brand-primary" />
-         <span className="text-[9px] font-black uppercase tracking-widest text-white">Interactive Preview</span>
+         <Sparkles className="w-3 h-3 text-[var(--text-primary)]" />
+         <span className="text-xs font-medium text-white">Interactive Preview</span>
       </div>
     </div>
   );

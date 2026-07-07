@@ -111,13 +111,13 @@ ${hasGrain ? `.aurora-grain {
   const controls = (
     <div className="space-y-6">
       <div className="space-y-3">
-        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Presets</label>
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Presets</label>
         <div className="grid grid-cols-2 gap-2">
           {presets.map((p) => (
             <button
               key={p.name}
               onClick={() => applyPreset(p)}
-              className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-wider text-slate-500 hover:text-brand-primary hover:border-brand-primary transition-all"
+              className="flex items-center gap-2 px-3 py-2 rounded-xl card text-sm font-medium uppercase tracking-wider text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-hover)] transition-colors"
             >
               <Sparkles className="w-3 h-3" /> {p.name}
             </button>
@@ -125,20 +125,20 @@ ${hasGrain ? `.aurora-grain {
         </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-2 pt-4 border-t border-white/10">
+      <div className="grid grid-cols-4 gap-2 pt-4 border-t border-[var(--border)]">
         {colors.map((c, i) => (
           <div key={i} className="space-y-1.5">
             <input 
               type="color" 
               value={c} 
               onChange={(e) => setColor(i, e.target.value)} 
-              className="w-full h-10 p-1 bg-transparent border border-white/10 rounded-lg cursor-pointer" 
+              className="w-full h-10 p-1 bg-transparent border border-[var(--border)] rounded-lg cursor-pointer" 
             />
           </div>
         ))}
       </div>
 
-      <div className="space-y-4 pt-4 border-t border-white/10">
+      <div className="space-y-4 pt-4 border-t border-[var(--border)]">
         {[
           { label: "Animation Speed", value: speed, setter: setSpeed, min: 5, max: 60, unit: "s", reverse: true },
           { label: "Blur Intensity", value: blur, setter: setBlur, min: 0, max: 100, unit: "px" },
@@ -146,8 +146,8 @@ ${hasGrain ? `.aurora-grain {
         ].map((item) => (
           <div key={item.label} className="space-y-2">
             <div className="flex justify-between">
-              <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">{item.label}</label>
-              <span className="text-[10px] font-bold text-brand-primary font-mono">{item.value}{item.unit}</span>
+              <label className="text-sm font-medium text-[var(--text-secondary)]">{item.label}</label>
+              <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{item.value}{item.unit}</span>
             </div>
             <input 
               type="range"
@@ -156,20 +156,20 @@ ${hasGrain ? `.aurora-grain {
               max={item.max} 
               step={1} 
               onChange={(e) => item.setter(item.reverse ? (65 - parseInt(e.target.value)) : parseInt(e.target.value))} 
-              className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+              className="w-full h-1.5 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
             />
           </div>
         ))}
       </div>
 
-      <div className="grid grid-cols-2 gap-2 pt-4 border-t border-white/10">
+      <div className="grid grid-cols-2 gap-2 pt-4 border-t border-[var(--border)]">
         <button
           onClick={() => setHasGrain(!hasGrain)}
           className={cn(
             "flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all border",
             hasGrain 
-              ? "bg-brand-primary/10 border-brand-primary/30 text-brand-primary" 
-              : "bg-white/5 border-white/10 text-slate-500"
+              ? "bg-[var(--bg-card)] border-[var(--border-hover)] text-[var(--text-primary)]" 
+              : "bg-[var(--bg-card)] border-[var(--border)] text-[var(--text-secondary)]"
           )}
         >
           <Grid className="w-3.5 h-3.5" /> Grain
@@ -179,8 +179,8 @@ ${hasGrain ? `.aurora-grain {
           className={cn(
             "flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all border",
             hasGlass 
-              ? "bg-brand-primary/10 border-brand-primary/30 text-brand-primary" 
-              : "bg-white/5 border-white/10 text-slate-500"
+              ? "bg-[var(--bg-card)] border-[var(--border-hover)] text-[var(--text-primary)]" 
+              : "bg-[var(--bg-card)] border-[var(--border)] text-[var(--text-secondary)]"
           )}
         >
           <Play className="w-3.5 h-3.5" /> Glass
@@ -191,10 +191,10 @@ ${hasGrain ? `.aurora-grain {
         <button
           onClick={() => setIsPlaying(!isPlaying)}
           className={cn(
-            "flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-2xl text-xs font-bold uppercase tracking-widest transition-all active:scale-95 shadow-lg",
+            "flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-[8px] text-xs font-bold uppercase tracking-widest transition-all active:scale-95 shadow-lg",
             isPlaying 
-              ? "bg-slate-900 dark:bg-white/5 text-white" 
-              : "bg-brand-primary text-white"
+              ? "bg-[var(--bg-card)] dark:bg-[var(--bg-card)] text-white" 
+              : "bg-[var(--text-primary)] text-[var(--bg)]"
           )}
         >
           {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
@@ -202,7 +202,7 @@ ${hasGrain ? `.aurora-grain {
         </button>
         <button
           onClick={reset}
-          className="p-3 rounded-2xl bg-white/5 text-slate-500 hover:text-brand-primary transition-colors"
+          className="p-3 rounded-[8px] bg-[var(--bg-card)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
         >
           <RefreshCcw className="w-4 h-4" />
         </button>
@@ -211,7 +211,7 @@ ${hasGrain ? `.aurora-grain {
   );
 
   const preview = (
-    <div className="w-full h-[350px] md:w-[400px] md:h-[350px] rounded-[3rem] relative overflow-hidden shadow-2xl border border-white/10 group bg-black">
+    <div className="w-full h-[350px] md:w-[400px] md:h-[350px] rounded-[12px] relative overflow-hidden shadow-2xl border border-[var(--border)] group bg-black">
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes aurora-preview {
           0% { background-position: 0% 50%; }
@@ -246,7 +246,7 @@ ${hasGrain ? `.aurora-grain {
 
       {hasGlass && (
         <div className="absolute inset-0 flex items-center justify-center p-8">
-          <div className="w-full h-full rounded-[2rem] bg-white/5 backdrop-blur-[40px] border border-white/20 flex items-center justify-center text-white/40 font-black uppercase tracking-[0.4em] text-[10px] shadow-2xl">
+          <div className="w-full h-full rounded-[12px] bg-[var(--bg-card)] backdrop-blur-[40px] border border-[var(--border-hover)] flex items-center justify-center text-[var(--text-secondary)] font-black uppercase tracking-[0.4em] text-[10px] shadow-2xl">
             Glass Interaction
           </div>
         </div>

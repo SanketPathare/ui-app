@@ -48,7 +48,7 @@ export function TextShadowGenerator() {
   const controls = (
     <div className="space-y-6">
       <div className="space-y-4">
-        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Typography</label>
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Typography</label>
         <input
           type="text"
           value={text}
@@ -56,13 +56,13 @@ export function TextShadowGenerator() {
             setText(e.target.value);
             setActivePreset(null);
           }}
-          className="w-full p-3 rounded-xl bg-white/5 border border-white/10 text-sm font-bold focus:border-brand-primary outline-none transition-all"
+          className="w-full p-3 rounded-xl card text-sm font-bold focus:border-[var(--border-hover)] outline-none transition-all"
           placeholder="Enter text..."
         />
         <div className="space-y-2">
           <div className="flex justify-between items-center">
-            <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Size</span>
-            <span className="text-[9px] font-mono text-brand-primary">{fontSize}px</span>
+            <span className="text-xs font-medium text-[var(--text-secondary)] uppercase tracking-widest">Size</span>
+            <span className="text-[9px] font-mono text-[var(--text-primary)]">{fontSize}px</span>
           </div>
           <input
             type="range"
@@ -73,12 +73,12 @@ export function TextShadowGenerator() {
               setFontSize(parseInt(e.target.value));
               setActivePreset(null);
             }}
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-5 pt-4 border-t border-white/10">
+      <div className="grid grid-cols-1 gap-5 pt-4 border-t border-[var(--border)]">
         {[
           { label: "Horizontal", value: hOffset, setter: setHOffset, min: -50, max: 50 },
           { label: "Vertical", value: vOffset, setter: setVOffset, min: -50, max: 50 },
@@ -86,8 +86,8 @@ export function TextShadowGenerator() {
         ].map((item) => (
           <div key={item.label} className="space-y-2.5">
             <div className="flex justify-between items-center">
-              <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">{item.label}</label>
-              <span className="text-[10px] font-black text-brand-primary font-mono">{item.value}px</span>
+              <label className="text-sm font-medium text-[var(--text-secondary)]">{item.label}</label>
+              <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{item.value}px</span>
             </div>
             <input
               type="range"
@@ -98,15 +98,15 @@ export function TextShadowGenerator() {
                 item.setter(parseInt(e.target.value));
                 setActivePreset(null);
               }}
-              className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+              className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
             />
           </div>
         ))}
         
         <div className="space-y-2.5">
           <div className="flex justify-between items-center">
-            <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Opacity</label>
-            <span className="text-[10px] font-black text-brand-primary font-mono">{Math.round(opacity * 100)}%</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Opacity</label>
+            <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{Math.round(opacity * 100)}%</span>
           </div>
           <input
             type="range"
@@ -117,23 +117,23 @@ export function TextShadowGenerator() {
               setOpacity(parseInt(e.target.value) / 100);
               setActivePreset(null);
             }}
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
       </div>
 
-      <div className="space-y-3 pt-4 border-t border-white/10">
-        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Presets</label>
+      <div className="space-y-3 pt-4 border-t border-[var(--border)]">
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Presets</label>
         <div className="grid grid-cols-2 gap-2">
           {presets.map((p) => (
             <button
               key={p.name}
               onClick={() => applyPreset(p)}
               className={cn(
-                "px-2 py-2 rounded-lg text-[9px] font-black uppercase tracking-tighter transition-all",
+                "px-2 py-2 rounded-lg text-xs font-medium transition-all",
                 activePreset === p.name 
-                  ? "bg-brand-primary text-white shadow-lg border-brand-primary" 
-                  : "bg-white/5 border border-white/10 text-slate-500 hover:text-brand-primary"
+                  ? "bg-[var(--text-primary)] text-[var(--bg)] shadow-lg border-[var(--border-hover)]" 
+                  : "card text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
               )}
             >
               {p.name}
@@ -142,9 +142,9 @@ export function TextShadowGenerator() {
         </div>
       </div>
 
-      <div className="pt-6 border-t border-white/10">
-        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-3 block">Color</label>
-        <div className="flex gap-2 p-1.5 rounded-xl bg-white/5 border border-white/10">
+      <div className="pt-6 border-t border-[var(--border)]">
+        <label className="text-sm font-medium text-[var(--text-secondary)] mb-3 block">Color</label>
+        <div className="flex gap-2 p-1.5 rounded-xl card">
           <input 
             type="color" 
             value={color} 
@@ -158,7 +158,7 @@ export function TextShadowGenerator() {
 
   const preview = (
     <div 
-      className="font-display font-black tracking-tighter transition-all duration-500 text-center px-4"
+      className="font-sans font-bold tracking-tighter transition-all duration-500 text-center px-4"
       style={{ 
         fontSize: `${fontSize}px`,
         textShadow: shadowValue,

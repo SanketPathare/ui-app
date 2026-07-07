@@ -55,8 +55,8 @@ border-radius: 24px;`;
         ].map((item) => (
           <div key={item.label} className="space-y-2.5">
             <div className="flex justify-between items-center">
-              <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">{item.label}</label>
-              <span className="text-[10px] font-black text-brand-primary font-mono">{item.value}{item.unit}</span>
+              <label className="text-sm font-medium text-[var(--text-secondary)]">{item.label}</label>
+              <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{item.value}{item.unit}</span>
             </div>
             <input
               type="range"
@@ -64,20 +64,20 @@ border-radius: 24px;`;
               max={item.max}
               value={item.value}
               onChange={(e) => item.setter(parseInt(e.target.value))}
-              className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+              className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
             />
           </div>
         ))}
       </div>
 
-      <div className="space-y-3 pt-4 border-t border-white/10">
-        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Visual Presets</label>
+      <div className="space-y-3 pt-4 border-t border-[var(--border)]">
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Visual Presets</label>
         <div className="grid grid-cols-4 gap-2">
           {presets.map((p) => (
             <button
               key={p.name}
               onClick={() => applyPreset(p)}
-              className="px-1 py-2 rounded-lg bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-tighter text-slate-500 hover:text-brand-primary hover:border-brand-primary transition-all"
+              className="px-1 py-2 rounded-lg card text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-hover)] transition-colors"
             >
               {p.name}
             </button>
@@ -85,8 +85,8 @@ border-radius: 24px;`;
         </div>
       </div>
 
-      <div className="pt-6 border-t border-white/10 space-y-3">
-        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Glass Tint</label>
+      <div className="pt-6 border-t border-[var(--border)] space-y-3">
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Glass Tint</label>
         <div className="flex gap-3">
           {["#ffffff", "#000000", "#8b5cf6", "#06b6d4"].map((c) => (
             <button
@@ -94,12 +94,12 @@ border-radius: 24px;`;
               onClick={() => setColor(c)}
               className={cn(
                 "w-8 h-8 rounded-lg border-2 transition-all",
-                color === c ? "border-brand-primary scale-110" : "border-transparent"
+                color === c ? "border-[var(--border-hover)] scale-110" : "border-transparent"
               )}
               style={{ backgroundColor: c }}
             />
           ))}
-          <div className="w-8 h-8 rounded-lg border border-white/10 relative overflow-hidden">
+          <div className="w-8 h-8 rounded-lg border border-[var(--border)] relative overflow-hidden">
             <input 
               type="color" 
               value={color} 

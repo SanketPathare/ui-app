@@ -68,27 +68,27 @@ export function BadgeGenerator() {
     <div className="space-y-6">
       <div className="space-y-4">
         <div className="space-y-2">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Badge Text</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Badge Text</label>
           <input 
             type="text" 
             value={text} 
             onChange={(e) => setText(e.target.value)}
-            className="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-2.5 text-[11px] font-bold text-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all"
+            className="w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-4 py-2.5 text-[11px] font-bold text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)]/30 transition-all"
           />
         </div>
 
         <div className="space-y-2">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Variant</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Variant</label>
           <div className="grid grid-cols-2 gap-2">
             {(["glass", "solid", "outline", "ghost"] as const).map((v) => (
               <button
                 key={v}
                 onClick={() => setVariant(v)}
                 className={cn(
-                  "px-2 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest border transition-all",
+                  "px-2 py-2 rounded-xl text-xs font-medium border transition-all",
                   variant === v 
-                    ? "bg-brand-primary/20 border-brand-primary/50 text-brand-primary shadow-lg shadow-brand-primary/10" 
-                    : "bg-white/5 border-white/10 text-slate-500 hover:text-slate-300"
+                    ? "bg-[var(--bg-active)] border-[var(--border-hover)] text-[var(--text-primary)] " 
+                    : "bg-[var(--bg-card)] border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                 )}
               >
                 {v}
@@ -99,8 +99,8 @@ export function BadgeGenerator() {
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Border Radius</label>
-            <span className="text-[10px] font-bold text-brand-primary font-mono">{borderRadius}px</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Border Radius</label>
+            <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{borderRadius}px</span>
           </div>
           <input 
             type="range"
@@ -109,12 +109,12 @@ export function BadgeGenerator() {
             max={32} 
             step={1} 
             onChange={(e) => setBorderRadius(parseInt(e.target.value))} 
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
 
         <div className="space-y-2">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Accent Color</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Accent Color</label>
           <div className="flex gap-2">
             {["#8b5cf6", "#06b6d4", "#ec4899", "#10b981", "#f59e0b"].map((color) => (
               <button
@@ -134,9 +134,9 @@ export function BadgeGenerator() {
   );
 
   const preview = (
-    <div className="w-full h-[300px] flex items-center justify-center bg-black/20 rounded-[2rem] p-12">
+    <div className="w-full h-[300px] flex items-center justify-center bg-[var(--bg)] rounded-[12px] p-12">
       <span 
-        className="transition-all duration-300 font-display font-black uppercase tracking-widest flex items-center gap-1.5"
+        className="transition-all duration-300 font-sans font-bold uppercase tracking-widest flex items-center gap-1.5"
         style={{ 
           padding: `${paddingY}px ${paddingX}px`,
           fontSize: `${fontSize}px`,

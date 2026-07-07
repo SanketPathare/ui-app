@@ -35,9 +35,9 @@ export function BorderAnimGenerator() {
   100% { transform: rotate(360deg); }
 }`;
 
-  const tailwindCode = `<div className="relative p-[${borderWidth}px] overflow-hidden rounded-[${borderRadius}px] bg-slate-950">
+  const tailwindCode = `<div className="relative p-[${borderWidth}px] overflow-hidden rounded-[${borderRadius}px] bg-[var(--bg)]">
   <div className="absolute inset-[-100%] animate-[spin_${speed}s_linear_infinite] bg-[conic-gradient(transparent,transparent,transparent,${color1},${color2})]" />
-  <div className="relative z-10 bg-slate-950 rounded-[${borderRadius-1}px] p-6 text-white">
+  <div className="relative z-10 bg-[var(--bg)] rounded-[${borderRadius-1}px] p-6 text-white">
     {/* Card Content */}
     <h3 className="text-lg font-bold">Animated Border</h3>
   </div>
@@ -94,34 +94,34 @@ export function BorderAnimGenerator() {
     <div className="space-y-6">
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-4">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Accent 1</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Accent 1</label>
           <input type="color" value={color1} onChange={(e) => setColor1(e.target.value)} className="w-full h-10 rounded-xl bg-transparent border-none cursor-pointer" />
         </div>
         <div className="space-y-4">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Accent 2</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Accent 2</label>
           <input type="color" value={color2} onChange={(e) => setColor2(e.target.value)} className="w-full h-10 rounded-xl bg-transparent border-none cursor-pointer" />
         </div>
       </div>
 
       <div className="space-y-4">
-        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500 flex justify-between">
+        <label className="text-sm font-medium text-[var(--text-secondary)] flex justify-between">
            Rotation Speed <span>{speed}s</span>
         </label>
         <input 
           type="range" min="1" max="10" step="0.5" value={speed} 
           onChange={(e) => setSpeed(parseFloat(e.target.value))}
-          className="w-full accent-brand-primary"
+          className="w-full accent-[var(--text-primary)]"
         />
       </div>
 
       <div className="space-y-4">
-        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500 flex justify-between">
+        <label className="text-sm font-medium text-[var(--text-secondary)] flex justify-between">
            Border Width <span>{borderWidth}px</span>
         </label>
         <input 
           type="range" min="1" max="10" value={borderWidth} 
           onChange={(e) => setBorderWidth(parseInt(e.target.value))}
-          className="w-full accent-brand-primary"
+          className="w-full accent-[var(--text-primary)]"
         />
       </div>
     </div>
@@ -143,15 +143,15 @@ export function BorderAnimGenerator() {
          }}
        />
        <div 
-         className="relative z-10 bg-[#020617] px-12 py-10 flex flex-col items-center justify-center gap-4 border border-white/5"
+         className="relative z-10 bg-[var(--bg)] px-12 py-10 flex flex-col items-center justify-center gap-4 border border-[var(--border)]"
          style={{ borderRadius: `${borderRadius - 1}px` }}
        >
-          <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-brand-primary">
+          <div className="w-12 h-12 rounded-xl bg-[var(--bg-card)] flex items-center justify-center text-[var(--text-primary)]">
              <RotateCw className="w-6 h-6 animate-spin-slow" />
           </div>
           <div className="text-center">
              <h3 className="text-sm font-black text-white uppercase tracking-widest">Active Border</h3>
-             <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-1">Conic Gradient Logic</p>
+             <p className="text-[9px] font-bold text-[var(--text-secondary)] uppercase tracking-widest mt-1">Conic Gradient Logic</p>
           </div>
        </div>
        <style jsx>{`

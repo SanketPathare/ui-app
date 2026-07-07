@@ -86,10 +86,10 @@ module.exports = {
           <div key={bp.label} className="space-y-2">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2">
-                <bp.icon className="w-3 h-3 text-slate-500" />
-                <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">{bp.label}</label>
+                <bp.icon className="w-3 h-3 text-[var(--text-secondary)]" />
+                <label className="text-sm font-medium text-[var(--text-secondary)]">{bp.label}</label>
               </div>
-              <span className="text-[10px] font-bold text-cyan-500 font-mono">{bp.val}px</span>
+              <span className="text-[10px] font-bold text-[var(--text-primary)] font-mono">{bp.val}px</span>
             </div>
             <input 
               type="range"
@@ -98,7 +98,7 @@ module.exports = {
               max={2000} 
               step={8} 
               onChange={(e) => bp.set(parseInt(e.target.value))} 
-              className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-cyan-500"
+              className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
             />
           </div>
         ))}
@@ -107,15 +107,15 @@ module.exports = {
   );
 
   const preview = (
-    <div className="w-full h-[400px] bg-black/20 rounded-[2rem] p-8 flex flex-col items-center justify-center space-y-8 overflow-hidden relative">
-      <div className="flex gap-2 bg-white/5 p-1 rounded-xl border border-white/10">
+    <div className="w-full h-[400px] bg-[var(--bg)] rounded-[12px] p-8 flex flex-col items-center justify-center space-y-8 overflow-hidden relative">
+      <div className="flex gap-2 bg-[var(--bg-card)] p-1 rounded-xl border border-[var(--border)]">
          {(["sm", "md", "lg", "xl", "xxl"] as const).map(v => (
            <button 
              key={v}
              onClick={() => setCurrentView(v)}
              className={cn(
-               "px-4 py-1.5 rounded-lg text-[10px] font-black uppercase transition-all",
-               currentView === v ? "bg-cyan-500 text-white shadow-lg shadow-cyan-500/20" : "text-slate-500 hover:text-slate-300"
+               "px-4 py-1.5 rounded-lg text-sm font-medium uppercase transition-all",
+               currentView === v ? "bg-[var(--text-primary)] text-white shadow-lg shadow-cyan-500/20" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
              )}
            >
              {v}
@@ -123,27 +123,27 @@ module.exports = {
          ))}
       </div>
 
-      <div className="relative w-full flex-1 flex items-center justify-center border-t border-white/5 pt-8">
+      <div className="relative w-full flex-1 flex items-center justify-center border-t border-[var(--border)] pt-8">
         <div 
-          className="h-full border-2 border-dashed border-cyan-500/20 rounded-2xl transition-all duration-500 flex flex-col items-center justify-center p-6 relative overflow-hidden"
+          className="h-full border-2 border-dashed border-[var(--border)] rounded-[8px] transition-all duration-500 flex flex-col items-center justify-center p-6 relative overflow-hidden"
           style={{ width: `${Math.min(getWidth(), 800)}px` }}
         >
           {/* Scaling info - since real px values might exceed preview area, we cap visual width at 800 but show real label */}
-          <div className="absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-[9px] font-black text-cyan-500 uppercase tracking-widest">
+          <div className="absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border)] text-xs font-medium text-[var(--text-primary)] uppercase tracking-widest">
              {currentView.toUpperCase()} Viewport: {getWidth()}px
           </div>
           
           <div className="w-full space-y-4">
              <div className="grid grid-cols-3 gap-4">
-                {[1,2,3].map(i => <div key={i} className="aspect-square bg-white/5 border border-white/5 rounded-xl animate-pulse" />)}
+                {[1,2,3].map(i => <div key={i} className="aspect-square bg-[var(--bg-card)] border border-[var(--border)] rounded-xl animate-pulse" />)}
              </div>
-             <div className="h-4 w-full bg-white/5 rounded-full" />
-             <div className="h-4 w-2/3 bg-white/5 rounded-full" />
+             <div className="h-4 w-full bg-[var(--bg-card)] rounded-full" />
+             <div className="h-4 w-2/3 bg-[var(--bg-card)] rounded-full" />
           </div>
         </div>
       </div>
       
-      <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest text-center">
+      <p className="text-[9px] font-bold text-[var(--text-secondary)] uppercase tracking-widest text-center">
         Visualization scaled to fit preview. Actual breakpoints used in code.
       </p>
     </div>

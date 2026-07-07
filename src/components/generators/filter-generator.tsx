@@ -34,8 +34,8 @@ export function FilterGenerator() {
         ].map((item) => (
           <div key={item.label} className="space-y-1.5">
             <div className="flex justify-between items-center">
-              <label className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">{item.label}</label>
-              <span className="text-[9px] font-black text-brand-primary font-mono">{item.value}{item.unit}</span>
+              <label className="text-xs font-medium text-[var(--text-secondary)] dark:text-[var(--text-secondary)] uppercase tracking-widest">{item.label}</label>
+              <span className="text-xs font-medium text-[var(--text-primary)] font-mono">{item.value}{item.unit}</span>
             </div>
             <input
               type="range"
@@ -43,13 +43,13 @@ export function FilterGenerator() {
               max={item.max}
               value={item.value}
               onChange={(e) => item.setter(parseInt(e.target.value))}
-              className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+              className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
             />
           </div>
         ))}
       </div>
 
-      <div className="pt-4 border-t border-white/10 grid grid-cols-2 gap-2">
+      <div className="pt-4 border-t border-[var(--border)] grid grid-cols-2 gap-2">
         {[
           { name: "Old Photo", bl: 0, br: 90, c: 110, s: 0, gr: 0, se: 100, i: 0, h: 0 },
           { name: "Noir", bl: 0, br: 100, c: 150, s: 0, gr: 100, se: 0, i: 0, h: 0 },
@@ -68,7 +68,7 @@ export function FilterGenerator() {
               setInvert(p.i);
               setHueRotate(p.h);
             }}
-            className="px-2 py-2 rounded-lg bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-tighter text-slate-500 hover:text-brand-primary transition-all"
+            className="px-2 py-2 rounded-lg card text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all"
           >
             {p.name}
           </button>
@@ -80,7 +80,7 @@ export function FilterGenerator() {
   const preview = (
     <div className="relative w-full h-full flex items-center justify-center p-8">
       <div 
-        className="w-48 h-48 md:w-64 md:h-64 rounded-3xl overflow-hidden shadow-2xl transition-all duration-300"
+        className="w-48 h-48 md:w-64 md:h-64 rounded-[12px] overflow-hidden shadow-2xl transition-all duration-300"
         style={{ filter: filterValue }}
       >
         <img 

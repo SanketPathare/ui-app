@@ -75,15 +75,15 @@ export function FlexboxGenerator() {
       <div className="space-y-4">
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Items</label>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Items</label>
             <span className="text-[10px] font-bold text-brand-secondary font-mono">{itemCount}</span>
           </div>
           <div className="flex items-center gap-3">
             <button 
               onClick={() => setItemCount(Math.max(1, itemCount - 1))}
-              className="p-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+              className="p-1.5 rounded-lg card hover:bg-[var(--bg-hover)] transition-colors"
             >
-              <Minus className="w-3.5 h-3.5 text-slate-400" />
+              <Minus className="w-3.5 h-3.5 text-[var(--text-secondary)]" />
             </button>
             <input 
               type="range"
@@ -92,29 +92,29 @@ export function FlexboxGenerator() {
               max={20} 
               step={1} 
               onChange={(e) => setItemCount(parseInt(e.target.value))} 
-              className="flex-1 h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-secondary"
+              className="flex-1 h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-secondary)]"
             />
             <button 
               onClick={() => setItemCount(Math.min(20, itemCount + 1))}
-              className="p-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+              className="p-1.5 rounded-lg card hover:bg-[var(--bg-hover)] transition-colors"
             >
-              <Plus className="w-3.5 h-3.5 text-slate-400" />
+              <Plus className="w-3.5 h-3.5 text-[var(--text-secondary)]" />
             </button>
           </div>
         </div>
 
         <div className="space-y-2">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Direction</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Direction</label>
           <div className="grid grid-cols-2 gap-2">
             {["row", "row-reverse", "column", "column-reverse"].map((dir) => (
               <button
                 key={dir}
                 onClick={() => setFlexDirection(dir as any)}
                 className={cn(
-                  "px-3 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest border transition-all",
+                  "px-3 py-2 rounded-xl text-xs font-medium border transition-all",
                   flexDirection === dir 
                     ? "bg-brand-secondary/20 border-brand-secondary/50 text-brand-secondary shadow-lg shadow-brand-secondary/10" 
-                    : "bg-white/5 border-white/10 text-slate-500 hover:text-slate-300"
+                    : "bg-[var(--bg-card)] border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                 )}
               >
                 {dir.replace("-", " ")}
@@ -124,11 +124,11 @@ export function FlexboxGenerator() {
         </div>
 
         <div className="space-y-2">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Justify Content</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Justify Content</label>
           <select 
             value={justifyContent} 
             onChange={(e) => setJustifyContent(e.target.value)}
-            className="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-2.5 text-[11px] font-bold text-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-secondary/50 transition-all"
+            className="w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-4 py-2.5 text-[11px] font-bold text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-brand-secondary/50 transition-all"
           >
             {["flex-start", "flex-end", "center", "space-between", "space-around", "space-evenly"].map((opt) => (
               <option key={opt} value={opt}>{opt}</option>
@@ -137,11 +137,11 @@ export function FlexboxGenerator() {
         </div>
 
         <div className="space-y-2">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Align Items</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Align Items</label>
           <select 
             value={alignItems} 
             onChange={(e) => setAlignItems(e.target.value)}
-            className="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-2.5 text-[11px] font-bold text-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-secondary/50 transition-all"
+            className="w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-4 py-2.5 text-[11px] font-bold text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-brand-secondary/50 transition-all"
           >
             {["flex-start", "flex-end", "center", "baseline", "stretch"].map((opt) => (
               <option key={opt} value={opt}>{opt}</option>
@@ -151,7 +151,7 @@ export function FlexboxGenerator() {
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Gap</label>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Gap</label>
             <span className="text-[10px] font-bold text-brand-secondary font-mono">{gap}px</span>
           </div>
           <input 
@@ -161,7 +161,7 @@ export function FlexboxGenerator() {
             max={100} 
             step={1} 
             onChange={(e) => setGap(parseInt(e.target.value))} 
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-secondary"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-secondary)]"
           />
         </div>
       </div>
@@ -170,7 +170,7 @@ export function FlexboxGenerator() {
 
   const preview = (
     <div 
-      className="flex w-full min-h-[300px] border border-dashed border-white/10 rounded-2xl p-4 transition-all duration-500"
+      className="flex w-full min-h-[300px] border border-dashed border-[var(--border)] rounded-[8px] p-4 transition-all duration-500"
       style={{
         flexDirection,
         justifyContent,

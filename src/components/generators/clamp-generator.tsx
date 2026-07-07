@@ -72,13 +72,13 @@ export function ClampGenerator() {
   const controls = (
     <div className="space-y-6">
       <div className="space-y-4">
-        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Typography Presets</label>
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Typography Presets</label>
         <div className="grid grid-cols-3 gap-2">
           {PRESETS.map(p => (
             <button 
               key={p.name}
               onClick={() => { setMinSize(p.min); setMaxSize(p.max); }}
-              className="py-2 rounded-xl bg-white/5 border border-white/5 text-[10px] font-black hover:border-pink-500/50 transition-all text-slate-400 hover:text-white"
+              className="py-2 rounded-xl bg-[var(--bg-card)] border border-[var(--border)] text-sm font-medium hover:border-[var(--border-hover)]/50 transition-all text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
             >
               {p.name}
             </button>
@@ -88,54 +88,54 @@ export function ClampGenerator() {
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-4">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500 flex justify-between">Min Size (px)</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)] flex justify-between">Min Size (px)</label>
           <input 
             type="number" value={minSize} 
             onChange={(e) => setMinSize(parseFloat(e.target.value) || 0)}
-            className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-2 text-xs text-white focus:border-pink-500/50 outline-none"
+            className="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl px-4 py-2 text-xs text-white focus:border-[var(--border-hover)]/50 outline-none"
           />
         </div>
         <div className="space-y-4">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500 flex justify-between">Max Size (px)</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)] flex justify-between">Max Size (px)</label>
           <input 
             type="number" value={maxSize} 
             onChange={(e) => setMaxSize(parseFloat(e.target.value) || 0)}
-            className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-2 text-xs text-white focus:border-pink-500/50 outline-none"
+            className="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl px-4 py-2 text-xs text-white focus:border-[var(--border-hover)]/50 outline-none"
           />
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-4">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Min Viewport (px)</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Min Viewport (px)</label>
           <input 
             type="number" value={minViewport} 
             onChange={(e) => setMinViewport(parseFloat(e.target.value) || 0)}
-            className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-2 text-xs text-white focus:border-pink-500/50 outline-none"
+            className="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl px-4 py-2 text-xs text-white focus:border-[var(--border-hover)]/50 outline-none"
           />
         </div>
         <div className="space-y-4">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Max Viewport (px)</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Max Viewport (px)</label>
           <input 
             type="number" value={maxViewport} 
             onChange={(e) => setMaxViewport(parseFloat(e.target.value) || 0)}
-            className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-2 text-xs text-white focus:border-pink-500/50 outline-none"
+            className="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl px-4 py-2 text-xs text-white focus:border-[var(--border-hover)]/50 outline-none"
           />
         </div>
       </div>
 
       <div className="space-y-4">
-        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Output Unit</label>
-        <div className="flex p-1 rounded-xl bg-white/5 border border-white/5">
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Output Unit</label>
+        <div className="flex p-1 rounded-xl bg-[var(--bg-card)] border border-[var(--border)]">
           <button 
             onClick={() => setOutputUnit("px")}
-            className={cn("flex-1 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all", outputUnit === "px" ? "bg-pink-500 text-white" : "text-slate-500 hover:text-slate-300")}
+            className={cn("flex-1 py-2 rounded-lg text-sm font-medium transition-all", outputUnit === "px" ? "bg-[var(--text-primary)] text-white" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]")}
           >
             Pixels (px)
           </button>
           <button 
             onClick={() => setOutputUnit("rem")}
-            className={cn("flex-1 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all", outputUnit === "rem" ? "bg-pink-500 text-white" : "text-slate-500 hover:text-slate-300")}
+            className={cn("flex-1 py-2 rounded-lg text-sm font-medium transition-all", outputUnit === "rem" ? "bg-[var(--text-primary)] text-white" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]")}
           >
             Relative (rem)
           </button>
@@ -145,14 +145,14 @@ export function ClampGenerator() {
   );
 
   const preview = (
-    <div className="w-full h-full  rounded-[2.5rem] bg-[#020617] border border-white/5 overflow-hidden flex flex-col p-8 relative group">
+    <div className="w-full h-full  rounded-[12px] bg-[var(--bg)] border border-[var(--border)] overflow-hidden flex flex-col p-8 relative group">
        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
             style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '32px 32px' }} />
        
        <div className="flex-1 flex flex-col items-center justify-center space-y-12 relative z-10">
           <div className="space-y-2 text-center">
-             <p className="text-[10px] font-black text-pink-500 uppercase tracking-widest">Live Simulation</p>
-             <h4 className="text-sm font-bold text-slate-500">{simulatedWidth}px Viewport</h4>
+             <p className="text-sm font-medium text-[var(--text-primary)] uppercase tracking-widest">Live Simulation</p>
+             <h4 className="text-sm font-bold text-[var(--text-secondary)]">{simulatedWidth}px Viewport</h4>
           </div>
 
           <div className="w-full max-w-xl mx-auto space-y-8">
@@ -161,9 +161,9 @@ export function ClampGenerator() {
             </p>
             
             <div className="flex flex-col items-center gap-4">
-              <div className="w-full h-1.5 bg-white/5 rounded-full relative overflow-hidden">
+              <div className="w-full h-1.5 bg-[var(--bg-card)] rounded-full relative overflow-hidden">
                 <div 
-                  className="absolute inset-y-0 left-0 bg-pink-500/50 transition-all duration-300"
+                  className="absolute inset-y-0 left-0 bg-[var(--text-primary)]/50 transition-all duration-300"
                   style={{ width: `${((simulatedWidth - 320) / (1920 - 320)) * 100}%` }}
                 />
               </div>
@@ -172,7 +172,7 @@ export function ClampGenerator() {
                 onChange={(e) => setSimulatedWidth(parseInt(e.target.value))}
                 className="w-full h-1 opacity-0 absolute cursor-pointer"
               />
-              <div className="flex justify-between w-full text-[9px] font-black text-slate-600 uppercase tracking-widest">
+              <div className="flex justify-between w-full text-xs font-medium text-[var(--text-tertiary)] uppercase tracking-widest">
                 <span>320px</span>
                 <span>Current: {currentSize.toFixed(1)}px</span>
                 <span>1920px</span>
@@ -191,14 +191,14 @@ export function ClampGenerator() {
                  key={device.label}
                  onClick={() => setSimulatedWidth(device.width)}
                  className={cn(
-                   "flex flex-col items-center gap-2 p-4 rounded-2xl border transition-all",
-                   simulatedWidth === device.width ? "bg-pink-500/10 border-pink-500 text-pink-500" : "bg-white/5 border-white/5 text-slate-500 hover:border-white/10"
+                   "flex flex-col items-center gap-2 p-4 rounded-[8px] border transition-all",
+                   simulatedWidth === device.width ? "bg-[var(--bg-card)] border-[var(--border-hover)] text-[var(--text-primary)]" : "bg-[var(--bg-card)] border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--border)]"
                  )}
                >
-                 <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center">
+                 <div className="w-8 h-8 rounded-lg bg-[var(--bg-card)] flex items-center justify-center">
                     {device.icon}
                  </div>
-                 <span className="text-[9px] font-black uppercase tracking-widest">{device.label}</span>
+                 <span className="text-xs font-medium">{device.label}</span>
                </button>
              ))}
           </div>

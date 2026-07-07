@@ -64,14 +64,14 @@ export function SvgDividerGenerator() {
   const controls = (
     <div className="space-y-6">
       <div className="space-y-4">
-        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Divider Type</label>
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Divider Type</label>
         <div className="grid grid-cols-2 gap-2">
           {(["waves", "steps", "peaks", "curve"] as DividerType[]).map((t) => (
             <button
               key={t}
               onClick={() => setType(t)}
-              className={`flex items-center gap-3 p-3 rounded-xl border transition-all uppercase text-[10px] font-black tracking-widest ${
-                type === t ? "bg-brand-primary/10 border-brand-primary text-brand-primary" : "bg-white/5 border-white/5 text-slate-500 hover:text-slate-300"
+              className={`flex items-center gap-3 p-3 rounded-xl border transition-all uppercase text-sm font-medium tracking-widest ${
+                type === t ? "bg-[var(--bg-card)] border-[var(--border-hover)] text-[var(--text-primary)]" : "bg-[var(--bg-card)] border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
               }`}
             >
               {t === "waves" && <Activity className="w-4 h-4" />}
@@ -86,31 +86,31 @@ export function SvgDividerGenerator() {
 
       <div className="space-y-4">
         <div className="flex justify-between">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Height</label>
-          <span className="text-[10px] font-bold text-brand-primary font-mono">{height}px</span>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Height</label>
+          <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{height}px</span>
         </div>
         <input 
           type="range" min={20} max={200} step={1}
           value={height} onChange={(e) => setHeight(parseInt(e.target.value))}
-          className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+          className="w-full h-1.5 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
         />
       </div>
 
       <div className="space-y-4">
         <div className="flex justify-between">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Frequency</label>
-          <span className="text-[10px] font-bold text-brand-primary font-mono">{frequency}</span>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Frequency</label>
+          <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{frequency}</span>
         </div>
         <input 
           type="range" min={1} max={10} step={1}
           value={frequency} onChange={(e) => setFrequency(parseInt(e.target.value))}
-          className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+          className="w-full h-1.5 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
         />
       </div>
 
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Color</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Color</label>
           <input 
             type="color" value={color} onChange={(e) => setColor(e.target.value)}
             className="w-12 h-8 p-0 border-none bg-transparent cursor-pointer"
@@ -118,19 +118,19 @@ export function SvgDividerGenerator() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 pt-4 border-t border-white/5">
+      <div className="grid grid-cols-2 gap-3 pt-4 border-t border-[var(--border)]">
         <button 
           onClick={() => setIsFlipped(!isFlipped)}
-          className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all ${
-            isFlipped ? "bg-brand-primary/10 border-brand-primary text-brand-primary" : "bg-white/5 border-white/5 text-slate-500"
+          className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium transition-all ${
+            isFlipped ? "bg-[var(--bg-card)] border-[var(--border-hover)] text-[var(--text-primary)]" : "bg-[var(--bg-card)] border-[var(--border)] text-[var(--text-secondary)]"
           }`}
         >
           <Repeat className="w-3.5 h-3.5" /> Flip
         </button>
         <button 
           onClick={() => setIsInverted(!isInverted)}
-          className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all ${
-            isInverted ? "bg-brand-primary/10 border-brand-primary text-brand-primary" : "bg-white/5 border-white/5 text-slate-500"
+          className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium transition-all ${
+            isInverted ? "bg-[var(--bg-card)] border-[var(--border-hover)] text-[var(--text-primary)]" : "bg-[var(--bg-card)] border-[var(--border)] text-[var(--text-secondary)]"
           }`}
         >
           <MoveVertical className="w-3.5 h-3.5" /> Invert
@@ -140,7 +140,7 @@ export function SvgDividerGenerator() {
   );
 
   const preview = (
-    <div className="w-full max-w-[600px] h-[300px] bg-slate-900 rounded-[2.5rem] overflow-hidden relative border border-white/5 flex flex-col justify-end shadow-2xl">
+    <div className="w-full max-w-[600px] h-[300px] bg-[var(--bg-card)] rounded-[12px] overflow-hidden relative border border-[var(--border)] flex flex-col justify-end shadow-2xl">
       <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
       <svg 
         viewBox="0 0 1440 320" 

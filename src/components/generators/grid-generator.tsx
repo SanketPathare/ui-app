@@ -35,7 +35,7 @@ export function GridGenerator() {
 }`;
 
   const tailwindCode = `<div class="grid grid-cols-${columns} grid-rows-${rows} gap-[${rowGap}px_${columnGap}px] w-full h-[400px]">
-  ${gridItems.map((_, i) => `<div class="bg-brand-primary/10 border border-brand-primary/20 rounded-lg flex items-center justify-center font-mono text-xs text-brand-primary">${i + 1}</div>`).join("\n  ")}
+  ${gridItems.map((_, i) => `<div class="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg flex items-center justify-center font-mono text-xs text-[var(--text-primary)]">${i + 1}</div>`).join("\n  ")}
 </div>`;
 
   const htmlCode = `<div class="grid-container">
@@ -73,15 +73,15 @@ export function GridGenerator() {
       <div className="space-y-4">
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Columns</label>
-            <span className="text-[10px] font-bold text-brand-primary font-mono">{columns}</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Columns</label>
+            <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{columns}</span>
           </div>
           <div className="flex items-center gap-3">
             <button 
               onClick={() => setColumns(Math.max(1, columns - 1))}
-              className="p-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+              className="p-1.5 rounded-lg card hover:bg-[var(--bg-hover)] transition-colors"
             >
-              <Minus className="w-3.5 h-3.5 text-slate-400" />
+              <Minus className="w-3.5 h-3.5 text-[var(--text-secondary)]" />
             </button>
             <input 
               type="range"
@@ -90,28 +90,28 @@ export function GridGenerator() {
               max={12} 
               step={1} 
               onChange={(e) => setColumns(parseInt(e.target.value))} 
-              className="flex-1 h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+              className="flex-1 h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
             />
             <button 
               onClick={() => setColumns(Math.min(12, columns + 1))}
-              className="p-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+              className="p-1.5 rounded-lg card hover:bg-[var(--bg-hover)] transition-colors"
             >
-              <Plus className="w-3.5 h-3.5 text-slate-400" />
+              <Plus className="w-3.5 h-3.5 text-[var(--text-secondary)]" />
             </button>
           </div>
         </div>
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Rows</label>
-            <span className="text-[10px] font-bold text-brand-primary font-mono">{rows}</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Rows</label>
+            <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{rows}</span>
           </div>
           <div className="flex items-center gap-3">
             <button 
               onClick={() => setRows(Math.max(1, rows - 1))}
-              className="p-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+              className="p-1.5 rounded-lg card hover:bg-[var(--bg-hover)] transition-colors"
             >
-              <Minus className="w-3.5 h-3.5 text-slate-400" />
+              <Minus className="w-3.5 h-3.5 text-[var(--text-secondary)]" />
             </button>
             <input 
               type="range"
@@ -120,21 +120,21 @@ export function GridGenerator() {
               max={12} 
               step={1} 
               onChange={(e) => setRows(parseInt(e.target.value))} 
-              className="flex-1 h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+              className="flex-1 h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
             />
             <button 
               onClick={() => setRows(Math.min(12, rows + 1))}
-              className="p-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+              className="p-1.5 rounded-lg card hover:bg-[var(--bg-hover)] transition-colors"
             >
-              <Plus className="w-3.5 h-3.5 text-slate-400" />
+              <Plus className="w-3.5 h-3.5 text-[var(--text-secondary)]" />
             </button>
           </div>
         </div>
 
-        <div className="space-y-2 pt-4 border-t border-white/5">
+        <div className="space-y-2 pt-4 border-t border-[var(--border)]">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Column Gap</label>
-            <span className="text-[10px] font-bold text-brand-primary font-mono">{columnGap}px</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Column Gap</label>
+            <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{columnGap}px</span>
           </div>
           <input 
             type="range"
@@ -143,14 +143,14 @@ export function GridGenerator() {
             max={100} 
             step={1} 
             onChange={(e) => setColumnGap(parseInt(e.target.value))} 
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Row Gap</label>
-            <span className="text-[10px] font-bold text-brand-primary font-mono">{rowGap}px</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Row Gap</label>
+            <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{rowGap}px</span>
           </div>
           <input 
             type="range"
@@ -159,7 +159,7 @@ export function GridGenerator() {
             max={100} 
             step={1} 
             onChange={(e) => setRowGap(parseInt(e.target.value))} 
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
       </div>
@@ -178,7 +178,7 @@ export function GridGenerator() {
       {gridItems.map((_, i) => (
         <div 
           key={i}
-          className="bg-brand-primary/10 border border-brand-primary/20 rounded-xl flex items-center justify-center font-mono text-[10px] text-brand-primary shadow-inner"
+          className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl flex items-center justify-center font-mono text-[10px] text-[var(--text-primary)] shadow-inner"
         >
           {i + 1}
         </div>

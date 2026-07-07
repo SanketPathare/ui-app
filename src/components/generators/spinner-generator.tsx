@@ -41,7 +41,7 @@ ${type === 'dots' ? `
   to { transform: translateY(-20px); opacity: 0.5; }
 }` : ""}`;
 
-  const tailwindCode = `<div class="w-${size/4} h-${size/4} border-${thickness} border-white/10 border-t-[${accentColor}] rounded-full animate-spin ${type === 'dual' ? `border-b-[${accentColor}]` : ""}"></div>`;
+  const tailwindCode = `<div class="w-${size/4} h-${size/4} border-${thickness} border-[var(--border)] border-t-[${accentColor}] rounded-full animate-spin ${type === 'dual' ? `border-b-[${accentColor}]` : ""}"></div>`;
 
   const htmlCode = `<div class="spinner"></div>
 
@@ -69,17 +69,17 @@ ${type === 'dots' ? `
     <div className="space-y-6">
       <div className="space-y-4">
         <div className="space-y-2">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Spinner Type</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Spinner Type</label>
           <div className="grid grid-cols-2 gap-2">
             {["classic", "dots", "dual", "ring"].map((t) => (
               <button
                 key={t}
                 onClick={() => setType(t as any)}
                 className={cn(
-                  "px-3 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest border transition-all",
+                  "px-3 py-2 rounded-xl text-xs font-medium border transition-all",
                   type === t 
-                    ? "bg-brand-primary/20 border-brand-primary/50 text-brand-primary shadow-lg shadow-brand-primary/10" 
-                    : "bg-white/5 border-white/10 text-slate-500 hover:text-slate-300"
+                    ? "bg-[var(--bg-active)] border-[var(--border-hover)] text-[var(--text-primary)] " 
+                    : "bg-[var(--bg-card)] border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                 )}
               >
                 {t}
@@ -90,8 +90,8 @@ ${type === 'dots' ? `
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Size</label>
-            <span className="text-[10px] font-bold text-brand-primary font-mono">{size}px</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Size</label>
+            <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{size}px</span>
           </div>
           <input 
             type="range"
@@ -100,14 +100,14 @@ ${type === 'dots' ? `
             max={120} 
             step={2} 
             onChange={(e) => setSize(parseInt(e.target.value))} 
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Thickness</label>
-            <span className="text-[10px] font-bold text-brand-primary font-mono">{thickness}px</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Thickness</label>
+            <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{thickness}px</span>
           </div>
           <input 
             type="range"
@@ -116,14 +116,14 @@ ${type === 'dots' ? `
             max={12} 
             step={1} 
             onChange={(e) => setThickness(parseInt(e.target.value))} 
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Speed (s/rot)</label>
-            <span className="text-[10px] font-bold text-brand-primary font-mono">{speed}s</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Speed (s/rot)</label>
+            <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{speed}s</span>
           </div>
           <input 
             type="range"
@@ -132,12 +132,12 @@ ${type === 'dots' ? `
             max={3} 
             step={0.1} 
             onChange={(e) => setSpeed(parseFloat(e.target.value))} 
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
 
         <div className="space-y-2">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Accent Color</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Accent Color</label>
           <div className="flex gap-2">
             {["#8b5cf6", "#06b6d4", "#ec4899", "#10b981", "#f59e0b"].map((color) => (
               <button
@@ -157,7 +157,7 @@ ${type === 'dots' ? `
   );
 
   const preview = (
-    <div className="w-full h-[300px] flex items-center justify-center rounded-[2rem] p-12">
+    <div className="w-full h-[300px] flex items-center justify-center rounded-[12px] p-12">
        {type === 'dots' ? (
          <div className="flex gap-3">
             {[1,2,3].map(i => (
@@ -177,7 +177,7 @@ ${type === 'dots' ? `
          </div>
        ) : (
          <div 
-           className="rounded-full border-white/10 animate-spin"
+           className="rounded-full border-[var(--border)] animate-spin"
            style={{ 
              width: `${size}px`, 
              height: `${size}px`, 
@@ -192,8 +192,8 @@ ${type === 'dots' ? `
        )}
        
        <div className="absolute bottom-8 flex items-center gap-2 opacity-30">
-          <RefreshCw className="w-3 h-3 text-brand-primary animate-spin" />
-          <span className="text-[9px] font-black uppercase tracking-widest text-white">Live Render</span>
+          <RefreshCw className="w-3 h-3 text-[var(--text-primary)] animate-spin" />
+          <span className="text-xs font-medium text-white">Live Render</span>
        </div>
     </div>
   );

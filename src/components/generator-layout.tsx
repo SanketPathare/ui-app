@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
-import { Copy, Check, RefreshCcw, ArrowLeft, Sun, Moon, Terminal, Code, Eye } from "lucide-react";
+import { Copy, Check, RefreshCcw, ArrowLeft, Sun, Moon, Code } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -11,7 +11,7 @@ interface GeneratorLayoutProps {
   description: string;
   controls: ReactNode;
   preview: ReactNode;
-  cssCode: string;
+  cssCode?: string;
   tailwindCode?: string;
   htmlCode?: string;
   jsCode?: string;
@@ -32,12 +32,13 @@ export function GeneratorLayout({
   onReset
 }: GeneratorLayoutProps) {
   const [copied, setCopied] = useState(false);
-  const [activeTab, setActiveTab] = useState<"react" | "css" | "html" | "js">("react");
+  const defaultTab = tailwindCode ? "react" : cssCode ? "css" : htmlCode ? "html" : "js";
+  const [activeTab, setActiveTab] = useState<"react" | "css" | "html" | "js">(defaultTab);
   const [previewMode, setPreviewMode] = useState<"dark" | "light">("dark");
 
   const copyToClipboard = () => {
     let codeToCopy = "";
-    if (activeTab === "css") codeToCopy = cssCode;
+    if (activeTab === "css") codeToCopy = cssCode || "";
     else if (activeTab === "react") codeToCopy = tailwindCode || "";
     else if (activeTab === "html") codeToCopy = htmlCode || "";
     else codeToCopy = jsCode || "";
@@ -47,26 +48,34 @@ export function GeneratorLayout({
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const switchPreviewMode = (mode: "dark" | "light") => {
+    setPreviewMode(mode);
+    if (mode === "light") {
+      document.documentElement.classList.remove("dark");
+      document.documentElement.classList.add("light");
+    } else {
+      document.documentElement.classList.remove("light");
+      document.documentElement.classList.add("dark");
+    }
+  };
+
   return (
-    <div className="space-y-8 animate-in fade-in duration-700">
-      {/* Premium Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div className="space-y-4">
+    <div className="space-y-8">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div className="space-y-3">
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 text-[10px] font-black text-slate-500 hover:text-brand-primary uppercase tracking-widest transition-colors group"
+            className="inline-flex items-center gap-1 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
           >
-            <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
-            Back to Hub
+            <ArrowLeft className="w-3.5 h-3.5" />
+            Back
           </Link>
-          <div className="space-y-2">
-            <h1 className="text-4xl font-black tracking-tighter text-white flex items-center gap-3">
-              {icon && <div className="text-brand-primary">{icon}</div>}
-              <div>
-                {title.split(' ')[0]} <span className="text-brand-primary">{title.split(' ').slice(1).join(' ')}</span>
-              </div>
+          <div className="space-y-1">
+            <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-[var(--text-primary)] flex items-center gap-2">
+              {icon && <span className="text-[var(--text-secondary)]">{icon}</span>}
+              {title}
             </h1>
-            <p className="text-slate-400 text-sm font-medium max-w-xl">
+            <p className="text-sm text-[var(--text-secondary)] max-w-xl">
               {description}
             </p>
           </div>
@@ -75,72 +84,55 @@ export function GeneratorLayout({
         {onReset && (
           <button
             onClick={onReset}
-            className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-white/5 border border-white/5 text-xs font-black uppercase tracking-widest text-slate-400 hover:bg-white/10 hover:text-white transition-all active:scale-95"
+            className="btn-secondary text-sm"
           >
             <RefreshCcw className="w-3.5 h-3.5" />
-            Reset Engine
+            Reset
           </button>
         )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Sidebar Zone */}
-        <div className="lg:col-span-4 space-y-6">
-          <div className="p-8 rounded-[2.5rem] bg-[#020617] border border-white/5 space-y-8 shadow-2xl">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <div className="lg:col-span-4 space-y-4">
+          <div className="card p-5 space-y-5">
+            <label className="text-xs font-semibold text-[var(--text-primary)] flex items-center gap-2">
+              Configuration
+            </label>
             <div className="space-y-4">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-2">
-                <div className="w-1 h-3 bg-brand-primary rounded-full" />
-                Configuration
-              </label>
-              <div className="space-y-6">
-                {controls}
-              </div>
+              {controls}
             </div>
           </div>
 
-          <div className="p-6 rounded-[2rem] bg-brand-primary/5 border border-brand-primary/10 flex items-start gap-4">
-            <div className="w-10 h-10 rounded-xl bg-brand-primary/10 flex items-center justify-center text-brand-primary flex-shrink-0">
-              <Terminal className="w-5 h-5" />
-            </div>
-            <div className="space-y-1">
-              <h4 className="text-[11px] font-black uppercase tracking-widest text-white">Engine Specs</h4>
-              <p className="text-[10px] text-slate-500 font-medium leading-relaxed">
-                Optimized for modern browser engines and high-performance UI rendering.
+          <div className="card p-4 flex items-start gap-3">
+            <Code className="w-4 h-4 text-[var(--text-secondary)] mt-0.5 shrink-0" />
+            <div className="space-y-0.5">
+              <h4 className="text-sm font-medium text-[var(--text-primary)]">Engine Specs</h4>
+              <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
+                Optimized for modern browser engines.
               </p>
             </div>
           </div>
         </div>
 
-        {/* Main Workspace Zone */}
-        <div className="lg:col-span-8 space-y-10">
-          {/* Simulation Lab */}
-          <div className="space-y-4">
+        <div className="lg:col-span-8 space-y-6">
+          <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-brand-primary/10 flex items-center justify-center text-brand-primary shadow-xl shadow-brand-primary/5">
-                  <Eye className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-black uppercase tracking-widest text-white">Simulation Lab</h4>
-                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">High-Fidelity Preview</p>
-                </div>
-              </div>
-
-              <div className="flex p-1 rounded-xl bg-white/5 border border-white/5">
+              <h4 className="text-sm font-medium text-[var(--text-primary)]">Preview</h4>
+              <div className="flex p-0.5 rounded-[6px] border border-[var(--border)]">
                 <button
-                  onClick={() => setPreviewMode("light")}
+                  onClick={() => switchPreviewMode("light")}
                   className={cn(
-                    "p-2 rounded-lg transition-all",
-                    previewMode === "light" ? "bg-white text-slate-900 shadow-lg" : "text-slate-500 hover:text-slate-400"
+                    "p-1.5 rounded-[4px] transition-colors text-sm",
+                    previewMode === "light" ? "bg-[var(--bg-card)] text-[var(--text-primary)]" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                   )}
                 >
                   <Sun className="w-3.5 h-3.5" />
                 </button>
                 <button
-                  onClick={() => setPreviewMode("dark")}
+                  onClick={() => switchPreviewMode("dark")}
                   className={cn(
-                    "p-2 rounded-lg transition-all",
-                    previewMode === "dark" ? "bg-slate-900 text-white shadow-lg" : "text-slate-500 hover:text-slate-400"
+                    "p-1.5 rounded-[4px] transition-colors text-sm",
+                    previewMode === "dark" ? "bg-[var(--bg-card)] text-[var(--text-primary)]" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                   )}
                 >
                   <Moon className="w-3.5 h-3.5" />
@@ -148,98 +140,85 @@ export function GeneratorLayout({
               </div>
             </div>
 
-            <div className={cn(
-              "rounded-[3rem] border transition-all duration-500 flex items-center justify-center shadow-3xl min-h-[500px] relative overflow-hidden group",
-              previewMode === "dark" ? "bg-[#020617] border-white/5" : "bg-slate-50 border-slate-200"
-            )}>
-              <div className={cn(
-                "absolute inset-0 preview-checkerboard transition-opacity",
-                previewMode === "dark" ? "opacity-[0.03]" : "opacity-[0.05]"
-              )} />
-              <div className="relative z-10 transition-transform duration-500 group-hover:scale-[1.02]">
+            <div
+              className={cn(
+                "rounded-[6px] border transition-colors flex items-center justify-center min-h-[400px] relative overflow-hidden",
+                previewMode === "dark" ? "bg-[var(--bg)] border-[var(--border)]" : "bg-white border-[#e0e0e0]"
+              )}
+            >
+              <div className="relative z-10 w-full h-full flex items-center justify-center p-8">
                 {preview}
               </div>
             </div>
           </div>
 
-          {/* Production Console */}
-          <div className="space-y-4">
+          <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500 shadow-xl shadow-emerald-500/5">
-                  <Code className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-black uppercase tracking-widest text-white">Production Console</h4>
-                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Copy-Paste Ready Exports</p>
-                </div>
-              </div>
+              <h4 className="text-sm font-medium text-[var(--text-primary)]">Code</h4>
               <button
                 onClick={copyToClipboard}
                 className={cn(
-                  "flex items-center gap-2 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 shadow-2xl",
-                  copied ? "bg-emerald-500 text-white" : "bg-brand-primary text-white hover:bg-brand-accent"
+                  "flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] text-sm font-medium transition-colors",
+                  copied
+                    ? "bg-[var(--bg-card)] text-[var(--text-primary)]"
+                    : "bg-[var(--text-primary)] text-[var(--bg)] hover:opacity-80"
                 )}
               >
-                {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                {copied ? 'Copied' : 'Export Code'}
+                {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                {copied ? "Copied" : "Copy"}
               </button>
             </div>
 
-            <div className="rounded-[2.5rem] bg-[#030712] border border-white/5 overflow-hidden shadow-3xl relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 to-transparent pointer-events-none" />
-              <div className="flex items-center justify-between px-8 py-4 bg-white/[0.02] border-b border-white/5 relative z-10">
-                <div className="flex gap-4">
-                  {tailwindCode && (
-                    <button
-                      onClick={() => setActiveTab("react")}
-                      className={cn(
-                        "text-[10px] font-black uppercase tracking-widest transition-colors",
-                        activeTab === "react" ? "text-brand-primary" : "text-slate-500 hover:text-slate-300"
-                      )}
-                    >
-                      React / Tailwind
-                    </button>
-                  )}
+            <div className="rounded-[6px] bg-[var(--bg)] border border-[var(--border)] overflow-hidden">
+              <div className="flex items-center gap-4 px-4 py-2.5 border-b border-[var(--border)] bg-[var(--bg-card)]">
+                {tailwindCode && (
+                  <button
+                    onClick={() => setActiveTab("react")}
+                    className={cn(
+                      "text-sm font-medium transition-colors",
+                      activeTab === "react" ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                    )}
+                  >
+                    React / Tailwind
+                  </button>
+                )}
+                {cssCode && (
                   <button
                     onClick={() => setActiveTab("css")}
                     className={cn(
-                      "text-[10px] font-black uppercase tracking-widest transition-colors",
-                      activeTab === "css" ? "text-brand-primary" : "text-slate-500 hover:text-slate-300"
+                      "text-sm font-medium transition-colors",
+                      activeTab === "css" ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                     )}
                   >
                     CSS
                   </button>
-                  {htmlCode && (
-                    <button
-                      onClick={() => setActiveTab("html")}
-                      className={cn(
-                        "text-[10px] font-black uppercase tracking-widest transition-colors",
-                        activeTab === "html" ? "text-brand-primary" : "text-slate-500 hover:text-slate-300"
-                      )}
-                    >
-                      HTML5
-                    </button>
-                  )}
-                  {jsCode && (
-                    <button
-                      onClick={() => setActiveTab("js")}
-                      className={cn(
-                        "text-[10px] font-black uppercase tracking-widest transition-colors",
-                        activeTab === "js" ? "text-brand-primary" : "text-slate-500 hover:text-slate-300"
-                      )}
-                    >
-                      JavaScript
-                    </button>
-                  )}
-                </div>
-                <span className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em]">
-                  {activeTab.toUpperCase()}
-                </span>
+                )}
+                {htmlCode && (
+                  <button
+                    onClick={() => setActiveTab("html")}
+                    className={cn(
+                      "text-sm font-medium transition-colors",
+                      activeTab === "html" ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                    )}
+                  >
+                    HTML
+                  </button>
+                )}
+                {jsCode && (
+                  <button
+                    onClick={() => setActiveTab("js")}
+                    className={cn(
+                      "text-sm font-medium transition-colors",
+                      activeTab === "js" ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                    )}
+                  >
+                    JavaScript
+                  </button>
+                )}
               </div>
-              <div className="p-8 font-mono text-[11px] leading-relaxed custom-scrollbar max-h-[400px] overflow-y-auto text-indigo-200/90 relative z-10">
+              <div className="p-4 font-mono text-sm leading-relaxed max-h-[300px] overflow-y-auto text-[var(--text-primary)]">
                 <pre className="whitespace-pre-wrap">
-                  {activeTab === "react" ? tailwindCode : activeTab === "css" ? cssCode : activeTab === "html" ? htmlCode : jsCode}
+                  {activeTab === "react" ? (tailwindCode || "") : activeTab === "css" ? (cssCode || "") : activeTab === "html" ? (htmlCode || "") : (jsCode || "")}
                 </pre>
               </div>
             </div>

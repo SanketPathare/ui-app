@@ -34,8 +34,8 @@ export function OutlineGenerator() {
       <div className="grid grid-cols-1 gap-5">
         <div className="space-y-2.5">
           <div className="flex justify-between items-center">
-            <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Width</label>
-            <span className="text-[10px] font-black text-brand-primary font-mono">{width}px</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Width</label>
+            <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{width}px</span>
           </div>
           <input
             type="range"
@@ -43,14 +43,14 @@ export function OutlineGenerator() {
             max="20"
             value={width}
             onChange={(e) => setWidth(parseInt(e.target.value))}
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
 
         <div className="space-y-2.5">
           <div className="flex justify-between items-center">
-            <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Offset</label>
-            <span className="text-[10px] font-black text-brand-primary font-mono">{offset}px</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Offset</label>
+            <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{offset}px</span>
           </div>
           <input
             type="range"
@@ -58,14 +58,14 @@ export function OutlineGenerator() {
             max="40"
             value={offset}
             onChange={(e) => setOffset(parseInt(e.target.value))}
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
 
         <div className="space-y-2.5">
           <div className="flex justify-between items-center">
-            <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Rounding</label>
-            <span className="text-[10px] font-black text-brand-primary font-mono">{radius}px</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Rounding</label>
+            <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{radius}px</span>
           </div>
           <input
             type="range"
@@ -73,23 +73,23 @@ export function OutlineGenerator() {
             max="100"
             value={radius}
             onChange={(e) => setRadius(parseInt(e.target.value))}
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
       </div>
 
-      <div className="space-y-3 pt-4 border-t border-white/10">
-        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Style</label>
+      <div className="space-y-3 pt-4 border-t border-[var(--border)]">
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Style</label>
         <div className="grid grid-cols-2 gap-2">
           {["solid", "dashed", "dotted", "double"].map((s) => (
             <button
               key={s}
               onClick={() => setStyle(s)}
               className={cn(
-                "px-2 py-2 rounded-lg text-[9px] font-black uppercase tracking-tighter transition-all",
+                "px-2 py-2 rounded-lg text-xs font-medium transition-all",
                 style === s 
-                  ? "bg-brand-primary text-white shadow-lg" 
-                  : "bg-white/5 text-slate-500 hover:text-brand-primary border border-white/10"
+                  ? "bg-[var(--text-primary)] text-[var(--bg)] shadow-lg" 
+                  : "bg-[var(--bg-card)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border)]"
               )}
             >
               {s}
@@ -98,14 +98,14 @@ export function OutlineGenerator() {
         </div>
       </div>
 
-      <div className="space-y-3 pt-4 border-t border-white/10">
-        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Presets</label>
+      <div className="space-y-3 pt-4 border-t border-[var(--border)]">
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Presets</label>
         <div className="grid grid-cols-2 gap-2">
           {presets.map((p) => (
             <button
               key={p.name}
               onClick={() => applyPreset(p)}
-              className="px-2 py-2 rounded-lg bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-tighter text-slate-500 hover:text-brand-primary hover:border-brand-primary transition-all"
+              className="px-2 py-2 rounded-lg card text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-hover)] transition-colors"
             >
               {p.name}
             </button>
@@ -113,9 +113,9 @@ export function OutlineGenerator() {
         </div>
       </div>
 
-      <div className="pt-6 border-t border-white/10">
-        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-3 block">Outline Color</label>
-        <div className="flex gap-2 p-1.5 rounded-xl bg-white/5 border border-white/10">
+      <div className="pt-6 border-t border-[var(--border)]">
+        <label className="text-sm font-medium text-[var(--text-secondary)] mb-3 block">Outline Color</label>
+        <div className="flex gap-2 p-1.5 rounded-xl card">
           <input 
             type="color" 
             value={color} 
@@ -129,7 +129,7 @@ export function OutlineGenerator() {
 
   const preview = (
     <div 
-      className="w-40 h-40 md:w-56 md:h-56 bg-white/10 transition-all duration-300"
+      className="w-40 h-40 md:w-56 md:h-56 bg-[var(--bg-hover)] transition-all duration-300"
       style={{ 
         outline: `${width}px ${style} ${color}`,
         outlineOffset: `${offset}px`,

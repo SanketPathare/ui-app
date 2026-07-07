@@ -3,52 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { 
-  Palette, 
-  Box, 
-  Square, 
-  MousePointer2, 
-  Layers,
-  BookOpen,
-  Sparkles,
-  Settings2,
-  Grid,
-  Type,
-  Layout,
-  Columns,
-  Rows,
-  Maximize,
-  PanelLeft,
-  Navigation,
-  Monitor,
-  CheckSquare,
-  ToggleLeft,
-  Tag,
-  Info,
-  Maximize2,
-  ClipboardList,
-  Play,
-  RotateCw,
-  Loader2,
-  ArrowDownCircle,
-  Menu,
-  X,
-  Zap,
-  Star,
-  Search,
-  Type as TypeIcon,
-  Scissors,
-  Hexagon,
-  Spline,
-  Image,
-  Activity,
-  Component,
-  Code,
-  Terminal,
-  Cpu,
-  Laptop,
-  Braces,
-  Wind
+import {
+  Palette, Box, Square, Layers, Sparkles, Grid, BookOpen,
+  Menu, X, Search, Sun, Moon, Zap, Layout, Columns, Maximize,
+  PanelLeft, Navigation, Monitor, CheckSquare, ToggleLeft, Tag,
+  Info, ClipboardList, Play, RotateCw, Loader2, Type as TypeIcon,
+  Scissors, Hexagon, Spline, Image, Activity, Code, Terminal, Cpu,
+  Component, ArrowDownCircle, Star, Laptop, Braces, Wind, Ghost,
+  Settings2, Frame, Type, MousePointer2
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -56,8 +18,6 @@ import { motion, AnimatePresence } from "framer-motion";
 const toolCategories = [
   {
     name: "Visual FX",
-    icon: Sparkles,
-    color: "text-blue-400",
     tools: [
       { title: "Gradient Text", href: "/fx-gradient-text", icon: Type },
       { title: "Glow Effect", href: "/fx-glow", icon: Zap },
@@ -74,8 +34,6 @@ const toolCategories = [
   },
   {
     name: "SVG & Geometry",
-    icon: Zap,
-    color: "text-yellow-400",
     tools: [
       { title: "SVG Shapes", href: "/svg-shape", icon: Zap },
       { title: "Clip-path", href: "/clip-path", icon: Scissors },
@@ -86,8 +44,6 @@ const toolCategories = [
   },
   {
     name: "Color & Patterns",
-    icon: Palette,
-    color: "text-purple-400",
     tools: [
       { title: "Gradient", href: "/gradient", icon: Palette },
       { title: "Mesh Gradient", href: "/mesh-gradient", icon: Palette },
@@ -100,8 +56,6 @@ const toolCategories = [
   },
   {
     name: "Layout System",
-    icon: Layout,
-    color: "text-emerald-400",
     tools: [
       { title: "CSS Grid", href: "/grid", icon: Grid },
       { title: "Flexbox", href: "/flexbox", icon: Columns },
@@ -112,8 +66,6 @@ const toolCategories = [
   },
   {
     name: "Navigation & UI",
-    icon: Navigation,
-    color: "text-orange-400",
     tools: [
       { title: "Navbar", href: "/navigation", icon: Navigation },
       { title: "Sidebar Pro", href: "/sidebar", icon: PanelLeft },
@@ -124,8 +76,6 @@ const toolCategories = [
   },
   {
     name: "Input & Motion",
-    icon: Play,
-    color: "text-pink-400",
     tools: [
       { title: "Form Gen", href: "/forms", icon: ClipboardList },
       { title: "Input Field", href: "/inputs", icon: Type },
@@ -141,8 +91,6 @@ const toolCategories = [
   },
   {
     name: "Dev & Frameworks",
-    icon: Code,
-    color: "text-indigo-400",
     tools: [
       { title: "HTML to TW", href: "/html-to-tw", icon: Code },
       { title: "CSS to TW", href: "/css-to-tw", icon: Terminal },
@@ -151,9 +99,34 @@ const toolCategories = [
   }
 ];
 
+function useTheme() {
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+
+  useEffect(() => {
+    const stored = localStorage.getItem("theme") as "dark" | "light" | null;
+    if (stored) setTheme(stored);
+  }, []);
+
+  const toggle = () => {
+    const next = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    localStorage.setItem("theme", next);
+    if (next === "light") {
+      document.documentElement.classList.remove("dark");
+      document.documentElement.classList.add("light");
+    } else {
+      document.documentElement.classList.remove("light");
+      document.documentElement.classList.add("dark");
+    }
+  };
+
+  return { theme, toggle };
+}
+
 export function Navbar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const { theme, toggle } = useTheme();
 
   const navItems = [
     { title: "Gradient", href: "/gradient", icon: Palette },
@@ -171,7 +144,6 @@ export function Navbar() {
     ...toolCategories.flatMap(c => c.tools)
   ];
 
-  // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
@@ -192,27 +164,23 @@ export function Navbar() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  const filteredTools = searchQuery.trim() === "" 
-    ? [] 
-    : allTools.filter(tool => 
+  const filteredTools = searchQuery.trim() === ""
+    ? []
+    : allTools.filter(tool =>
         tool.title.toLowerCase().includes(searchQuery.toLowerCase())
       );
 
   return (
-    <nav className="sticky top-0 z-[100] w-full bg-[#020617]/70 backdrop-blur-xl border-b border-white/5">
-      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        <div className="flex items-center gap-8">
-          <Link href="/" className="flex items-center gap-2.5 group shrink-0">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-brand-primary to-brand-secondary flex items-center justify-center shadow-lg shadow-brand-primary/20 group-hover:rotate-12 transition-transform duration-300">
-              <span className="text-white font-black text-lg tracking-tighter">C</span>
-            </div>
-            <span className="hidden sm:inline-block font-display font-bold text-lg tracking-tight text-white">
+    <nav className="sticky top-0 z-[100] w-full bg-[var(--bg)] border-b border-[var(--border)]">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 h-14 flex items-center justify-between">
+        <div className="flex items-center gap-6">
+          <Link href="/" className="flex items-center gap-2 shrink-0">
+            <span className="font-sans font-semibold text-base text-[var(--text-primary)] tracking-tight">
               UI Engine
             </span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-0.5">
             {navItems.map((item) => {
               const isActive = pathname === item.href;
               return (
@@ -220,10 +188,10 @@ export function Navbar() {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-bold transition-all duration-300",
-                    isActive 
-                      ? "bg-brand-primary/10 text-brand-primary" 
-                      : "text-slate-400 hover:text-slate-100 hover:bg-white/5"
+                    "flex items-center gap-1.5 px-2.5 py-1.5 rounded-[6px] text-sm font-medium transition-colors duration-150",
+                    isActive
+                      ? "bg-[var(--bg-card)] text-[var(--text-primary)]"
+                      : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card)]"
                   )}
                 >
                   <item.icon className="w-3.5 h-3.5" />
@@ -231,142 +199,131 @@ export function Navbar() {
                 </Link>
               );
             })}
-            
-            <button 
+
+            <button
               onClick={() => setIsLibraryOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-brand-primary hover:bg-brand-primary/5 transition-all"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-[6px] text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card)] transition-colors"
             >
               <Grid className="w-3.5 h-3.5" />
-              Tool Library
-              <kbd className="hidden xl:inline-flex h-4 select-none items-center gap-1 rounded border border-white/10 bg-white/5 px-1 font-mono text-[9px] font-medium text-slate-500 ml-1">
-                <span>⌘</span>L
-              </kbd>
+              Library
             </button>
           </div>
         </div>
 
-        <div className="flex items-center gap-6">
-          <div className="relative hidden md:flex items-center bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 gap-2 group focus-within:border-brand-primary/50 focus-within:bg-white/10 transition-all">
-            <Search className="w-3.5 h-3.5 text-slate-500 group-focus-within:text-brand-primary transition-colors" />
-            <input 
+        <div className="flex items-center gap-3">
+          <div className="relative hidden md:flex items-center bg-[var(--bg)] border border-[var(--border)] rounded-[6px] px-3 h-8 gap-2 group focus-within:border-[var(--text-primary)] transition-colors">
+            <Search className="w-3.5 h-3.5 text-[var(--text-secondary)]" />
+            <input
               id="nav-search"
-              type="text" 
-              placeholder="Search tools..." 
+              type="text"
+              placeholder="Search..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-transparent border-none outline-none text-[11px] font-medium w-28 focus:w-48 transition-all text-slate-200 placeholder:text-slate-600"
+              className="bg-transparent border-none outline-none text-sm w-24 focus:w-36 transition-all text-[var(--text-primary)] placeholder:text-[var(--text-secondary)]"
             />
             {searchQuery && (
-              <button 
+              <button
                 onClick={() => setSearchQuery("")}
-                className="hover:text-white transition-colors"
+                className="hover:text-[var(--text-primary)] transition-colors"
               >
-                <X className="w-3 h-3 text-slate-500" />
+                <X className="w-3 h-3 text-[var(--text-secondary)]" />
               </button>
             )}
             {!searchQuery && (
-              <kbd className="hidden sm:inline-flex h-4 select-none items-center gap-1 rounded border border-white/10 bg-white/5 px-1 font-mono text-[9px] font-medium text-slate-500 opacity-100">
+              <kbd className="hidden sm:inline-flex h-4 select-none items-center gap-1 rounded border border-[var(--border)] bg-[var(--bg-card)] px-1 font-mono text-[10px] text-[var(--text-secondary)]">
                 <span>⌘</span>K
               </kbd>
             )}
 
-            {/* Search Results Dropdown */}
             {filteredTools.length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-slate-900 border border-white/10 rounded-xl shadow-2xl overflow-hidden z-[300] max-h-64 overflow-y-auto p-1">
+              <div className="absolute top-full left-0 right-0 mt-1.5 bg-[var(--bg-card)] border border-[var(--border)] rounded-[6px] shadow-lg overflow-hidden z-[300] max-h-64 overflow-y-auto p-1">
                 {filteredTools.map((tool) => (
                   <Link
                     key={tool.href}
                     href={tool.href}
                     onClick={() => setSearchQuery("")}
-                    className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 text-slate-400 hover:text-white transition-all group/res"
+                    className="flex items-center gap-2 px-2.5 py-2 rounded-[4px] hover:bg-[var(--bg-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors text-sm"
                   >
-                    <div className="w-7 h-7 rounded-md bg-white/5 flex items-center justify-center group-hover/res:bg-brand-primary/10 group-hover/res:text-brand-primary transition-colors">
-                      <tool.icon className="w-3.5 h-3.5" />
-                    </div>
-                    <span className="text-[12px] font-medium">{tool.title}</span>
+                    <tool.icon className="w-3.5 h-3.5" />
+                    <span>{tool.title}</span>
                   </Link>
                 ))}
               </div>
             )}
           </div>
 
-          <div className="flex items-center gap-3">
-            <Link
-              href="/docs"
-              className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg text-slate-400 hover:text-brand-primary transition-all text-xs font-bold"
-            >
-              <BookOpen className="w-3.5 h-3.5" />
-              Docs
-            </Link>
-            <div className="h-4 w-px bg-white/10 mx-1 hidden sm:block" />
-            <button 
-              className="lg:hidden p-2 rounded-lg bg-white/5 text-slate-400 hover:text-white"
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-          </div>
+          <Link
+            href="/docs"
+            className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-[6px] text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card)] transition-colors"
+          >
+            <BookOpen className="w-3.5 h-3.5" />
+            Docs
+          </Link>
+
+          <button
+            onClick={toggle}
+            className="p-1.5 rounded-[6px] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card)] transition-colors"
+            aria-label="Toggle theme"
+          >
+            {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </button>
+
+          <button
+            className="lg:hidden p-1.5 rounded-[6px] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card)] transition-colors"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            {isOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+          </button>
         </div>
       </div>
 
-      {/* Tool Library Modal */}
       <AnimatePresence>
         {isLibraryOpen && (
-          <div className="fixed inset-0 z-[200] flex items-start justify-center pt-20 px-4">
-            <motion.div 
+          <div className="fixed inset-0 z-[200] flex items-start justify-center pt-16 px-4">
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsLibraryOpen(false)}
-              className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm"
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             />
-            
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: -20 }}
+              initial={{ opacity: 0, scale: 0.96, y: -12 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: -20 }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="relative w-full max-w-5xl bg-slate-900/95 border border-white/10 rounded-3xl shadow-2xl overflow-hidden"
+              exit={{ opacity: 0, scale: 0.96, y: -12 }}
+              transition={{ duration: 0.2, ease: [0.175, 0.885, 0.32, 1.1] }}
+              className="relative w-full max-w-4xl bg-[var(--bg-card)] border border-[var(--border)] rounded-[12px] shadow-lg overflow-hidden"
             >
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-primary via-brand-accent to-brand-secondary opacity-50" />
-              
-              <div className="p-8 max-h-[80vh] overflow-y-auto custom-scrollbar">
-                <div className="flex items-center justify-between mb-8">
+              <div className="p-6 max-h-[70vh] overflow-y-auto">
+                <div className="flex items-center justify-between mb-6">
                   <div>
-                    <h2 className="text-2xl font-bold text-white mb-1">Tool Library</h2>
-                    <p className="text-sm text-slate-400">Explore our comprehensive suite of UI engineering tools.</p>
+                    <h2 className="text-lg font-semibold text-[var(--text-primary)]">Tool Library</h2>
+                    <p className="text-sm text-[var(--text-secondary)]">All available generators and tools.</p>
                   </div>
-                  <button 
+                  <button
                     onClick={() => setIsLibraryOpen(false)}
-                    className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all"
+                    className="p-1.5 rounded-[6px] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-colors"
                   >
-                    <X className="w-5 h-5" />
+                    <X className="w-4 h-4" />
                   </button>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   {toolCategories.map((category) => (
-                    <div key={category.name} className="space-y-4">
-                      <div className="flex items-center gap-2 px-1">
-                        <category.icon className={cn("w-4 h-4", category.color)} />
-                        <h3 className="text-[11px] font-black text-white/90 uppercase tracking-widest">
-                          {category.name}
-                        </h3>
-                      </div>
-                      <div className="grid grid-cols-1 gap-1">
+                    <div key={category.name} className="space-y-3">
+                      <h3 className="text-xs font-semibold text-[var(--text-primary)] uppercase tracking-wider">
+                        {category.name}
+                      </h3>
+                      <div className="flex flex-col gap-0.5">
                         {category.tools.map((tool) => (
                           <Link
                             key={tool.href}
                             href={tool.href}
                             onClick={() => setIsLibraryOpen(false)}
-                            className="group/item flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/5 transition-all border border-transparent hover:border-white/5"
+                            className="flex items-center gap-2 px-2.5 py-2 rounded-[4px] hover:bg-[var(--bg-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors text-sm"
                           >
-                            <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover/item:bg-brand-primary/10 group-hover/item:text-brand-primary transition-colors">
-                              <tool.icon className="w-4 h-4" />
-                            </div>
-                            <span className="text-sm font-medium text-slate-400 group-hover/item:text-slate-100 transition-colors">
-                              {tool.title}
-                            </span>
+                            <tool.icon className="w-3.5 h-3.5 shrink-0" />
+                            <span>{tool.title}</span>
                           </Link>
                         ))}
                       </div>
@@ -379,31 +336,30 @@ export function Navbar() {
         )}
       </AnimatePresence>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden border-t border-white/5 bg-slate-950 p-6 overflow-hidden"
+            className="lg:hidden border-t border-[var(--border)] bg-[var(--bg)] overflow-hidden"
           >
-            <div className="grid grid-cols-1 gap-8">
+            <div className="p-4 space-y-6">
               {toolCategories.map((category) => (
-                <div key={category.name} className="flex flex-col gap-4">
-                  <h3 className="text-xs font-black text-slate-500 uppercase tracking-[0.2em]">
+                <div key={category.name} className="space-y-2">
+                  <h3 className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider">
                     {category.name}
                   </h3>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-2 gap-1">
                     {category.tools.map((tool) => (
                       <Link
                         key={tool.href}
                         href={tool.href}
                         onClick={() => setIsOpen(false)}
-                        className="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-brand-primary/10 transition-colors"
+                        className="flex items-center gap-2 px-2.5 py-2 rounded-[4px] text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card)] transition-colors"
                       >
-                        <tool.icon className="w-4 h-4 text-slate-400" />
-                        <span className="text-sm font-medium text-slate-300">{tool.title}</span>
+                        <tool.icon className="w-3.5 h-3.5 shrink-0" />
+                        <span>{tool.title}</span>
                       </Link>
                     ))}
                   </div>

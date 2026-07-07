@@ -56,10 +56,10 @@ border-radius: ${radius};`;
     <div className="space-y-6">
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Color</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Color</label>
           <div className="flex items-center gap-2">
              <div 
-               className="w-4 h-4 rounded-full border border-white/10" 
+               className="w-4 h-4 rounded-full border border-[var(--border)]" 
                style={{ backgroundColor: color }}
              />
              <input 
@@ -74,8 +74,8 @@ border-radius: ${radius};`;
 
       <div className="space-y-4">
         <div className="flex justify-between">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Size</label>
-          <span className="text-[10px] font-bold text-brand-primary font-mono">{size}px</span>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Size</label>
+          <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{size}px</span>
         </div>
         <input 
           type="range"
@@ -84,23 +84,23 @@ border-radius: ${radius};`;
           max={500} 
           step={1} 
           onChange={(e) => setSize(parseInt(e.target.value))} 
-          className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+          className="w-full h-1.5 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
         />
       </div>
 
       <div className="space-y-4 pt-4">
         <button
           onClick={generateBlob}
-          className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-brand-primary text-white text-xs font-bold uppercase tracking-widest hover:bg-brand-accent transition-all active:scale-95 shadow-lg shadow-brand-primary/20"
+          className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-[8px] bg-[var(--text-primary)] text-[var(--bg)] text-xs font-bold uppercase tracking-widest hover:opacity-80 transition-all active:scale-95 "
         >
           <RefreshCcw className="w-4 h-4" />
           Regenerate Shape
         </button>
       </div>
 
-      <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2">
-        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Current Radius</label>
-        <div className="text-[10px] font-mono text-slate-600 dark:text-slate-300 break-all leading-relaxed">
+      <div className="p-4 rounded-[8px] card space-y-2">
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Current Radius</label>
+        <div className="text-[10px] font-mono text-[var(--text-tertiary)] dark:text-[var(--text-primary)] break-all leading-relaxed">
           {radius}
         </div>
       </div>

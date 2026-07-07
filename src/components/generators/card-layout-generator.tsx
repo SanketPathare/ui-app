@@ -24,17 +24,17 @@ export const CardGrid = () => {
       {cards.map((item) => (
         <div 
           key={item}
-          className="group relative bg-slate-900/50 backdrop-blur-xl border border-white/5 p-[${padding}px] rounded-[${borderRadius}px] transition-all duration-500 ${hoverEffect ? "hover:-translate-y-2 hover:border-pink-500/30 hover:shadow-[0_20px_50px_rgba(236,72,153,0.1)]" : ""}"
+          className="group relative bg-[var(--bg-card)] backdrop-blur-xl border border-[var(--border)] p-[${padding}px] rounded-[${borderRadius}px] transition-all duration-500 ${hoverEffect ? "hover:-translate-y-2 hover:border-[var(--border-hover)]/30 hover:shadow-[0_20px_50px_rgba(236,72,153,0.1)]" : ""}"
         >
           {${showImage} && (
-            <div className="relative aspect-video mb-6 overflow-hidden rounded-[${Math.max(0, borderRadius - 8)}px] bg-slate-800">
+            <div className="relative aspect-video mb-6 overflow-hidden rounded-[${Math.max(0, borderRadius - 8)}px] bg-[var(--bg-card)]">
               <img 
                 src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop" 
                 alt="Card visual"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80"
               />
               <div className="absolute top-3 right-3 flex gap-2">
-                <button className="p-2 rounded-full bg-black/50 backdrop-blur-md border border-white/10 text-white/70 hover:text-pink-500 transition-colors">
+                <button className="p-2 rounded-full bg-black/50 backdrop-blur-md border border-[var(--border)] text-white/70 hover:text-[var(--text-primary)] transition-colors">
                   <Heart size={14} />
                 </button>
               </div>
@@ -43,29 +43,29 @@ export const CardGrid = () => {
           
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <span className="px-2 py-1 rounded-md bg-pink-500/10 text-pink-500 text-[10px] font-bold uppercase tracking-wider">
+              <span className="px-2 py-1 rounded-md bg-[var(--bg-card)] text-[var(--text-primary)] text-[10px] font-bold uppercase tracking-wider">
                 Featured
               </span>
-              <div className="flex items-center gap-1 text-amber-500">
+              <div className="flex items-center gap-1 text-[var(--text-primary)]">
                 <Star size={10} fill="currentColor" />
                 <span className="text-[10px] font-bold">4.9</span>
               </div>
             </div>
             
-            <h3 className="text-lg font-bold text-white group-hover:text-pink-500 transition-colors line-clamp-1">
+            <h3 className="text-lg font-bold text-white group-hover:text-[var(--text-primary)] transition-colors line-clamp-1">
               Premium Card Component
             </h3>
             
-            <p className="text-slate-400 text-sm leading-relaxed line-clamp-2">
+            <p className="text-[var(--text-secondary)] text-sm leading-relaxed line-clamp-2">
               A highly optimized, glassmorphic card architecture designed for modern high-performance interfaces.
             </p>
             
-            <div className="pt-4 mt-4 border-t border-white/5 flex items-center justify-between">
+            <div className="pt-4 mt-4 border-t border-[var(--border)] flex items-center justify-between">
               <div className="flex flex-col">
-                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Price</span>
+                <span className="text-[10px] text-[var(--text-secondary)] font-bold uppercase tracking-wider">Price</span>
                 <span className="text-white font-black">$99.00</span>
               </div>
-              <button className="flex items-center gap-2 px-4 py-2 bg-pink-500 hover:bg-pink-600 text-white rounded-xl text-xs font-bold transition-all active:scale-95">
+              <button className="flex items-center gap-2 px-4 py-2 bg-[var(--text-primary)] hover:bg-pink-600 text-white rounded-xl text-xs font-bold transition-all active:scale-95">
                 Buy Now
                 <ArrowRight size={14} />
               </button>
@@ -167,8 +167,8 @@ ${hoverEffect ? `.card:hover {
       <div className="space-y-4">
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Grid Columns</label>
-            <span className="text-[10px] font-bold text-pink-500 font-mono">{columns}</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Grid Columns</label>
+            <span className="text-[10px] font-bold text-[var(--text-primary)] font-mono">{columns}</span>
           </div>
           <input 
             type="range"
@@ -177,14 +177,14 @@ ${hoverEffect ? `.card:hover {
             max={4} 
             step={1} 
             onChange={(e) => setColumns(parseInt(e.target.value))} 
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-pink-500"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Border Radius</label>
-            <span className="text-[10px] font-bold text-pink-500 font-mono">{borderRadius}px</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Border Radius</label>
+            <span className="text-[10px] font-bold text-[var(--text-primary)] font-mono">{borderRadius}px</span>
           </div>
           <input 
             type="range"
@@ -193,14 +193,14 @@ ${hoverEffect ? `.card:hover {
             max={48} 
             step={1} 
             onChange={(e) => setBorderRadius(parseInt(e.target.value))} 
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-pink-500"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Internal Padding</label>
-            <span className="text-[10px] font-bold text-pink-500 font-mono">{padding}px</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Internal Padding</label>
+            <span className="text-[10px] font-bold text-[var(--text-primary)] font-mono">{padding}px</span>
           </div>
           <input 
             type="range"
@@ -209,18 +209,18 @@ ${hoverEffect ? `.card:hover {
             max={40} 
             step={1} 
             onChange={(e) => setPadding(parseInt(e.target.value))} 
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-pink-500"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
 
-        <div className="pt-4 space-y-4 border-t border-white/5">
+        <div className="pt-4 space-y-4 border-t border-[var(--border)]">
           <label className="flex items-center justify-between group cursor-pointer">
-            <span className="text-[11px] font-black uppercase tracking-widest text-slate-400 group-hover:text-slate-300 transition-colors">Hover Animation</span>
+            <span className="text-sm font-medium text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] transition-colors">Hover Animation</span>
             <div 
               onClick={() => setHoverEffect(!hoverEffect)}
               className={cn(
                 "w-10 h-5 rounded-full relative transition-all duration-300",
-                hoverEffect ? "bg-pink-500 shadow-lg shadow-pink-500/20" : "bg-white/10"
+                hoverEffect ? "bg-[var(--text-primary)] " : "bg-[var(--bg-hover)]"
               )}
             >
               <div className={cn(
@@ -231,12 +231,12 @@ ${hoverEffect ? `.card:hover {
           </label>
 
           <label className="flex items-center justify-between group cursor-pointer">
-            <span className="text-[11px] font-black uppercase tracking-widest text-slate-400 group-hover:text-slate-300 transition-colors">Show Visual Content</span>
+            <span className="text-sm font-medium text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] transition-colors">Show Visual Content</span>
             <div 
               onClick={() => setShowImage(!showImage)}
               className={cn(
                 "w-10 h-5 rounded-full relative transition-all duration-300",
-                showImage ? "bg-pink-500 shadow-lg shadow-pink-500/20" : "bg-white/10"
+                showImage ? "bg-[var(--text-primary)] " : "bg-[var(--bg-hover)]"
               )}
             >
               <div className={cn(
@@ -263,8 +263,8 @@ ${hoverEffect ? `.card:hover {
            <div 
              key={i}
              className={cn(
-               "bg-slate-900/50 backdrop-blur-xl border border-white/5 flex flex-col transition-all duration-500 group/card",
-               hoverEffect ? "hover:-translate-y-2 hover:border-pink-500/30 hover:shadow-[0_20px_50px_rgba(236,72,153,0.1)]" : ""
+               "bg-[var(--bg-card)] backdrop-blur-xl border border-[var(--border)] flex flex-col transition-all duration-500 group/card",
+               hoverEffect ? "hover:-translate-y-2 hover:border-[var(--border-hover)]/30 hover:shadow-[0_20px_50px_rgba(236,72,153,0.1)]" : ""
              )}
              style={{ 
                borderRadius: `${borderRadius}px`,
@@ -273,7 +273,7 @@ ${hoverEffect ? `.card:hover {
            >
              {showImage && (
                <div 
-                 className="w-full aspect-video bg-slate-800 border border-white/5 flex items-center justify-center mb-6 overflow-hidden relative group"
+                 className="w-full aspect-video bg-[var(--bg-card)] border border-[var(--border)] flex items-center justify-center mb-6 overflow-hidden relative group"
                  style={{ borderRadius: `${Math.max(0, borderRadius - 8)}px` }}
                >
                  <img 
@@ -287,27 +287,27 @@ ${hoverEffect ? `.card:hover {
              
              <div className="space-y-3 mb-6">
                 <div className="flex items-center justify-between">
-                   <div className="h-4 w-20 bg-pink-500/10 border border-pink-500/20 rounded-full flex items-center justify-center">
-                      <span className="text-[8px] font-black uppercase text-pink-500 tracking-widest">Premium</span>
+                   <div className="h-4 w-20 bg-[var(--bg-card)] border border-[var(--border-hover)]/20 rounded-full flex items-center justify-center">
+                      <span className="text-xs font-medium uppercase text-[var(--text-primary)] tracking-widest">Premium</span>
                    </div>
                    <div className="flex items-center gap-1">
-                      <Star className="w-2.5 h-2.5 text-amber-500 fill-amber-500" />
+                      <Star className="w-2.5 h-2.5 text-[var(--text-primary)] fill-amber-500" />
                       <span className="text-[9px] font-bold text-white/50">4.9</span>
                    </div>
                 </div>
-                <h3 className="text-sm font-black text-white group-hover/card:text-pink-500 transition-colors">Digital Architecture</h3>
+                <h3 className="text-sm font-black text-white group-hover/card:text-[var(--text-primary)] transition-colors">Digital Architecture</h3>
                 <div className="space-y-1.5">
-                   <div className="h-1.5 w-full bg-white/10 rounded-full" />
-                   <div className="h-1.5 w-2/3 bg-white/5 rounded-full" />
+                   <div className="h-1.5 w-full bg-[var(--bg-hover)] rounded-full" />
+                   <div className="h-1.5 w-2/3 bg-[var(--bg-card)] rounded-full" />
                 </div>
              </div>
              
-             <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between">
+             <div className="mt-auto pt-4 border-t border-[var(--border)] flex items-center justify-between">
                 <div className="flex flex-col">
-                   <span className="text-[8px] font-bold text-slate-500 uppercase tracking-widest">Entry Fee</span>
+                   <span className="text-[8px] font-bold text-[var(--text-secondary)] uppercase tracking-widest">Entry Fee</span>
                    <span className="text-xs font-black text-white">$99.00</span>
                 </div>
-                <div className="w-8 h-8 rounded-xl bg-pink-500 flex items-center justify-center text-white shadow-lg shadow-pink-500/20 group-hover/card:scale-110 transition-transform">
+                <div className="w-8 h-8 rounded-xl bg-[var(--text-primary)] flex items-center justify-center text-white  group-hover/card:scale-110 transition-transform">
                    <ArrowRight className="w-4 h-4" />
                 </div>
              </div>

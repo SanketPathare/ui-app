@@ -92,10 +92,10 @@ export function FormGenerator() {
   const tailwindCode = `<form class="max-w-xl w-full ${layout === 'grid' ? 'grid grid-cols-2 gap-6' : 'flex flex-col gap-6'}">
   ${fields.map(f => `
   <div class="flex flex-col gap-2 ${layout === 'grid' && f.type === 'textarea' ? 'col-span-2' : ''}">
-    ${showLabels ? `<label class="text-sm font-semibold text-slate-400">${f.label}</label>` : ""}
+    ${showLabels ? `<label class="text-sm font-semibold text-[var(--text-secondary)]">${f.label}</label>` : ""}
     <${f.type === 'textarea' ? 'textarea' : 'input type="' + f.type + '"'} 
       placeholder="${f.placeholder}" 
-      class="w-full px-4 py-3 bg-slate-900 border border-white/10 rounded-[${borderRadius}px] text-white focus:outline-none focus:border-[${accentColor}] focus:ring-4 focus:ring-[${accentColor}]/20 transition-all"
+      class="w-full px-4 py-3 bg-[var(--bg-card)] border border-[var(--border)] rounded-[${borderRadius}px] text-white focus:outline-none focus:border-[${accentColor}] focus:ring-4 focus:ring-[${accentColor}]/20 transition-all"
     >${f.type === 'textarea' ? '</textarea>' : ''}
   </div>`).join("")}
   <button type="submit" class="w-full py-4 bg-[${accentColor}] text-white rounded-[${borderRadius}px] font-bold ${layout === 'grid' ? 'col-span-2' : ''}">Submit</button>
@@ -131,17 +131,17 @@ button { background: ${accentColor}; color: white; padding: 1rem; border: none; 
     <div className="space-y-6">
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Layout</label>
-          <div className="flex bg-white/5 rounded-lg p-1 border border-white/10">
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Layout</label>
+          <div className="flex bg-[var(--bg-card)] rounded-lg p-1 border border-[var(--border)]">
              <button 
                onClick={() => setLayout("stacked")}
-               className={cn("px-3 py-1 rounded-md text-[9px] font-black uppercase transition-all", layout === "stacked" ? "bg-brand-primary text-white" : "text-slate-500")}
+               className={cn("px-3 py-1 rounded-md text-xs font-medium transition-all", layout === "stacked" ? "bg-[var(--text-primary)] text-[var(--bg)]" : "text-[var(--text-secondary)]")}
              >
                Stacked
              </button>
              <button 
                onClick={() => setLayout("grid")}
-               className={cn("px-3 py-1 rounded-md text-[9px] font-black uppercase transition-all", layout === "grid" ? "bg-brand-primary text-white" : "text-slate-500")}
+               className={cn("px-3 py-1 rounded-md text-xs font-medium transition-all", layout === "grid" ? "bg-[var(--text-primary)] text-[var(--bg)]" : "text-[var(--text-secondary)]")}
              >
                Grid
              </button>
@@ -150,8 +150,8 @@ button { background: ${accentColor}; color: white; padding: 1rem; border: none; 
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Border Radius</label>
-            <span className="text-[10px] font-bold text-brand-primary font-mono">{borderRadius}px</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Border Radius</label>
+            <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{borderRadius}px</span>
           </div>
           <input 
             type="range"
@@ -160,15 +160,15 @@ button { background: ${accentColor}; color: white; padding: 1rem; border: none; 
             max={32} 
             step={1} 
             onChange={(e) => setBorderRadius(parseInt(e.target.value))} 
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
 
-        <div className="pt-4 space-y-3 border-t border-white/5">
-           <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Form Fields</label>
+        <div className="pt-4 space-y-3 border-t border-[var(--border)]">
+           <label className="text-sm font-medium text-[var(--text-secondary)]">Form Fields</label>
            <div className="space-y-3">
               {fields.map((field) => (
-                <div key={field.id} className="group flex items-center gap-2 p-2 bg-white/5 border border-white/10 rounded-xl hover:border-white/20 transition-all">
+                <div key={field.id} className="group flex items-center gap-2 p-2 card hover:border-[var(--border-hover)] transition-all">
                    <div className="flex-1 space-y-2">
                       <input 
                         type="text" 
@@ -179,7 +179,7 @@ button { background: ${accentColor}; color: white; padding: 1rem; border: none; 
                       <select 
                         value={field.type} 
                         onChange={(e) => updateField(field.id, { type: e.target.value as any })}
-                        className="w-full bg-transparent text-[9px] text-slate-500 outline-none cursor-pointer"
+                        className="w-full bg-transparent text-[9px] text-[var(--text-secondary)] outline-none cursor-pointer"
                       >
                          <option value="text">Text</option>
                          <option value="email">Email</option>
@@ -189,7 +189,7 @@ button { background: ${accentColor}; color: white; padding: 1rem; border: none; 
                    </div>
                    <button 
                      onClick={() => removeField(field.id)}
-                     className="p-1.5 text-slate-600 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100"
+                     className="p-1.5 text-[var(--text-tertiary)] hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100"
                    >
                      <Trash2 className="w-3.5 h-3.5" />
                    </button>
@@ -197,7 +197,7 @@ button { background: ${accentColor}; color: white; padding: 1rem; border: none; 
               ))}
               <button 
                 onClick={addField}
-                className="w-full py-2 border border-dashed border-white/10 rounded-xl text-[9px] font-black uppercase tracking-widest text-slate-500 hover:text-slate-300 hover:border-white/20 transition-all flex items-center justify-center gap-2"
+                className="w-full py-2 border border-dashed border-[var(--border)] rounded-xl text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-hover)] transition-all flex items-center justify-center gap-2"
               >
                 <Plus className="w-3 h-3" /> Add Field
               </button>
@@ -208,7 +208,7 @@ button { background: ${accentColor}; color: white; padding: 1rem; border: none; 
   );
 
   const preview = (
-    <div className="w-full h-full min-h-[400px] flex items-center justify-center bg-black/20 rounded-[2rem] p-12 overflow-y-auto">
+    <div className="w-full h-full min-h-[400px] flex items-center justify-center bg-[var(--bg)] rounded-[12px] p-12 overflow-y-auto">
       <div className={cn(
         "w-full max-w-xl",
         layout === 'grid' ? "grid grid-cols-2 gap-x-6 gap-y-4" : "flex flex-col gap-4"
@@ -222,21 +222,21 @@ button { background: ${accentColor}; color: white; padding: 1rem; border: none; 
             )}
           >
             {showLabels && (
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">
+              <label className="text-sm font-medium text-[var(--text-secondary)] ml-1">
                 {field.label}
               </label>
             )}
             {field.type === 'textarea' ? (
               <textarea 
                 placeholder={field.placeholder}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 text-white text-sm outline-none transition-all focus:border-brand-primary/50 focus:ring-4 focus:ring-brand-primary/10"
+                className="w-full px-4 py-3 card text-white text-sm outline-none transition-all focus:border-[var(--border-hover)] focus:ring-4 focus:ring-brand-primary/10"
                 style={{ borderRadius: `${borderRadius}px`, height: '100px' }}
               />
             ) : (
               <input 
                 type={field.type} 
                 placeholder={field.placeholder}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 text-white text-sm outline-none transition-all focus:border-brand-primary/50 focus:ring-4 focus:ring-brand-primary/10"
+                className="w-full px-4 py-3 card text-white text-sm outline-none transition-all focus:border-[var(--border-hover)] focus:ring-4 focus:ring-brand-primary/10"
                 style={{ borderRadius: `${borderRadius}px` }}
               />
             )}
@@ -244,7 +244,7 @@ button { background: ${accentColor}; color: white; padding: 1rem; border: none; 
         ))}
         <button 
           className={cn(
-            "w-full py-4 mt-4 rounded-2xl font-bold text-white shadow-xl transition-all hover:scale-[1.02] active:scale-95",
+            "w-full py-4 mt-4 rounded-[8px] font-bold text-white shadow-xl transition-all hover:scale-[1.02] active:scale-95",
             layout === 'grid' ? "col-span-2" : ""
           )}
           style={{ 

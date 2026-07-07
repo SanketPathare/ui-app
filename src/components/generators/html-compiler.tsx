@@ -237,16 +237,16 @@ export function HtmlCompiler() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="space-y-4">
-          <Link href="/" className="inline-flex items-center gap-1.5 text-[10px] font-black text-slate-500 hover:text-brand-primary uppercase tracking-widest transition-colors group">
+          <Link href="/" className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] uppercase tracking-widest transition-colors group">
             <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
             Back to Hub
           </Link>
           <div className="space-y-2">
             <h1 className="text-4xl font-black tracking-tighter text-white flex items-center gap-3">
-              <Code className="w-8 h-8 text-brand-primary" />
-              HTML Compiler <span className="text-brand-primary">Online</span>
+              <Code className="w-8 h-8 text-[var(--text-primary)]" />
+              HTML Compiler <span className="text-[var(--text-primary)]">Online</span>
             </h1>
-            <p className="text-slate-400 text-sm font-medium max-w-xl">
+            <p className="text-[var(--text-secondary)] text-sm font-medium max-w-xl">
               A high-performance live editing environment for rapid HTML5 prototyping and real-time visualization.
             </p>
           </div>
@@ -254,7 +254,7 @@ export function HtmlCompiler() {
         <div className="flex gap-3">
           <button
             onClick={resetCode}
-            className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-white/5 border border-white/5 text-xs font-black uppercase tracking-widest text-slate-400 hover:bg-white/10 hover:text-white transition-all active:scale-95"
+            className="flex items-center gap-2 px-6 py-3 rounded-[8px] bg-[var(--bg-card)] border border-[var(--border)] text-xs font-black uppercase tracking-widest text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] transition-all active:scale-95"
           >
             <RefreshCcw className="w-3.5 h-3.5" />
             Reset
@@ -262,8 +262,8 @@ export function HtmlCompiler() {
           <button
             onClick={handleCopy}
             className={cn(
-              "flex items-center gap-2 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 shadow-2xl",
-              copied ? "bg-emerald-500 text-white" : "bg-brand-primary text-white hover:bg-brand-accent"
+              "flex items-center gap-2 px-6 py-3 rounded-[8px] text-sm font-medium transition-all active:scale-95 shadow-2xl",
+              copied ? "bg-emerald-500 text-white" : "bg-[var(--text-primary)] text-[var(--bg)] hover:opacity-80"
             )}
           >
             {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
@@ -275,15 +275,15 @@ export function HtmlCompiler() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Editor Section */}
         <div className="lg:col-span-6 space-y-6">
-          <div className="rounded-[2.5rem] bg-[#020617] border border-white/5 overflow-hidden shadow-2xl flex flex-col h-[650px]">
+          <div className="rounded-[12px] bg-[var(--bg)] border border-[var(--border)] overflow-hidden shadow-2xl flex flex-col h-[650px]">
             {/* Tabs */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between bg-white/[0.02] border-b border-white/5">
-              <div className="flex overflow-x-auto no-scrollbar border-b sm:border-b-0 border-white/5 px-4 sm:px-8 py-4 gap-6 flex-shrink-0">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between bg-[var(--bg)] border-b border-[var(--border)]">
+              <div className="flex overflow-x-auto no-scrollbar border-b sm:border-b-0 border-[var(--border)] px-4 sm:px-8 py-4 gap-6 flex-shrink-0">
                 <button
                   onClick={() => setActiveTab("html")}
                   className={cn(
-                    "flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap",
-                    activeTab === "html" ? "text-brand-primary" : "text-slate-500 hover:text-slate-300"
+                    "flex items-center gap-2 text-sm font-medium transition-all whitespace-nowrap",
+                    activeTab === "html" ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                   )}
                 >
                   <FileCode className="w-3.5 h-3.5" />
@@ -292,8 +292,8 @@ export function HtmlCompiler() {
                 <button
                   onClick={() => setActiveTab("css")}
                   className={cn(
-                    "flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap",
-                    activeTab === "css" ? "text-brand-primary" : "text-slate-500 hover:text-slate-300"
+                    "flex items-center gap-2 text-sm font-medium transition-all whitespace-nowrap",
+                    activeTab === "css" ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                   )}
                 >
                   <Layers className="w-3.5 h-3.5" />
@@ -302,8 +302,8 @@ export function HtmlCompiler() {
                 <button
                   onClick={() => setActiveTab("js")}
                   className={cn(
-                    "flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap",
-                    activeTab === "js" ? "text-brand-primary" : "text-slate-500 hover:text-slate-300"
+                    "flex items-center gap-2 text-sm font-medium transition-all whitespace-nowrap",
+                    activeTab === "js" ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                   )}
                 >
                   <Zap className="w-3.5 h-3.5" />
@@ -315,8 +315,8 @@ export function HtmlCompiler() {
                 <button
                   onClick={() => setAutoCompleteEnabled(!autoCompleteEnabled)}
                   className={cn(
-                    "flex items-center gap-2 px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all whitespace-nowrap",
-                    autoCompleteEnabled ? "bg-emerald-500/10 text-emerald-500" : "bg-white/5 text-slate-500 hover:text-slate-300"
+                    "flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-medium transition-all whitespace-nowrap",
+                    autoCompleteEnabled ? "bg-emerald-500/10 text-[var(--text-primary)]" : "bg-[var(--bg-card)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                   )}
                   title={autoCompleteEnabled ? "Autocompletion Active" : "Autocompletion Disabled"}
                 >
@@ -325,17 +325,17 @@ export function HtmlCompiler() {
                 </button>
                 <button
                   onClick={formatCode}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/5 text-[9px] font-black uppercase tracking-widest text-slate-500 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap"
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[var(--bg-card)] text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-all whitespace-nowrap"
                 >
-                  <Palette className="w-3 h-3 text-brand-primary" />
+                  <Palette className="w-3 h-3 text-[var(--text-primary)]" />
                   <span className="hidden lg:inline">Format</span>
                 </button>
                 <div className="relative">
                   <button
                     onClick={() => setShowSnippets(!showSnippets)}
                     className={cn(
-                      "flex items-center gap-2 px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all whitespace-nowrap",
-                      showSnippets ? "bg-brand-primary text-white" : "bg-white/5 text-slate-400 hover:text-white"
+                      "flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-medium transition-all whitespace-nowrap",
+                      showSnippets ? "bg-[var(--text-primary)] text-[var(--bg)]" : "bg-[var(--bg-card)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                     )}
                   >
                     <Layout className="w-3 h-3" />
@@ -349,18 +349,18 @@ export function HtmlCompiler() {
                           className="fixed inset-0 z-40" 
                           onClick={() => setShowSnippets(false)} 
                         />
-                        <div className="absolute right-0 mt-2 w-56 bg-[#0f172a] border border-white/10 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-                          <div className="px-4 py-3 border-b border-white/5 bg-white/[0.02]">
-                            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">Design Patterns</span>
+                        <div className="absolute right-0 mt-2 w-56 bg-[#0f172a] border border-[var(--border)] rounded-[8px] shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                          <div className="px-4 py-3 border-b border-[var(--border)] bg-[var(--bg)]">
+                            <span className="text-xs font-medium tracking-[0.2em] text-[var(--text-secondary)]">Design Patterns</span>
                           </div>
                           <div className="p-2 space-y-1">
                             {SNIPPETS.map((snippet) => (
                               <button
                                 key={snippet.id}
                                 onClick={() => loadSnippet(snippet)}
-                                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/5 text-slate-400 hover:text-white transition-all text-left group"
+                                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[var(--bg-card)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all text-left group"
                               >
-                                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-slate-500 group-hover:text-brand-primary group-hover:bg-brand-primary/10 transition-all">
+                                <div className="w-8 h-8 rounded-lg bg-[var(--bg-card)] flex items-center justify-center text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] group-hover:bg-[var(--bg-hover)] transition-all">
                                   {snippet.icon}
                                 </div>
                                 <span className="text-[10px] font-bold uppercase tracking-wide">{snippet.name}</span>
@@ -377,7 +377,7 @@ export function HtmlCompiler() {
                       else if (activeTab === "css") setCss("");
                       else setJs("");
                     }}
-                    className="p-1.5 rounded-lg bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white transition-all ml-2"
+                    className="p-1.5 rounded-lg bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-[var(--text-primary)] transition-all ml-2"
                     title="Clear Current Editor"
                   >
                     <RefreshCcw className="w-3 h-3" />
@@ -446,7 +446,7 @@ export function HtmlCompiler() {
             </div>
 
             {/* Stats Footer */}
-            <div className="px-8 py-3 bg-white/[0.01] border-t border-white/5 flex items-center justify-between text-[9px] font-bold text-slate-600 uppercase tracking-widest">
+            <div className="px-8 py-3 bg-white/[0.01] border-t border-[var(--border)] flex items-center justify-between text-[9px] font-bold text-[var(--text-tertiary)] uppercase tracking-widest">
               <div className="flex items-center gap-4">
                 <span>UTF-8</span>
                 <span>Ready</span>
@@ -458,13 +458,13 @@ export function HtmlCompiler() {
             </div>
           </div>
 
-          <div className="p-6 rounded-[2rem] bg-brand-primary/5 border border-brand-primary/10 flex items-start gap-4">
-            <div className="w-10 h-10 rounded-xl bg-brand-primary/10 flex items-center justify-center text-brand-primary flex-shrink-0">
+          <div className="p-6 rounded-[12px] bg-[var(--bg-card)] border border-[var(--border)] flex items-start gap-4">
+            <div className="w-10 h-10 rounded-xl bg-[var(--bg-card)] flex items-center justify-center text-[var(--text-primary)] flex-shrink-0">
               <Cpu className="w-5 h-5" />
             </div>
             <div className="space-y-1">
-              <h4 className="text-[11px] font-black uppercase tracking-widest text-white">Edge Rendering</h4>
-              <p className="text-[10px] text-slate-500 font-medium leading-relaxed">
+              <h4 className="text-sm font-medium text-white">Edge Rendering</h4>
+              <p className="text-[10px] text-[var(--text-secondary)] font-medium leading-relaxed">
                 Low-latency execution environment optimized for modern web standards and rapid UI iteration.
               </p>
             </div>
@@ -476,15 +476,15 @@ export function HtmlCompiler() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-brand-primary/10 flex items-center justify-center text-brand-primary shadow-xl shadow-brand-primary/5">
+                <div className="w-10 h-10 rounded-[8px] bg-[var(--bg-card)] flex items-center justify-center text-[var(--text-primary)] ">
                   <Eye className="w-5 h-5" />
                 </div>
                 <div className="space-y-1">
                   <h4 className="text-sm font-black uppercase tracking-widest text-white">Simulation Lab</h4>
                   <div className="flex items-center gap-3">
-                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">High-Fidelity Preview</p>
+                    <p className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-widest">High-Fidelity Preview</p>
                     {executionTime !== null && (
-                      <span className="text-[9px] font-black text-brand-primary uppercase tracking-tighter bg-brand-primary/10 px-2 py-0.5 rounded-full">
+                      <span className="text-xs font-medium text-[var(--text-primary)] uppercase tracking-tighter bg-[var(--bg-card)] px-2 py-0.5 rounded-full">
                         Sync: {executionTime}ms
                       </span>
                     )}
@@ -492,15 +492,15 @@ export function HtmlCompiler() {
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <div className="flex p-1 rounded-xl bg-white/5 border border-white/5">
-                  <button onClick={() => setViewport("wide")} className={cn("p-2 rounded-lg transition-all", viewport === "wide" ? "bg-white/10 text-white" : "text-slate-500 hover:text-slate-300")} title="Ultra Wide (1440px)"><Box className="w-4 h-4" /></button>
-                  <button onClick={() => setViewport("desktop")} className={cn("p-2 rounded-lg transition-all", viewport === "desktop" ? "bg-white/10 text-white" : "text-slate-500 hover:text-slate-300")} title="Desktop (100%)"><Monitor className="w-4 h-4" /></button>
-                  <button onClick={() => setViewport("tablet")} className={cn("p-2 rounded-lg transition-all", viewport === "tablet" ? "bg-white/10 text-white" : "text-slate-500 hover:text-slate-300")} title="Tablet (450px)"><Tablet className="w-4 h-4" /></button>
-                  <button onClick={() => setViewport("mobile")} className={cn("p-2 rounded-lg transition-all", viewport === "mobile" ? "bg-white/10 text-white" : "text-slate-500 hover:text-slate-300")} title="Mobile (320px)"><Smartphone className="w-4 h-4" /></button>
+                <div className="flex p-1 rounded-xl bg-[var(--bg-card)] border border-[var(--border)]">
+                  <button onClick={() => setViewport("wide")} className={cn("p-2 rounded-lg transition-all", viewport === "wide" ? "bg-[var(--bg-hover)] text-white" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]")} title="Ultra Wide (1440px)"><Box className="w-4 h-4" /></button>
+                  <button onClick={() => setViewport("desktop")} className={cn("p-2 rounded-lg transition-all", viewport === "desktop" ? "bg-[var(--bg-hover)] text-white" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]")} title="Desktop (100%)"><Monitor className="w-4 h-4" /></button>
+                  <button onClick={() => setViewport("tablet")} className={cn("p-2 rounded-lg transition-all", viewport === "tablet" ? "bg-[var(--bg-hover)] text-white" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]")} title="Tablet (450px)"><Tablet className="w-4 h-4" /></button>
+                  <button onClick={() => setViewport("mobile")} className={cn("p-2 rounded-lg transition-all", viewport === "mobile" ? "bg-[var(--bg-hover)] text-white" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]")} title="Mobile (320px)"><Smartphone className="w-4 h-4" /></button>
                 </div>
                 <button 
                   onClick={() => setIsFullscreen(true)}
-                  className="p-3 rounded-2xl bg-white/5 border border-white/5 text-slate-400 hover:bg-brand-primary hover:text-white transition-all shadow-xl"
+                  className="p-3 rounded-[8px] bg-[var(--bg-card)] border border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--text-primary)] hover:text-[var(--text-primary)] transition-all shadow-xl"
                   title="Fullscreen Preview"
                 >
                   <Maximize2 className="w-4 h-4" />
@@ -508,12 +508,12 @@ export function HtmlCompiler() {
               </div>
             </div>
 
-            <div className="h-[450px] rounded-[3rem] bg-[#020617] border border-white/5 shadow-2xl relative overflow-hidden flex items-center justify-center transition-all group">
+            <div className="h-[450px] rounded-[12px] bg-[var(--bg)] border border-[var(--border)] shadow-2xl relative overflow-hidden flex items-center justify-center transition-all group">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--color-brand-primary)_0%,_transparent_70%)] opacity-[0.03] pointer-events-none" />
 
               <div className={cn(
                 "relative z-10 h-full transition-all duration-500 bg-white shadow-2xl overflow-hidden flex flex-col",
-                viewport === "wide" ? "w-[120%] scale-90" : viewport === "desktop" ? "w-full" : viewport === "tablet" ? "w-[450px] h-[400px] rounded-3xl" : "w-[320px] h-[380px] rounded-3xl"
+                viewport === "wide" ? "w-[120%] scale-90" : viewport === "desktop" ? "w-full" : viewport === "tablet" ? "w-[450px] h-[400px] rounded-[12px]" : "w-[320px] h-[380px] rounded-[12px]"
               )}>
                 {/* Browser Frame */}
                 <div className="flex items-center gap-3 px-4 py-3 bg-slate-100 border-b border-slate-200">
@@ -522,10 +522,10 @@ export function HtmlCompiler() {
                     <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
                     <div className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
                   </div>
-                  <div className="flex-1 bg-white rounded-lg h-6 flex items-center px-3 gap-2 border border-slate-200 group/url cursor-pointer hover:border-brand-primary/30 transition-all" onClick={openPreview}>
+                  <div className="flex-1 bg-white rounded-lg h-6 flex items-center px-3 gap-2 border border-slate-200 group/url cursor-pointer hover:border-[var(--border-hover)] transition-all" onClick={openPreview}>
                     <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-tight group-hover/url:text-brand-primary transition-colors">localhost:3000/preview</span>
-                    <Maximize2 className="w-2.5 h-2.5 ml-auto text-slate-300 group-hover/url:text-brand-primary transition-colors" />
+                    <span className="text-[9px] font-bold text-[var(--text-secondary)] uppercase tracking-tight group-hover/url:text-[var(--text-primary)] transition-colors">localhost:3000/preview</span>
+                    <Maximize2 className="w-2.5 h-2.5 ml-auto text-[var(--text-primary)] group-hover/url:text-[var(--text-primary)] transition-colors" />
                   </div>
                   <div className="flex gap-2">
                     <div className="w-4 h-4 rounded bg-slate-200" />
@@ -544,14 +544,14 @@ export function HtmlCompiler() {
                   {isCompiling && (
                     <div className="absolute inset-0 bg-white/60 backdrop-blur-sm z-20 flex flex-col items-center justify-center animate-in fade-in duration-300">
                       <div className="relative">
-                        <div className="w-12 h-12 rounded-full border-2 border-brand-primary/20 border-t-brand-primary animate-spin" />
+                        <div className="w-12 h-12 rounded-full border-2 border-[var(--border)] border-t-brand-primary animate-spin" />
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <Cpu className="w-4 h-4 text-brand-primary animate-pulse" />
+                          <Cpu className="w-4 h-4 text-[var(--text-primary)] animate-pulse" />
                         </div>
                       </div>
                       <div className="mt-4 flex flex-col items-center">
-                        <span className="text-[9px] font-black uppercase tracking-widest text-brand-primary animate-pulse">Rendering Engine...</span>
-                        <span className="text-[8px] font-bold text-slate-500 uppercase mt-1">Estimating Latency</span>
+                        <span className="text-xs font-medium text-[var(--text-primary)] animate-pulse">Rendering Engine...</span>
+                        <span className="text-[8px] font-bold text-[var(--text-secondary)] uppercase mt-1">Estimating Latency</span>
                       </div>
                     </div>
                   )}
@@ -559,28 +559,28 @@ export function HtmlCompiler() {
             </div>
 
             {/* Production Console */}
-            <div className="rounded-[2rem] bg-[#020617] border border-white/5 overflow-hidden shadow-2xl flex flex-col h-[180px]">
-              <div className="flex items-center justify-between px-6 py-3 bg-white/[0.02] border-b border-white/5">
+            <div className="rounded-[12px] bg-[var(--bg)] border border-[var(--border)] overflow-hidden shadow-2xl flex flex-col h-[180px]">
+              <div className="flex items-center justify-between px-6 py-3 bg-[var(--bg)] border-b border-[var(--border)]">
                 <div className="flex items-center gap-2">
-                  <Terminal className="w-3.5 h-3.5 text-brand-primary" />
-                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-300">Production Console</span>
+                  <Terminal className="w-3.5 h-3.5 text-[var(--text-primary)]" />
+                  <span className="text-sm font-medium text-[var(--text-primary)]">Production Console</span>
                 </div>
                 <button
                   onClick={() => setLogs([])}
-                  className="text-[9px] font-bold text-slate-500 hover:text-white uppercase tracking-widest transition-colors"
+                  className="text-[9px] font-bold text-[var(--text-secondary)] hover:text-[var(--text-primary)] uppercase tracking-widest transition-colors"
                 >
                   Clear
                 </button>
               </div>
-              <div className="flex-1 overflow-y-auto p-4 font-mono text-[10px] space-y-1.5 custom-scrollbar bg-black/20">
+              <div className="flex-1 overflow-y-auto p-4 font-mono text-[10px] space-y-1.5 custom-scrollbar bg-[var(--bg)]">
                 {logs.length === 0 ? (
-                  <div className="h-full flex items-center justify-center text-slate-600 italic">
+                  <div className="h-full flex items-center justify-center text-[var(--text-tertiary)] italic">
                     No logs recorded.
                   </div>
                 ) : (
                   logs.map((log, index) => (
                     <div key={index} className="flex gap-3 animate-in slide-in-from-left-2 duration-300">
-                      <span className="text-slate-600 flex-shrink-0">[{log.timestamp}]</span>
+                      <span className="text-[var(--text-tertiary)] flex-shrink-0">[{log.timestamp}]</span>
                       <span className={cn(
                         "break-all",
                         log.type === "error" ? "text-rose-400" : log.type === "warn" ? "text-amber-400" : "text-indigo-200"
@@ -599,28 +599,28 @@ export function HtmlCompiler() {
 
       {/* Fullscreen Preview Modal */}
       {isFullscreen && (
-        <div className=" mt-10 fixed inset-0 z-[100] bg-[#020617] p-8 md:p-16 flex flex-col animate-in fade-in duration-300">
+        <div className=" mt-10 fixed inset-0 z-[100] bg-[var(--bg)] p-8 md:p-16 flex flex-col animate-in fade-in duration-300">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--color-brand-primary)_0%,_transparent_40%)] opacity-20 pointer-events-none" />
           
           <div className="flex items-center justify-between mb-8 relative z-10">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-brand-primary/10 flex items-center justify-center text-brand-primary">
+              <div className="w-12 h-12 rounded-[8px] bg-[var(--bg-card)] flex items-center justify-center text-[var(--text-primary)]">
                 <Maximize2 className="w-6 h-6" />
               </div>
               <div>
                 <h2 className="text-2xl font-black text-white tracking-tighter uppercase">Expanded View</h2>
-                <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Full Canvas Visualization</p>
+                <p className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-widest">Full Canvas Visualization</p>
               </div>
             </div>
             <button 
               onClick={() => setIsFullscreen(false)}
-              className="px-6 py-3 rounded-2xl bg-white/5 border border-white/5 text-xs font-black text-slate-400 hover:bg-rose-500 hover:text-white transition-all uppercase tracking-widest"
+              className="px-6 py-3 rounded-[8px] bg-[var(--bg-card)] border border-[var(--border)] text-xs font-black text-[var(--text-secondary)] hover:bg-rose-500 hover:text-[var(--text-primary)] transition-all uppercase tracking-widest"
             >
               Close Preview
             </button>
           </div>
 
-          <div className="flex-1 w-7xl mx-auto rounded-[3rem] bg-white shadow-[0_0_100px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col border border-white/10 relative z-10">
+          <div className="flex-1 w-7xl mx-auto rounded-[12px] bg-white shadow-[0_0_100px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col border border-[var(--border)] relative z-10">
             {/* Browser Frame */}
             <div className="flex items-center gap-3 px-6 py-4 bg-slate-100 border-b border-slate-200">
               <div className="flex gap-1.5">
@@ -628,10 +628,10 @@ export function HtmlCompiler() {
                 <div className="w-3 h-3 rounded-full bg-amber-400" />
                 <div className="w-3 h-3 rounded-full bg-emerald-400" />
               </div>
-              <div className="flex-1 bg-white rounded-xl h-8 flex items-center px-4 gap-3 border border-slate-200 mx-8 group/url cursor-pointer hover:border-brand-primary/50 transition-all" onClick={openPreview}>
+              <div className="flex-1 bg-white rounded-xl h-8 flex items-center px-4 gap-3 border border-slate-200 mx-8 group/url cursor-pointer hover:border-[var(--border-hover)] transition-all" onClick={openPreview}>
                 <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest group-hover/url:text-brand-primary transition-colors">localhost:3000/preview</span>
-                <Maximize2 className="w-3.5 h-3.5 ml-auto text-slate-300 group-hover/url:text-brand-primary transition-colors" />
+                <span className="text-sm font-medium text-[var(--text-secondary)] uppercase tracking-widest group-hover/url:text-[var(--text-primary)] transition-colors">localhost:3000/preview</span>
+                <Maximize2 className="w-3.5 h-3.5 ml-auto text-[var(--text-primary)] group-hover/url:text-[var(--text-primary)] transition-colors" />
               </div>
               <div className="flex gap-2">
                 <div className="w-6 h-6 rounded-lg bg-slate-200" />
@@ -649,12 +649,12 @@ export function HtmlCompiler() {
             {isCompiling && (
               <div className="absolute inset-0 bg-white/60 backdrop-blur-md z-20 flex flex-col items-center justify-center animate-in fade-in duration-300">
                 <div className="relative">
-                  <div className="w-16 h-16 rounded-full border-4 border-brand-primary/20 border-t-brand-primary animate-spin" />
+                  <div className="w-16 h-16 rounded-full border-4 border-[var(--border)] border-t-brand-primary animate-spin" />
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <Cpu className="w-6 h-6 text-brand-primary animate-pulse" />
+                    <Cpu className="w-6 h-6 text-[var(--text-primary)] animate-pulse" />
                   </div>
                 </div>
-                <span className="mt-6 text-xs font-black uppercase tracking-[0.3em] text-brand-primary animate-pulse">Synchronizing Edge...</span>
+                <span className="mt-6 text-xs font-black uppercase tracking-[0.3em] text-[var(--text-primary)] animate-pulse">Synchronizing Edge...</span>
               </div>
             )}
           </div>

@@ -64,8 +64,8 @@ export function GradientGenerator() {
   const controls = (
     <div className="space-y-8">
       <div className="space-y-3">
-        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Engine Mode</label>
-        <div className="flex gap-2 p-1 rounded-xl bg-white/5 border border-white/10">
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Engine Mode</label>
+        <div className="flex gap-2 p-1 rounded-xl card">
           {(["linear", "radial"] as const).map((t) => (
             <button
               key={t}
@@ -73,8 +73,8 @@ export function GradientGenerator() {
               className={cn(
                 "flex-1 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all",
                 type === t 
-                  ? "bg-brand-primary text-white shadow-lg shadow-brand-primary/20" 
-                  : "text-slate-500 hover:text-slate-300"
+                  ? "bg-[var(--text-primary)] text-[var(--bg)]" 
+                  : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
               )}
             >
               {t}
@@ -86,8 +86,8 @@ export function GradientGenerator() {
       {type === "linear" && (
         <div className="space-y-3">
           <div className="flex justify-between items-center">
-            <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Angle</label>
-            <span className="text-[10px] font-black text-brand-primary font-mono">{angle}°</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Angle</label>
+            <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{angle}°</span>
           </div>
           <input
             type="range"
@@ -95,7 +95,7 @@ export function GradientGenerator() {
             max="360"
             value={angle}
             onChange={(e) => setAngle(parseInt(e.target.value))}
-            className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1.5 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
       )}
@@ -103,8 +103,8 @@ export function GradientGenerator() {
       <div className="space-y-4">
         <div className="flex justify-between items-center">
           <div className="flex flex-col">
-            <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Color Matrix</label>
-            <span className="text-[9px] text-slate-400 font-medium">Add up to 5 control points</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Color Matrix</label>
+            <span className="text-[9px] text-[var(--text-secondary)] font-medium">Add up to 5 control points</span>
           </div>
           <div className="flex gap-2">
             <button
@@ -112,7 +112,7 @@ export function GradientGenerator() {
                 const newColors = [...colors].reverse().map((c, i) => ({ ...c, stop: 100 - c.stop }));
                 setColors(newColors);
               }}
-              className="p-1.5 rounded-lg bg-white/5 text-slate-500 hover:text-brand-primary transition-all"
+              className="p-1.5 rounded-lg bg-[var(--bg-card)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all"
               title="Reverse Order"
             >
               <MoveHorizontal className="w-3.5 h-3.5" />
@@ -122,7 +122,7 @@ export function GradientGenerator() {
                 const randomHex = () => "#" + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
                 setColors(colors.map(c => ({ ...c, color: randomHex() })));
               }}
-              className="p-1.5 rounded-lg bg-white/5 text-slate-500 hover:text-brand-primary transition-all"
+              className="p-1.5 rounded-lg bg-[var(--bg-card)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all"
               title="Randomize Matrix"
             >
               <RotateCcw className="w-3.5 h-3.5" />
@@ -130,7 +130,7 @@ export function GradientGenerator() {
             <button
               onClick={addColor}
               disabled={colors.length >= 5}
-              className="p-1.5 rounded-lg bg-brand-primary/10 text-brand-primary hover:bg-brand-primary hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+              className="p-1.5 rounded-lg bg-[var(--bg-card)] text-[var(--text-primary)] hover:bg-[var(--text-primary)] hover:text-[var(--text-primary)] transition-all disabled:opacity-30 disabled:cursor-not-allowed"
             >
               <Plus className="w-3.5 h-3.5" />
             </button>
@@ -139,19 +139,19 @@ export function GradientGenerator() {
         
         <div className="space-y-3">
           {colors.map((c, index) => (
-            <div key={c.id} className="group flex items-center gap-3 p-2 rounded-xl bg-white/[0.02] border border-white/5 transition-all hover:border-brand-primary/20">
+            <div key={c.id} className="group flex items-center gap-3 p-2 rounded-xl bg-[var(--bg)] border border-[var(--border)] transition-all hover:border-[var(--border)]">
               <button
                 onClick={() => setActiveId(c.id)}
                 className={cn(
                   "w-10 h-10 rounded-lg border-2 transition-all shrink-0 shadow-sm",
-                  activeId === c.id ? "border-brand-primary scale-105" : "border-transparent"
+                  activeId === c.id ? "border-[var(--border-hover)] scale-105" : "border-transparent"
                 )}
                 style={{ backgroundColor: c.color }}
               />
               <div className="flex-1 min-w-0 space-y-1">
                 <div className="flex justify-between items-center">
-                  <span className="text-[9px] font-black text-slate-400 uppercase tracking-tighter">Stop {index + 1}</span>
-                  <span className="text-[9px] font-mono font-bold text-brand-primary">{c.stop}%</span>
+                  <span className="text-xs font-medium text-[var(--text-secondary)] uppercase tracking-tighter">Stop {index + 1}</span>
+                  <span className="text-[9px] font-mono font-bold text-[var(--text-primary)]">{c.stop}%</span>
                 </div>
                 <input
                   type="range"
@@ -159,14 +159,14 @@ export function GradientGenerator() {
                   max="100"
                   value={c.stop}
                   onChange={(e) => updateColor(c.id, { stop: parseInt(e.target.value) })}
-                  className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+                  className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
                 />
               </div>
               {/* Hide delete icons for the first two colors */}
               {colors.length > 2 && index >= 2 && (
                 <button
                   onClick={() => removeColor(c.id)}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-500/10 transition-all opacity-0 group-hover:opacity-100"
+                  className="p-1.5 rounded-lg text-[var(--text-secondary)] hover:text-red-500 hover:bg-red-500/10 transition-all opacity-0 group-hover:opacity-100"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>
@@ -177,13 +177,13 @@ export function GradientGenerator() {
       </div>
 
       <div className="space-y-3">
-        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Presets</label>
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Presets</label>
         <div className="grid grid-cols-3 gap-2">
           {presets.map((p) => (
             <button
               key={p.name}
               onClick={() => applyPreset(p.colors)}
-              className="px-2 py-2 rounded-lg bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-tighter text-slate-500 hover:text-brand-primary hover:border-brand-primary transition-all"
+              className="px-2 py-2 rounded-lg card text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-hover)] transition-colors"
             >
               {p.name}
             </button>
@@ -192,14 +192,14 @@ export function GradientGenerator() {
       </div>
 
       {activeColor && (
-        <div className="pt-6 border-t border-white/10 dark:border-white/5 space-y-4">
+        <div className="pt-6 border-t border-[var(--border)] dark:border-[var(--border)] space-y-4">
           <div className="flex justify-between items-center">
-             <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Hex Code</label>
-             <span className="text-[10px] font-mono font-black text-brand-primary uppercase">
+             <label className="text-sm font-medium text-[var(--text-secondary)]">Hex Code</label>
+             <span className="text-[10px] font-mono font-black text-[var(--text-primary)] uppercase">
                {activeColor.color}
              </span>
           </div>
-          <div className="rounded-2xl overflow-hidden border border-white/10 shadow-inner">
+          <div className="rounded-[8px] overflow-hidden border border-[var(--border)] shadow-inner">
             <HexColorPicker
               color={activeColor.color}
               onChange={(color) => updateColor(activeColor.id, { color })}
@@ -213,7 +213,7 @@ export function GradientGenerator() {
 
   const preview = (
     <div 
-      className="w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 rounded-[2.5rem] shadow-2xl transition-all duration-500"
+      className="w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 rounded-[12px] shadow-2xl transition-all duration-500"
       style={{ background: cssValue }}
     />
   );

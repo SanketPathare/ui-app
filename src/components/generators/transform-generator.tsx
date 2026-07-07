@@ -31,8 +31,8 @@ export function TransformGenerator() {
         ].map((item) => (
           <div key={item.label} className="space-y-2">
             <div className="flex justify-between items-center">
-              <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">{item.label}</label>
-              <span className="text-[10px] font-black text-brand-primary font-mono">{item.value}{item.unit}</span>
+              <label className="text-sm font-medium text-[var(--text-secondary)]">{item.label}</label>
+              <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{item.value}{item.unit}</span>
             </div>
             <input
               type="range"
@@ -41,13 +41,13 @@ export function TransformGenerator() {
               step={item.step || 1}
               value={item.value}
               onChange={(e) => item.setter(parseFloat(e.target.value))}
-              className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+              className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
             />
           </div>
         ))}
       </div>
 
-      <div className="pt-6 border-t border-white/10 grid grid-cols-2 gap-2">
+      <div className="pt-6 border-t border-[var(--border)] grid grid-cols-2 gap-2">
         {[
           { name: "3D Tilt", r: 15, s: 1.1, sx: 10, sy: 0 },
           { name: "Skew", r: 0, s: 1, sx: 20, sy: 0 },
@@ -62,7 +62,7 @@ export function TransformGenerator() {
               setSkewX(p.sx);
               setSkewY(p.sy);
             }}
-            className="px-2 py-2 rounded-lg bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-tighter text-slate-500 hover:text-brand-primary transition-all"
+            className="px-2 py-2 rounded-lg card text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all"
           >
             {p.name}
           </button>
@@ -73,10 +73,10 @@ export function TransformGenerator() {
 
   const preview = (
     <div 
-      className="w-40 h-40 md:w-56 md:h-56 bg-brand-primary rounded-3xl shadow-2xl flex items-center justify-center transition-all duration-300"
+      className="w-40 h-40 md:w-56 md:h-56 bg-brand-primary rounded-[12px] shadow-2xl flex items-center justify-center transition-all duration-300"
       style={{ transform: transformValue }}
     >
-      <div className="w-12 h-12 bg-white/20 rounded-lg border-2 border-white/40 flex items-center justify-center">
+      <div className="w-12 h-12 bg-[var(--bg-active)] rounded-lg border-2 border-white/40 flex items-center justify-center">
         <div className="w-2 h-2 bg-white rounded-full" />
       </div>
     </div>

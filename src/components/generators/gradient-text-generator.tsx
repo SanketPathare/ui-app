@@ -87,25 +87,25 @@ ${strokeWidth > 0 ? `-webkit-text-stroke: ${strokeWidth}px ${strokeColor};` : ""
   const controls = (
     <div className="space-y-6">
       <div className="space-y-4">
-        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Preview Text</label>
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Preview Text</label>
         <textarea 
           value={text} 
           onChange={(e) => setText(e.target.value)}
-          className="w-full bg-slate-950 border border-white/10 rounded-2xl p-4 text-[11px] font-mono text-slate-300 focus:ring-1 focus:ring-brand-primary outline-none transition-all"
+          className="w-full bg-[var(--bg)] border border-[var(--border)] rounded-[8px] p-4 text-[11px] font-mono text-[var(--text-primary)] focus:ring-1 focus:ring-brand-primary outline-none transition-all"
           rows={2}
         />
       </div>
 
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-           <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Color Palette</label>
+           <label className="text-sm font-medium text-[var(--text-secondary)]">Color Palette</label>
            {colors.length < 3 && (
-             <button onClick={addColor} className="text-[9px] font-black text-brand-primary uppercase hover:text-white transition-colors">+ Add Stop</button>
+             <button onClick={addColor} className="text-xs font-medium text-[var(--text-primary)] uppercase hover:text-[var(--text-primary)] transition-colors">+ Add Stop</button>
            )}
         </div>
         <div className="space-y-2">
            {colors.map((color, i) => (
-             <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5 group">
+             <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-[var(--bg-card)] border border-[var(--border)] group">
                 <input type="color" value={color} onChange={(e) => updateColor(i, e.target.value)} className="w-8 h-8 rounded-lg bg-transparent border-none cursor-pointer" />
                 <input type="text" value={color} onChange={(e) => updateColor(i, e.target.value)} className="flex-1 bg-transparent border-none text-[10px] font-mono text-white uppercase outline-none" />
                 {colors.length > 2 && (
@@ -120,33 +120,33 @@ ${strokeWidth > 0 ? `-webkit-text-stroke: ${strokeWidth}px ${strokeColor};` : ""
 
       <div className="grid grid-cols-2 gap-4">
          <div className="space-y-4">
-            <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex justify-between">Angle <span>{angle}°</span></label>
-            <input type="range" min="0" max="360" value={angle} onChange={(e) => setAngle(parseInt(e.target.value))} className="w-full accent-brand-primary" />
+            <label className="text-sm font-medium text-[var(--text-secondary)] flex justify-between">Angle <span>{angle}°</span></label>
+            <input type="range" min="0" max="360" value={angle} onChange={(e) => setAngle(parseInt(e.target.value))} className="w-full accent-[var(--text-primary)]" />
          </div>
          <div className="space-y-4">
-            <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex justify-between">Size <span>{fontSize}px</span></label>
-            <input type="range" min="12" max="150" value={fontSize} onChange={(e) => setFontSize(parseInt(e.target.value))} className="w-full accent-brand-primary" />
+            <label className="text-sm font-medium text-[var(--text-secondary)] flex justify-between">Size <span>{fontSize}px</span></label>
+            <input type="range" min="12" max="150" value={fontSize} onChange={(e) => setFontSize(parseInt(e.target.value))} className="w-full accent-[var(--text-primary)]" />
          </div>
       </div>
 
       <div className="space-y-4">
-        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Typography Presets</label>
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Typography Presets</label>
         <div className="grid grid-cols-2 gap-2">
            {PRESETS.map(p => (
              <button 
                key={p.name}
                onClick={() => { setColors(p.colors); setAngle(p.angle); }}
-               className="flex items-center gap-2 p-2 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-all text-left"
+               className="flex items-center gap-2 p-2 rounded-xl bg-[var(--bg-card)] border border-[var(--border)] hover:bg-[var(--bg-hover)] transition-all text-left"
              >
                 <div className="w-4 h-4 rounded-full" style={{ background: `linear-gradient(135deg, ${p.colors[0]}, ${p.colors[1]})` }} />
-                <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">{p.name}</span>
+                <span className="text-xs font-medium text-[var(--text-secondary)]">{p.name}</span>
              </button>
            ))}
         </div>
       </div>
 
-      <div className="space-y-4 pt-4 border-t border-white/5">
-         <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex justify-between">Letter Spacing <span>{letterSpacing}px</span></label>
+      <div className="space-y-4 pt-4 border-t border-[var(--border)]">
+         <label className="text-sm font-medium text-[var(--text-secondary)] flex justify-between">Letter Spacing <span>{letterSpacing}px</span></label>
          <input type="range" min="-10" max="20" value={letterSpacing} onChange={(e) => setLetterSpacing(parseInt(e.target.value))} className="w-full accent-emerald-500" />
       </div>
     </div>

@@ -95,7 +95,7 @@ const CustomCursor = ({ pos }) => (
   const controls = (
     <div className="space-y-6">
       <div className="space-y-4">
-        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Cursor Preset</label>
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Cursor Preset</label>
         <div className="grid grid-cols-2 gap-2">
           {PRESETS.map((p) => (
             <button
@@ -104,8 +104,8 @@ const CustomCursor = ({ pos }) => (
               className={cn(
                 "flex items-center gap-2 px-3 py-2.5 rounded-xl border text-[10px] font-bold uppercase transition-all",
                 preset === p.id 
-                  ? "bg-brand-primary/10 border-brand-primary text-brand-primary shadow-lg shadow-brand-primary/10" 
-                  : "bg-white/5 border-white/5 text-slate-400 hover:border-white/10"
+                  ? "bg-[var(--bg-card)] border-[var(--border-hover)] text-[var(--text-primary)] " 
+                  : "bg-[var(--bg-card)] border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--border)]"
               )}
             >
               {p.icon}
@@ -116,8 +116,8 @@ const CustomCursor = ({ pos }) => (
       </div>
 
       <div className="space-y-4">
-        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Cursor Color</label>
-        <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Cursor Color</label>
+        <div className="flex items-center gap-3 p-3 rounded-xl bg-[var(--bg-card)] border border-[var(--border)]">
            <input type="color" value={color} onChange={(e) => setColor(e.target.value)} className="w-10 h-10 rounded-lg bg-transparent border-none cursor-pointer" />
            <input type="text" value={color} onChange={(e) => setColor(e.target.value)} className="bg-transparent border-none text-xs font-mono text-white w-full uppercase" />
         </div>
@@ -125,36 +125,36 @@ const CustomCursor = ({ pos }) => (
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-4">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500 flex justify-between">
+          <label className="text-sm font-medium text-[var(--text-secondary)] flex justify-between">
              Size <span>{size}px</span>
           </label>
           <input 
             type="range" min="10" max="150" value={size} 
             onChange={(e) => setSize(parseInt(e.target.value))}
-            className="w-full accent-brand-primary"
+            className="w-full accent-[var(--text-primary)]"
           />
         </div>
 
         <div className="space-y-4">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500 flex justify-between">
+          <label className="text-sm font-medium text-[var(--text-secondary)] flex justify-between">
              Blur <span>{blur}px</span>
           </label>
           <input 
             type="range" min="0" max="80" value={blur} 
             onChange={(e) => setBlur(parseInt(e.target.value))}
-            className="w-full accent-brand-primary"
+            className="w-full accent-[var(--text-primary)]"
           />
         </div>
       </div>
 
       <div className="space-y-4">
-        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500 flex justify-between">
+        <label className="text-sm font-medium text-[var(--text-secondary)] flex justify-between">
            Opacity <span>{Math.round(opacity * 100)}%</span>
         </label>
         <input 
           type="range" min="0.1" max="1" step="0.1" value={opacity} 
           onChange={(e) => setOpacity(parseFloat(e.target.value))}
-          className="w-full accent-brand-primary"
+          className="w-full accent-[var(--text-primary)]"
         />
       </div>
     </div>
@@ -166,22 +166,22 @@ const CustomCursor = ({ pos }) => (
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
-      className="w-full h-80 rounded-[2.5rem] bg-[#020617] border border-white/5 overflow-hidden relative cursor-none flex items-center justify-center group select-none"
+      className="w-full h-80 rounded-[12px] bg-[var(--bg)] border border-[var(--border)] overflow-hidden relative cursor-none flex items-center justify-center group select-none"
     >
        <div className="grid grid-cols-2 gap-4 relative z-10 w-full px-12">
           {[1, 2, 3, 4].map((i) => (
             <div 
               key={i}
-              className="h-20 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center justify-center transition-all hover:bg-white/5 hover:border-brand-primary/20 hover:scale-[1.02] group/target"
+              className="h-20 rounded-[8px] bg-[var(--bg)] border border-[var(--border)] flex items-center justify-center transition-all hover:bg-[var(--bg-card)] hover:border-[var(--border)] hover:scale-[1.02] group/target"
               onMouseEnter={() => setIsHovering(true)}
             >
-              <span className="text-[9px] font-black uppercase tracking-widest text-slate-600 group-hover/target:text-brand-primary transition-colors">Target Area</span>
+              <span className="text-xs font-medium text-[var(--text-tertiary)] group-hover/target:text-[var(--text-primary)] transition-colors">Target Area</span>
             </div>
           ))}
        </div>
 
        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
-          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Interactive Canvas</p>
+          <p className="text-sm font-medium uppercase tracking-[0.3em] text-[var(--text-secondary)]">Interactive Canvas</p>
        </div>
        
        {/* Custom Follower */}
@@ -220,7 +220,7 @@ const CustomCursor = ({ pos }) => (
        {/* Outer Ring */}
        {(preset === "ring" || preset === "blob") && (
          <div 
-           className="absolute pointer-events-none transition-all duration-500 ease-out border border-white/10 rounded-full"
+           className="absolute pointer-events-none transition-all duration-500 ease-out border border-[var(--border)] rounded-full"
            style={{ 
              left: cursorPos.x,
              top: cursorPos.y,

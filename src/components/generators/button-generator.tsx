@@ -49,12 +49,12 @@ box-shadow: 0 10px 20px -10px ${bgColor};`;
   const controls = (
     <div className="space-y-6">
       <div className="space-y-2.5">
-        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Call to Action</label>
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Call to Action</label>
         <input
           type="text"
           value={text}
           onChange={(e) => setText(e.target.value)}
-          className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-xs font-bold focus:ring-2 focus:ring-brand-primary/50 outline-none transition-all text-white"
+          className="w-full px-4 py-3 rounded-xl card text-xs font-bold focus:ring-2 focus:ring-[var(--focus-ring)]/30 outline-none transition-all text-white"
         />
       </div>
 
@@ -67,8 +67,8 @@ box-shadow: 0 10px 20px -10px ${bgColor};`;
         ].map((item) => (
           <div key={item.label} className="space-y-2.5">
             <div className="flex justify-between items-center">
-              <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">{item.label}</label>
-              <span className="text-[10px] font-black text-brand-primary font-mono">{item.value}px</span>
+              <label className="text-sm font-medium text-[var(--text-secondary)]">{item.label}</label>
+              <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{item.value}px</span>
             </div>
             <input
               type="range"
@@ -76,20 +76,20 @@ box-shadow: 0 10px 20px -10px ${bgColor};`;
               max={item.max}
               value={item.value}
               onChange={(e) => item.setter(parseInt(e.target.value))}
-              className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+              className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
             />
           </div>
         ))}
       </div>
 
-      <div className="space-y-3 pt-4 border-t border-white/10">
-        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Library</label>
+      <div className="space-y-3 pt-4 border-t border-[var(--border)]">
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Library</label>
         <div className="grid grid-cols-4 gap-2">
           {presets.map((p) => (
             <button
               key={p.name}
               onClick={() => applyPreset(p)}
-              className="px-1 py-2 rounded-lg bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-tighter text-slate-500 hover:text-brand-primary hover:border-brand-primary transition-all"
+              className="px-1 py-2 rounded-lg card text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-hover)] transition-colors"
             >
               {p.name}
             </button>
@@ -97,19 +97,19 @@ box-shadow: 0 10px 20px -10px ${bgColor};`;
         </div>
       </div>
 
-      <div className="pt-6 border-t border-white/10 grid grid-cols-2 gap-4">
+      <div className="pt-6 border-t border-[var(--border)] grid grid-cols-2 gap-4">
         <div className="space-y-3">
-          <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Background</label>
-          <div className="p-1.5 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2">
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Background</label>
+          <div className="p-1.5 rounded-xl card flex items-center gap-2">
             <input type="color" value={bgColor} onChange={(e) => setBgColor(e.target.value)} className="w-8 h-8 rounded-lg overflow-hidden border-none cursor-pointer shrink-0" />
-            <span className="text-[9px] font-mono font-black text-slate-500 uppercase">{bgColor}</span>
+            <span className="text-[9px] font-mono font-black text-[var(--text-secondary)] uppercase">{bgColor}</span>
           </div>
         </div>
         <div className="space-y-3">
-          <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Text</label>
-          <div className="p-1.5 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2">
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Text</label>
+          <div className="p-1.5 rounded-xl card flex items-center gap-2">
             <input type="color" value={textColor} onChange={(e) => setTextColor(e.target.value)} className="w-8 h-8 rounded-lg overflow-hidden border-none cursor-pointer shrink-0" />
-            <span className="text-[9px] font-mono font-black text-slate-500 uppercase">{textColor}</span>
+            <span className="text-[9px] font-mono font-black text-[var(--text-secondary)] uppercase">{textColor}</span>
           </div>
         </div>
       </div>

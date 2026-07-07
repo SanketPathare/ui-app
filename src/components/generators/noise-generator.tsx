@@ -46,7 +46,7 @@ export function NoiseGenerator() {
     <div className="space-y-6">
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Background Color</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Background Color</label>
           <input 
             type="color" 
             value={bgColor} 
@@ -58,8 +58,8 @@ export function NoiseGenerator() {
 
       <div className="space-y-4">
         <div className="flex justify-between">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Noise Density</label>
-          <span className="text-[10px] font-bold text-brand-primary font-mono">{density.toFixed(2)}</span>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Noise Density</label>
+          <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{density.toFixed(2)}</span>
         </div>
         <input 
           type="range"
@@ -68,14 +68,14 @@ export function NoiseGenerator() {
           max={100} 
           step={1} 
           onChange={(e) => setDensity(parseInt(e.target.value) / 100)} 
-          className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+          className="w-full h-1.5 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
         />
       </div>
 
       <div className="space-y-4">
         <div className="flex justify-between">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Noise Opacity</label>
-          <span className="text-[10px] font-bold text-brand-primary font-mono">{Math.round(opacity * 100)}%</span>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Noise Opacity</label>
+          <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{Math.round(opacity * 100)}%</span>
         </div>
         <input 
           type="range"
@@ -84,16 +84,16 @@ export function NoiseGenerator() {
           max={100} 
           step={1} 
           onChange={(e) => setOpacity(parseInt(e.target.value) / 100)} 
-          className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+          className="w-full h-1.5 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
         />
       </div>
 
-      <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2">
+      <div className="p-4 rounded-[8px] card space-y-2">
         <div className="flex items-center gap-2 mb-2">
            <div className="w-1.5 h-1.5 rounded-full bg-brand-primary" />
-           <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Implementation Tip</span>
+           <span className="text-sm font-medium text-[var(--text-secondary)]">Implementation Tip</span>
         </div>
-        <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
+        <p className="text-[10px] text-[var(--text-secondary)] dark:text-[var(--text-secondary)] leading-relaxed font-medium">
           Use the <code>::after</code> pseudo-element approach for the best performance and control over the texture layering.
         </p>
       </div>
@@ -102,7 +102,7 @@ export function NoiseGenerator() {
 
   const preview = (
     <div 
-      className="w-[300px] h-[300px] rounded-3xl relative overflow-hidden shadow-2xl border border-white/10"
+      className="w-[300px] h-[300px] rounded-[12px] relative overflow-hidden shadow-2xl border border-[var(--border)]"
       style={{ backgroundColor: bgColor }}
     >
       <div 

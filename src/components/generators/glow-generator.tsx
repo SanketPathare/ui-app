@@ -48,32 +48,32 @@ export function GlowGenerator() {
   const controls = (
     <div className="space-y-6">
       <div className="space-y-4">
-        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Glow Color</label>
-        <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Glow Color</label>
+        <div className="flex items-center gap-3 p-3 rounded-xl bg-[var(--bg-card)] border border-[var(--border)]">
            <input type="color" value={glowColor} onChange={(e) => setGlowColor(e.target.value)} className="w-10 h-10 rounded-lg bg-transparent border-none cursor-pointer" />
            <input type="text" value={glowColor} onChange={(e) => setGlowColor(e.target.value)} className="bg-transparent border-none text-xs font-mono text-white w-full uppercase" />
         </div>
       </div>
 
       <div className="space-y-4">
-        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500 flex justify-between">
+        <label className="text-sm font-medium text-[var(--text-secondary)] flex justify-between">
            Intensity <span>{glowIntensity}px</span>
         </label>
         <input 
           type="range" min="0" max="100" value={glowIntensity} 
           onChange={(e) => setGlowIntensity(parseInt(e.target.value))}
-          className="w-full accent-brand-primary"
+          className="w-full accent-[var(--text-primary)]"
         />
       </div>
 
       <div className="space-y-4">
-        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500 flex justify-between">
+        <label className="text-sm font-medium text-[var(--text-secondary)] flex justify-between">
            Spread <span>{spread}px</span>
         </label>
         <input 
           type="range" min="0" max="150" value={spread} 
           onChange={(e) => setSpread(parseInt(e.target.value))}
-          className="w-full accent-brand-primary"
+          className="w-full accent-[var(--text-primary)]"
         />
       </div>
 
@@ -81,10 +81,10 @@ export function GlowGenerator() {
         onClick={() => setIsAnimated(!isAnimated)}
         className={cn(
           "w-full flex items-center justify-between p-4 rounded-xl border transition-all",
-          isAnimated ? "bg-brand-primary/10 border-brand-primary text-brand-primary" : "bg-white/5 border-white/5 text-slate-500"
+          isAnimated ? "bg-[var(--bg-card)] border-[var(--border-hover)] text-[var(--text-primary)]" : "bg-[var(--bg-card)] border-[var(--border)] text-[var(--text-secondary)]"
         )}
       >
-        <span className="text-[10px] font-black uppercase tracking-widest">Pulse Animation</span>
+        <span className="text-sm font-medium">Pulse Animation</span>
         <Activity className={cn("w-4 h-4", isAnimated ? "animate-bounce" : "")} />
       </button>
     </div>
@@ -94,7 +94,7 @@ export function GlowGenerator() {
     <div className="relative group">
        <div 
          className={cn(
-           "w-32 h-32 rounded-[2.5rem] bg-slate-900 border border-white/20 flex items-center justify-center transition-all duration-500",
+           "w-32 h-32 rounded-[12px] bg-[var(--bg-card)] border border-[var(--border-hover)] flex items-center justify-center transition-all duration-500",
            isAnimated ? "animate-glow-pulse" : ""
          )}
          style={{ 

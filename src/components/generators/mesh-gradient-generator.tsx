@@ -236,17 +236,17 @@ export function MeshGradientGenerator() {
     <div className="space-y-6">
       {/* Presets */}
       <div className="space-y-3">
-        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Presets</label>
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Presets</label>
         <div className="grid grid-cols-2 gap-2">
           {presets.map((p) => (
             <button
               key={p.name}
               onClick={() => applyPreset(p)}
               className={cn(
-                "flex items-center gap-2 px-3 py-2 rounded-xl border text-[10px] font-black uppercase tracking-wider transition-all",
+                "flex items-center gap-2 px-3 py-2 rounded-xl border text-sm font-medium uppercase tracking-wider transition-all",
                 activePreset === p.name
-                  ? "bg-brand-primary/10 border-brand-primary text-brand-primary"
-                  : "bg-white/5 border-white/10 text-slate-500 hover:text-brand-primary hover:border-brand-primary"
+                  ? "bg-[var(--bg-card)] border-[var(--border-hover)] text-[var(--text-primary)]"
+                  : "bg-[var(--bg-card)] border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-hover)]"
               )}
             >
               <Sparkles className="w-3 h-3" /> {p.name}
@@ -256,9 +256,9 @@ export function MeshGradientGenerator() {
       </div>
 
       {/* Global Controls */}
-      <div className="space-y-4 pt-4 border-t border-white/10">
+      <div className="space-y-4 pt-4 border-t border-[var(--border)]">
         <div className="flex items-center justify-between">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Base Color</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Base Color</label>
           <input
             type="color"
             value={baseColor}
@@ -273,8 +273,8 @@ export function MeshGradientGenerator() {
         ].map((item) => (
           <div key={item.label} className="space-y-2">
             <div className="flex justify-between">
-              <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">{item.label}</label>
-              <span className="text-[10px] font-bold text-brand-primary font-mono">{item.value}{item.unit}</span>
+              <label className="text-sm font-medium text-[var(--text-secondary)]">{item.label}</label>
+              <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{item.value}{item.unit}</span>
             </div>
             <input
               type="range"
@@ -283,18 +283,18 @@ export function MeshGradientGenerator() {
               max={item.max}
               step={1}
               onChange={(e) => item.setter(parseInt(e.target.value))}
-              className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+              className="w-full h-1.5 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
             />
           </div>
         ))}
 
         <div className="flex items-center justify-between pt-1">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Animate</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Animate</label>
           <button
             onClick={() => setAnimate(!animate)}
             className={cn(
-              "px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all",
-              animate ? "bg-brand-primary text-white" : "bg-white/5 text-slate-500"
+              "px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
+              animate ? "bg-[var(--text-primary)] text-[var(--bg)]" : "bg-[var(--bg-card)] text-[var(--text-secondary)]"
             )}
           >
             {animate ? "On" : "Off"}
@@ -303,13 +303,13 @@ export function MeshGradientGenerator() {
       </div>
 
       {/* Points */}
-      <div className="space-y-4 pt-4 border-t border-white/10">
+      <div className="space-y-4 pt-4 border-t border-[var(--border)]">
         <div className="flex items-center justify-between">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Points ({points.length}/8)</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Points ({points.length}/8)</label>
           <button
             onClick={addPoint}
             disabled={points.length >= 8}
-            className="p-1.5 rounded-lg bg-brand-primary/10 text-brand-primary hover:bg-brand-primary hover:text-white transition-all disabled:opacity-50"
+            className="p-1.5 rounded-lg bg-[var(--bg-card)] text-[var(--text-primary)] hover:bg-[var(--text-primary)] hover:text-[var(--text-primary)] transition-all disabled:opacity-50"
           >
             <Plus className="w-4 h-4" />
           </button>
@@ -317,10 +317,10 @@ export function MeshGradientGenerator() {
 
         <div className="space-y-4 max-h-[280px] overflow-y-auto pr-1">
           {points.map((point, index) => (
-            <div key={point.id} className="p-3 rounded-xl bg-white/5 border border-white/10 space-y-3 relative group">
+            <div key={point.id} className="p-3 rounded-xl card space-y-3 relative group">
               <button
                 onClick={() => removePoint(point.id)}
-                className="absolute top-2 right-2 p-1 text-slate-400 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                className="absolute top-2 right-2 p-1 text-[var(--text-secondary)] hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity"
               >
                 <Trash2 className="w-3 h-3" />
               </button>
@@ -332,7 +332,7 @@ export function MeshGradientGenerator() {
                   onChange={(e) => updatePoint(point.id, { color: e.target.value })}
                   className="w-6 h-6 p-0 border-none bg-transparent cursor-pointer rounded"
                 />
-                <span className="text-[10px] font-black text-slate-400 uppercase">Point {index + 1}</span>
+                <span className="text-sm font-medium text-[var(--text-secondary)] uppercase">Point {index + 1}</span>
               </div>
 
               {[
@@ -341,7 +341,7 @@ export function MeshGradientGenerator() {
                 { label: "Size", key: "size" as const, val: point.size, max: 150 },
               ].map((ctrl) => (
                 <div key={ctrl.label} className="space-y-1">
-                  <div className="flex justify-between text-[9px] font-bold text-slate-500 uppercase">
+                  <div className="flex justify-between text-[9px] font-bold text-[var(--text-secondary)] uppercase">
                     <span>{ctrl.label}</span>
                     <span className="font-mono">{ctrl.val}%</span>
                   </div>
@@ -352,7 +352,7 @@ export function MeshGradientGenerator() {
                     max={ctrl.max}
                     step={1}
                     onChange={(e) => updatePoint(point.id, { [ctrl.key]: parseInt(e.target.value) })}
-                    className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+                    className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
                   />
                 </div>
               ))}
@@ -365,13 +365,13 @@ export function MeshGradientGenerator() {
       <div className="grid grid-cols-2 gap-2">
         <button
           onClick={shufflePositions}
-          className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-slate-900 dark:bg-white/5 text-white dark:text-slate-300 text-[10px] font-black uppercase tracking-widest hover:opacity-80 transition-all active:scale-95 border border-transparent dark:border-white/5"
+          className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-[var(--bg-card)] dark:bg-[var(--bg-card)] text-white dark:text-[var(--text-primary)] text-sm font-medium hover:opacity-80 transition-all active:scale-95 border border-transparent dark:border-[var(--border)]"
         >
           <Shuffle className="w-3.5 h-3.5" /> Position
         </button>
         <button
           onClick={shuffleColors}
-          className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-brand-primary text-white text-[10px] font-black uppercase tracking-widest hover:opacity-80 transition-all active:scale-95"
+          className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-[var(--text-primary)] text-[var(--bg)] text-sm font-medium hover:opacity-80 transition-all active:scale-95"
         >
           <RefreshCcw className="w-3.5 h-3.5" /> Colors
         </button>
@@ -393,7 +393,7 @@ export function MeshGradientGenerator() {
   ));
 
   const preview = (
-    <div className="w-64 h-64 md:w-80 md:h-72 rounded-3xl overflow-hidden relative shadow-2xl border border-white/10">
+    <div className="w-64 h-64 md:w-80 md:h-72 rounded-[12px] overflow-hidden relative shadow-2xl border border-[var(--border)]">
       <svg
         viewBox="0 0 400 400"
         preserveAspectRatio="none"

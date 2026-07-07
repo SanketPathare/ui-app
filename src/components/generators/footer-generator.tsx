@@ -49,16 +49,16 @@ export function FooterGenerator() {
   margin-top: 24px;
 }`;
 
-  const tailwindCode = `<footer class="bg-${theme === "dark" ? "slate-900" : "slate-950"} border-t border-white/10 py-[${paddingY}px] px-6">
+  const tailwindCode = `<footer class="bg-${theme === "dark" ? "slate-900" : "slate-950"} border-t border-[var(--border)] py-[${paddingY}px] px-6">
   <div class="max-w-7xl mx-auto">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-${columns} gap-12">
       <!-- Logo & Desc -->
       <div class="space-y-6">
         <h3 class="font-black text-xl tracking-tight">BRAND</h3>
-        <p class="text-sm text-white/60 leading-relaxed max-w-xs">Building the next generation of the web with high-fidelity UI components.</p>
+        <p class="text-sm text-[var(--text-tertiary)] leading-relaxed max-w-xs">Building the next generation of the web with high-fidelity UI components.</p>
         ${showSocials ? `<div class="flex gap-4">
-          <a href="#" class="p-2 bg-white/5 rounded-lg hover:bg-white/10 transition-colors"><Globe class="w-4 h-4"/></a>
-          <a href="#" class="p-2 bg-white/5 rounded-lg hover:bg-white/10 transition-colors"><Mail class="w-4 h-4"/></a>
+          <a href="#" class="p-2 bg-[var(--bg-card)] rounded-lg hover:bg-[var(--bg-hover)] transition-colors"><Globe class="w-4 h-4"/></a>
+          <a href="#" class="p-2 bg-[var(--bg-card)] rounded-lg hover:bg-[var(--bg-hover)] transition-colors"><Mail class="w-4 h-4"/></a>
         </div>` : ""}
       </div>
       
@@ -67,8 +67,8 @@ export function FooterGenerator() {
       <div>
         <h4 class="text-xs font-black uppercase tracking-widest mb-6 text-white">Resources</h4>
         <ul class="space-y-3">
-          <li><a href="#" class="text-sm text-white/60 hover:text-white transition-colors">Documentation</a></li>
-          <li><a href="#" class="text-sm text-white/60 hover:text-white transition-colors">Components</a></li>
+          <li><a href="#" class="text-sm text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors">Documentation</a></li>
+          <li><a href="#" class="text-sm text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors">Components</a></li>
         </ul>
       </div>`).join("")}
     </div>
@@ -99,8 +99,8 @@ export function FooterGenerator() {
       <div className="space-y-4">
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Columns</label>
-            <span className="text-[10px] font-bold text-slate-300 font-mono">{columns}</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Columns</label>
+            <span className="text-[10px] font-bold text-[var(--text-primary)] font-mono">{columns}</span>
           </div>
           <input 
             type="range"
@@ -109,14 +109,14 @@ export function FooterGenerator() {
             max={6} 
             step={1} 
             onChange={(e) => setColumns(parseInt(e.target.value))} 
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-slate-400"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-slate-400"
           />
         </div>
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Padding Y</label>
-            <span className="text-[10px] font-bold text-slate-300 font-mono">{paddingY}px</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Padding Y</label>
+            <span className="text-[10px] font-bold text-[var(--text-primary)] font-mono">{paddingY}px</span>
           </div>
           <input 
             type="range"
@@ -125,18 +125,18 @@ export function FooterGenerator() {
             max={160} 
             step={8} 
             onChange={(e) => setPaddingY(parseInt(e.target.value))} 
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-slate-400"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-slate-400"
           />
         </div>
 
-        <div className="pt-4 space-y-4 border-t border-white/5">
+        <div className="pt-4 space-y-4 border-t border-[var(--border)]">
           <label className="flex items-center justify-between group cursor-pointer">
-            <span className="text-[11px] font-black uppercase tracking-widest text-slate-400 group-hover:text-slate-300 transition-colors">Social Icons</span>
+            <span className="text-sm font-medium text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] transition-colors">Social Icons</span>
             <div 
               onClick={() => setShowSocials(!showSocials)}
               className={cn(
                 "w-10 h-5 rounded-full relative transition-all duration-300",
-                showSocials ? "bg-slate-400 shadow-lg shadow-slate-400/20" : "bg-white/10"
+                showSocials ? "bg-slate-400 shadow-lg shadow-slate-400/20" : "bg-[var(--bg-hover)]"
               )}
             >
               <div className={cn(
@@ -147,17 +147,17 @@ export function FooterGenerator() {
           </label>
 
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-black uppercase tracking-widest text-slate-400">Theme</span>
-            <div className="flex bg-white/5 rounded-lg p-1 border border-white/10">
+            <span className="text-sm font-medium text-[var(--text-secondary)]">Theme</span>
+            <div className="flex bg-[var(--bg-card)] rounded-lg p-1 border border-[var(--border)]">
                <button 
                  onClick={() => setTheme("dark")}
-                 className={cn("px-3 py-1 rounded-md text-[9px] font-black uppercase transition-all", theme === "dark" ? "bg-slate-700 text-white" : "text-slate-500")}
+                 className={cn("px-3 py-1 rounded-md text-xs font-medium transition-all", theme === "dark" ? "bg-[var(--bg-active)] text-white" : "text-[var(--text-secondary)]")}
                >
                  Slate
                </button>
                <button 
                  onClick={() => setTheme("black")}
-                 className={cn("px-3 py-1 rounded-md text-[9px] font-black uppercase transition-all", theme === "black" ? "bg-slate-700 text-white" : "text-slate-500")}
+                 className={cn("px-3 py-1 rounded-md text-xs font-medium transition-all", theme === "black" ? "bg-[var(--bg-active)] text-white" : "text-[var(--text-secondary)]")}
                >
                  Deep
                </button>
@@ -169,11 +169,11 @@ export function FooterGenerator() {
   );
 
   const preview = (
-    <div className="w-full h-[350px] bg-black/20 rounded-[2rem] p-6 relative overflow-hidden flex items-center justify-center">
+    <div className="w-full h-[350px] bg-[var(--bg)] rounded-[12px] p-6 relative overflow-hidden flex items-center justify-center">
       <footer 
         className={cn(
-          "w-full max-w-5xl rounded-2xl border border-white/10 transition-all duration-500 overflow-hidden",
-          theme === "dark" ? "bg-slate-900" : "bg-slate-950"
+          "w-full max-w-5xl rounded-[8px] border border-[var(--border)] transition-all duration-500 overflow-hidden",
+          theme === "dark" ? "bg-[var(--bg-card)]" : "bg-[var(--bg)]"
         )}
         style={{ padding: `${paddingY / 2}px 24px` }}
       >
@@ -182,22 +182,22 @@ export function FooterGenerator() {
           style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}
         >
           <div className="space-y-4">
-            <div className="h-4 w-20 bg-white/20 rounded-full" />
+            <div className="h-4 w-20 bg-[var(--bg-active)] rounded-full" />
             <div className="space-y-1.5">
-               <div className="h-1.5 w-full bg-white/5 rounded-full" />
-               <div className="h-1.5 w-2/3 bg-white/5 rounded-full" />
+               <div className="h-1.5 w-full bg-[var(--bg-card)] rounded-full" />
+               <div className="h-1.5 w-2/3 bg-[var(--bg-card)] rounded-full" />
             </div>
             {showSocials && (
                <div className="flex gap-2">
-                  {[1,2,3].map(i => <div key={i} className="w-6 h-6 rounded-lg bg-white/5" />)}
+                  {[1,2,3].map(i => <div key={i} className="w-6 h-6 rounded-lg bg-[var(--bg-card)]" />)}
                </div>
             )}
           </div>
           {Array.from({ length: columns - 1 }).map((_, i) => (
             <div key={i} className="space-y-4">
-               <div className="h-3 w-12 bg-white/10 rounded-full" />
+               <div className="h-3 w-12 bg-[var(--bg-hover)] rounded-full" />
                <div className="space-y-2">
-                  {[1,2,3].map(j => <div key={j} className="h-1.5 w-full bg-white/5 rounded-full" />)}
+                  {[1,2,3].map(j => <div key={j} className="h-1.5 w-full bg-[var(--bg-card)] rounded-full" />)}
                </div>
             </div>
           ))}

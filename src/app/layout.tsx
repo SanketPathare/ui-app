@@ -1,35 +1,55 @@
-  import type { Metadata } from "next";
-  import { Inter, Outfit } from "next/font/google";
-  import "./globals.css";
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
 
-  const inter = Inter({
-    variable: "--font-inter",
-    subsets: ["latin"],
-  });
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
 
-  const outfit = Outfit({
-    variable: "--font-outfit",
-    subsets: ["latin"],
-  });
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
 
-  export const metadata: Metadata = {
-    title: "UI Engine | Next-Gen CSS Design System",
-    description: "The ultimate CSS and UI design architecture for modern engineering teams. Design, preview, and deploy high-fidelity styles in seconds.",
-    keywords: ["CSS Engine", "UI Architecture", "Design Systems", "Glassmorphism Pro", "Advanced Gradients", "Developer Tools"],
-  };
+export const metadata: Metadata = {
+  title: "UI Engine | CSS Design Tools",
+  description: "A collection of CSS generators for modern developers.",
+  keywords: ["CSS", "UI", "design", "generator", "developer tools"],
+};
 
-  export default function RootLayout({
-    children,
-  }: Readonly<{
-    children: React.ReactNode;
-  }>) {
-    return (
-      <html lang="en" className="dark">
-        <body
-          className={`${inter.variable} ${outfit.variable} font-sans antialiased bg-[#020617] text-slate-100 selection:bg-brand-primary/30 selection:text-brand-primary`}
-        >
-          {children}
-        </body>
-      </html>
-    );
-  }
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en" className="dark" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('theme');
+                  if (theme === 'light') {
+                    document.documentElement.classList.remove('dark');
+                    document.documentElement.classList.add('light');
+                  } else {
+                    document.documentElement.classList.remove('light');
+                    document.documentElement.classList.add('dark');
+                  }
+                } catch(e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
+      >
+        {children}
+      </body>
+    </html>
+  );
+}

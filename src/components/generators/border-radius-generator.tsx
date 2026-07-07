@@ -43,16 +43,16 @@ export function BorderRadiusGenerator() {
       <button
         onClick={() => setAll(!all)}
         className={cn(
-          "w-full flex items-center justify-between p-3 rounded-xl border transition-all text-[10px] font-black uppercase tracking-widest",
+          "w-full flex items-center justify-between p-3 rounded-xl border transition-all text-sm font-medium",
           all 
-            ? "bg-brand-primary/10 border-brand-primary/30 text-brand-primary shadow-sm" 
-            : "bg-white/5 border-white/10 text-slate-500"
+            ? "bg-[var(--bg-card)] border-[var(--border-hover)] text-[var(--text-primary)] shadow-sm" 
+            : "bg-[var(--bg-card)] border-[var(--border)] text-[var(--text-secondary)]"
         )}
       >
         Sync Corners
         <div className={cn(
           "w-8 h-4 rounded-full relative transition-colors",
-          all ? "bg-brand-primary" : "bg-white/10"
+          all ? "bg-brand-primary" : "bg-[var(--bg-hover)]"
         )}>
           <div className={cn(
             "absolute top-0.5 w-3 h-3 bg-white rounded-full transition-all",
@@ -65,8 +65,8 @@ export function BorderRadiusGenerator() {
         {all ? (
           <div className="space-y-2.5">
             <div className="flex justify-between items-center">
-              <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Uniform Radius</label>
-              <span className="text-[10px] font-black text-brand-primary font-mono">{topLeft}px</span>
+              <label className="text-sm font-medium text-[var(--text-secondary)]">Uniform Radius</label>
+              <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{topLeft}px</span>
             </div>
             <input
               type="range"
@@ -74,7 +74,7 @@ export function BorderRadiusGenerator() {
               max="200"
               value={topLeft}
               onChange={(e) => updateAll(parseInt(e.target.value))}
-              className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+              className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
             />
           </div>
         ) : (
@@ -87,8 +87,8 @@ export function BorderRadiusGenerator() {
             ].map((item) => (
               <div key={item.label} className="space-y-2.5">
                 <div className="flex justify-between items-center">
-                  <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">{item.label}</label>
-                  <span className="text-[10px] font-black text-brand-primary font-mono">{item.value}px</span>
+                  <label className="text-sm font-medium text-[var(--text-secondary)]">{item.label}</label>
+                  <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{item.value}px</span>
                 </div>
                 <input
                   type="range"
@@ -96,7 +96,7 @@ export function BorderRadiusGenerator() {
                   max="200"
                   value={item.value}
                   onChange={(e) => item.setter(parseInt(e.target.value))}
-                  className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+                  className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
                 />
               </div>
             ))}
@@ -104,14 +104,14 @@ export function BorderRadiusGenerator() {
         )}
       </div>
 
-      <div className="space-y-3 pt-4 border-t border-white/10">
-        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Geometry Presets</label>
+      <div className="space-y-3 pt-4 border-t border-[var(--border)]">
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Geometry Presets</label>
         <div className="grid grid-cols-3 gap-2">
           {presets.map((p) => (
             <button
               key={p.name}
               onClick={() => applyPreset(p)}
-              className="px-2 py-2 rounded-lg bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-tighter text-slate-500 hover:text-brand-primary hover:border-brand-primary transition-all"
+              className="px-2 py-2 rounded-lg card text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-hover)] transition-colors"
             >
               {p.name}
             </button>

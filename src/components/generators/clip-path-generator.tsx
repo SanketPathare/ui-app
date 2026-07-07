@@ -94,15 +94,15 @@ export function ClipPathGenerator() {
   const controls = (
     <div className="space-y-6">
       <div className="space-y-4">
-        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Presets</label>
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Presets</label>
         <div className="grid grid-cols-4 gap-2">
           {Object.keys(PRESETS).map(name => (
             <button
               key={name}
               onClick={() => setPoints(PRESETS[name])}
-              className="flex flex-col items-center gap-2 p-2.5 rounded-xl bg-white/5 border border-white/5 hover:border-brand-primary/50 transition-all group"
+              className="flex flex-col items-center gap-2 p-2.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border)] hover:border-[var(--border-hover)] transition-all group"
             >
-              <div className="w-7 h-7 flex items-center justify-center rounded-lg bg-white/5 group-hover:bg-brand-primary/10 group-hover:text-brand-primary transition-colors">
+              <div className="w-7 h-7 flex items-center justify-center rounded-lg bg-[var(--bg-card)] group-hover:bg-[var(--bg-hover)] group-hover:text-[var(--text-primary)] transition-colors">
                 {name === "Square" && <Square className="w-3.5 h-3.5" />}
                 {name === "Hexagon" && <Hexagon className="w-3.5 h-3.5" />}
                 {name === "Star" && <Star className="w-3.5 h-3.5" />}
@@ -112,22 +112,22 @@ export function ClipPathGenerator() {
                 {name === "Arrow" && <Move className="w-3.5 h-3.5" />}
                 {name === "Diamond" && <RotateCw className="w-3.5 h-3.5 rotate-45" />}
               </div>
-              <span className="text-[8px] font-bold text-slate-500 group-hover:text-white uppercase tracking-tighter">{name}</span>
+              <span className="text-[8px] font-bold text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] uppercase tracking-tighter">{name}</span>
             </button>
           ))}
         </div>
       </div>
 
-      <div className="space-y-4 pt-4 border-t border-white/5">
-        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Visuals</label>
-        <div className="flex gap-2 p-1 rounded-xl bg-white/5 border border-white/5">
+      <div className="space-y-4 pt-4 border-t border-[var(--border)]">
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Visuals</label>
+        <div className="flex gap-2 p-1 rounded-xl bg-[var(--bg-card)] border border-[var(--border)]">
           {(["gradient", "solid", "image"] as const).map((type) => (
             <button
               key={type}
               onClick={() => setBgType(type)}
               className={cn(
-                "flex-1 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all capitalize",
-                bgType === type ? "bg-brand-primary text-white" : "text-slate-500 hover:text-slate-300"
+                "flex-1 py-2 rounded-lg text-xs font-medium transition-all capitalize",
+                bgType === type ? "bg-[var(--text-primary)] text-[var(--bg)]" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
               )}
             >
               {type}
@@ -135,7 +135,7 @@ export function ClipPathGenerator() {
           ))}
         </div>
         <div className="flex items-center justify-between px-2">
-          <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Accent Color</span>
+          <span className="text-[9px] font-bold text-[var(--text-secondary)] uppercase tracking-widest">Accent Color</span>
           <input 
             type="color" value={accentColor} onChange={(e) => setAccentColor(e.target.value)}
             className="w-10 h-6 p-0 border-none bg-transparent cursor-pointer rounded overflow-hidden"
@@ -143,30 +143,30 @@ export function ClipPathGenerator() {
         </div>
       </div>
 
-      <div className="space-y-4 pt-4 border-t border-white/5">
+      <div className="space-y-4 pt-4 border-t border-[var(--border)]">
         <div className="flex items-center justify-between">
-          <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Nodes ({points.length})</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Nodes ({points.length})</label>
           <button 
             onClick={addPoint}
             disabled={points.length >= 20}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 text-slate-300 text-[9px] font-black uppercase tracking-widest hover:bg-brand-primary/10 hover:text-brand-primary transition-all disabled:opacity-30"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--bg-card)] text-[var(--text-primary)] text-xs font-medium hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] transition-all disabled:opacity-30"
           >
             <Plus className="w-3 h-3" /> Add Node
           </button>
         </div>
         <div className="grid grid-cols-1 gap-1 max-h-[160px] overflow-y-auto custom-scrollbar pr-2">
           {points.map((p, i) => (
-            <div key={i} className="flex items-center gap-3 p-2 rounded-xl bg-white/5 border border-white/5 group/node">
-              <div className="w-5 h-5 rounded flex items-center justify-center bg-white/10 text-[8px] font-bold text-slate-400">
+            <div key={i} className="flex items-center gap-3 p-2 rounded-xl bg-[var(--bg-card)] border border-[var(--border)] group/node">
+              <div className="w-5 h-5 rounded flex items-center justify-center bg-[var(--bg-hover)] text-[8px] font-bold text-[var(--text-secondary)]">
                 {i + 1}
               </div>
-              <div className="flex-1 grid grid-cols-2 gap-2 text-[9px] font-mono text-slate-500">
+              <div className="flex-1 grid grid-cols-2 gap-2 text-[9px] font-mono text-[var(--text-secondary)]">
                 <span>X:{p.x}</span>
                 <span>Y:{p.y}</span>
               </div>
               <button 
                 onClick={() => removePoint(i)}
-                className="opacity-0 group-hover/node:opacity-100 p-1 rounded-md hover:bg-rose-500/10 hover:text-rose-500 text-slate-500 transition-all"
+                className="opacity-0 group-hover/node:opacity-100 p-1 rounded-md hover:bg-rose-500/10 hover:text-rose-500 text-[var(--text-secondary)] transition-all"
               >
                 <Trash2 className="w-3 h-3" />
               </button>
@@ -181,11 +181,11 @@ export function ClipPathGenerator() {
     <div className="relative w-[240px] h-[240px] md:w-[320px] md:h-[320px]">
       <div 
         ref={containerRef}
-        className="absolute inset-0 bg-slate-950 rounded-[2.5rem] overflow-hidden border border-white/5 shadow-2xl"
+        className="absolute inset-0 bg-[var(--bg)] rounded-[12px] overflow-hidden border border-[var(--border)] shadow-2xl"
       >
         <div className="absolute inset-0 grid grid-cols-10 grid-rows-10 opacity-[0.05] pointer-events-none">
           {Array.from({ length: 100 }).map((_, i) => (
-            <div key={i} className="border-[0.5px] border-white/10" />
+            <div key={i} className="border-[0.5px] border-[var(--border)]" />
           ))}
         </div>
 
@@ -216,11 +216,11 @@ export function ClipPathGenerator() {
             onMouseDown={() => handleMouseDown(i)}
             className={cn(
               "absolute w-5 h-5 -ml-2.5 -mt-2.5 rounded-full border-2 cursor-move transition-all active:scale-125 z-20 flex items-center justify-center shadow-lg",
-              draggingIdx === i ? "bg-white border-brand-primary scale-125" : "bg-slate-700 border-white/20"
+              draggingIdx === i ? "bg-white border-[var(--border-hover)] scale-125" : "bg-[var(--bg-active)] border-[var(--border-hover)]"
             )}
             style={{ left: `${p.x}%`, top: `${p.y}%` }}
           >
-             <div className="w-1 h-1 rounded-full bg-white/20" />
+             <div className="w-1 h-1 rounded-full bg-[var(--bg-active)]" />
           </div>
         ))}
       </div>

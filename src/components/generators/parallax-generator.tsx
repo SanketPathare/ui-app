@@ -66,8 +66,8 @@ export function ParallaxGenerator() {
       <div className="space-y-4">
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Tilt Intensity</label>
-            <span className="text-[10px] font-bold text-brand-primary font-mono">{intensity}</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Tilt Intensity</label>
+            <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{intensity}</span>
           </div>
           <input 
             type="range"
@@ -76,14 +76,14 @@ export function ParallaxGenerator() {
             max={50} 
             step={1} 
             onChange={(e) => setIntensity(parseInt(e.target.value))} 
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Perspective</label>
-            <span className="text-[10px] font-bold text-brand-primary font-mono">{perspective}px</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Perspective</label>
+            <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{perspective}px</span>
           </div>
           <input 
             type="range"
@@ -92,12 +92,12 @@ export function ParallaxGenerator() {
             max={2000} 
             step={100} 
             onChange={(e) => setPerspective(parseInt(e.target.value))} 
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
 
         <div className="space-y-2">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Accent Color</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Accent Color</label>
           <div className="flex gap-2">
             {["#8b5cf6", "#06b6d4", "#ec4899", "#10b981", "#f59e0b"].map((color) => (
               <button
@@ -113,14 +113,14 @@ export function ParallaxGenerator() {
           </div>
         </div>
 
-        <div className="pt-4 border-t border-white/5">
+        <div className="pt-4 border-t border-[var(--border)]">
           <label className="flex items-center justify-between group cursor-pointer">
-            <span className="text-[11px] font-black uppercase tracking-widest text-slate-400 group-hover:text-slate-300 transition-colors">Depth Glow</span>
+            <span className="text-sm font-medium text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] transition-colors">Depth Glow</span>
             <div 
               onClick={() => setShowGlow(!showGlow)}
               className={cn(
                 "w-10 h-5 rounded-full relative transition-all duration-300",
-                showGlow ? "bg-brand-primary shadow-lg shadow-brand-primary/20" : "bg-white/10"
+                showGlow ? "bg-[var(--text-primary)]" : "bg-[var(--bg-hover)]"
               )}
             >
               <div className={cn(
@@ -149,7 +149,7 @@ export function ParallaxGenerator() {
   };
 
   const preview = (
-    <div className="w-full h-[400px] flex items-center justify-center rounded-[2rem] p-8 overflow-hidden [perspective:1000px]">
+    <div className="w-full h-[400px] flex items-center justify-center rounded-[12px] p-8 overflow-hidden [perspective:1000px]">
        <div 
          className="w-64 h-80 relative group cursor-pointer [transform-style:preserve-3d] transition-all ease-out"
          style={{ 
@@ -161,7 +161,7 @@ export function ParallaxGenerator() {
          onMouseLeave={() => setRotation({ x: 0, y: 0 })}
        >
           {/* Base Layer */}
-          <div className="absolute inset-0 bg-slate-900 border border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl">
+          <div className="absolute inset-0 bg-[var(--bg-card)] border border-[var(--border)] rounded-[12px] overflow-hidden shadow-2xl">
              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent" />
              {/* Decorative grid */}
              <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }} />
@@ -171,7 +171,7 @@ export function ParallaxGenerator() {
           <div 
             className="absolute inset-0 flex items-center justify-center [transform:translateZ(60px)] pointer-events-none"
           >
-             <div className="w-20 h-20 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 flex items-center justify-center shadow-2xl">
+             <div className="w-20 h-20 rounded-[12px] bg-[var(--bg-card)] backdrop-blur-xl border border-[var(--border)] flex items-center justify-center shadow-2xl">
                 <Layers className="w-8 h-8 text-white opacity-40" />
              </div>
           </div>  
@@ -179,9 +179,9 @@ export function ParallaxGenerator() {
           {/* Top Layer (Title) */}
           <div className="absolute bottom-10 left-0 w-full px-8 [transform:translateZ(100px)] pointer-events-none">
              <div className="space-y-2">
-                <div className="h-3 w-20 bg-white/20 rounded-full" style={{ backgroundColor: accentColor + '40' }} />
-                <div className="h-1.5 w-full bg-white/5 rounded-full" />
-                <div className="h-1.5 w-2/3 bg-white/5 rounded-full" />
+                <div className="h-3 w-20 bg-[var(--bg-active)] rounded-full" style={{ backgroundColor: accentColor + '40' }} />
+                <div className="h-1.5 w-full bg-[var(--bg-card)] rounded-full" />
+                <div className="h-1.5 w-2/3 bg-[var(--bg-card)] rounded-full" />
              </div>
           </div>
 

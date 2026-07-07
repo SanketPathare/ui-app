@@ -38,7 +38,7 @@ export function HoverGenerator() {
   color: white;`}
 }`;
 
-  const tailwindCode = `<div class="transition-all duration-${duration*1000} ease-out ${effect === 'lift' ? `hover:-translate-y-[${Math.abs(yOffset)}px] hover:scale-[${scale}]` : ""} hover:shadow-2xl hover:shadow-[${accentColor}]/${shadowOpacity} p-8 bg-white/5 border border-white/10 rounded-2xl">
+  const tailwindCode = `<div class="transition-all duration-${duration*1000} ease-out ${effect === 'lift' ? `hover:-translate-y-[${Math.abs(yOffset)}px] hover:scale-[${scale}]` : ""} hover:shadow-2xl hover:shadow-[${accentColor}]/${shadowOpacity} p-8 card">
   Hover Content
 </div>`;
 
@@ -72,17 +72,17 @@ export function HoverGenerator() {
     <div className="space-y-6">
       <div className="space-y-4">
         <div className="space-y-2">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Interaction Type</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Interaction Type</label>
           <div className="grid grid-cols-2 gap-2">
             {["lift", "glow", "border", "fill"].map((eff) => (
               <button
                 key={eff}
                 onClick={() => setEffect(eff as any)}
                 className={cn(
-                  "px-3 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest border transition-all",
+                  "px-3 py-2 rounded-xl text-xs font-medium border transition-all",
                   effect === eff 
-                    ? "bg-brand-primary/20 border-brand-primary/50 text-brand-primary shadow-lg shadow-brand-primary/10" 
-                    : "bg-white/5 border-white/10 text-slate-500 hover:text-slate-300"
+                    ? "bg-[var(--bg-active)] border-[var(--border-hover)] text-[var(--text-primary)] " 
+                    : "bg-[var(--bg-card)] border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                 )}
               >
                 {eff}
@@ -93,8 +93,8 @@ export function HoverGenerator() {
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Duration (s)</label>
-            <span className="text-[10px] font-bold text-brand-primary font-mono">{duration}s</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Duration (s)</label>
+            <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{duration}s</span>
           </div>
           <input 
             type="range"
@@ -103,7 +103,7 @@ export function HoverGenerator() {
             max={1} 
             step={0.05} 
             onChange={(e) => setDuration(parseFloat(e.target.value))} 
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
 
@@ -111,8 +111,8 @@ export function HoverGenerator() {
           <>
             <div className="space-y-2">
               <div className="flex justify-between">
-                <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Scale Factor</label>
-                <span className="text-[10px] font-bold text-brand-primary font-mono">{scale}x</span>
+                <label className="text-sm font-medium text-[var(--text-secondary)]">Scale Factor</label>
+                <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{scale}x</span>
               </div>
               <input 
                 type="range"
@@ -121,14 +121,14 @@ export function HoverGenerator() {
                 max={1.5} 
                 step={0.01} 
                 onChange={(e) => setScale(parseFloat(e.target.value))} 
-                className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+                className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
               />
             </div>
 
             <div className="space-y-2">
               <div className="flex justify-between">
-                <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Y Offset (px)</label>
-                <span className="text-[10px] font-bold text-brand-primary font-mono">{yOffset}px</span>
+                <label className="text-sm font-medium text-[var(--text-secondary)]">Y Offset (px)</label>
+                <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{yOffset}px</span>
               </div>
               <input 
                 type="range"
@@ -137,14 +137,14 @@ export function HoverGenerator() {
                 max={50} 
                 step={1} 
                 onChange={(e) => setYOffset(parseInt(e.target.value))} 
-                className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+                className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
               />
             </div>
           </>
         )}
 
         <div className="space-y-2">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Accent Color</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Accent Color</label>
           <div className="flex gap-2">
             {["#8b5cf6", "#06b6d4", "#ec4899", "#10b981", "#f59e0b"].map((color) => (
               <button
@@ -164,12 +164,12 @@ export function HoverGenerator() {
   );
 
   const preview = (
-    <div className="w-full h-[400px] flex items-center justify-center rounded-[2rem] p-12 overflow-hidden">
+    <div className="w-full h-[400px] flex items-center justify-center rounded-[12px] p-12 overflow-hidden">
       <div 
         className="group relative cursor-pointer"
       >
         <div 
-          className="w-64 h-48 rounded-3xl flex flex-col items-center justify-center p-8 transition-all ease-[cubic-bezier(0.4,0,0.2,1)] overflow-hidden"
+          className="w-64 h-48 rounded-[12px] flex flex-col items-center justify-center p-8 transition-all ease-[cubic-bezier(0.4,0,0.2,1)] overflow-hidden"
           style={{ 
             transitionDuration: `${duration}s`,
             background: 'rgba(255, 255, 255, 0.03)',
@@ -201,10 +201,10 @@ export function HoverGenerator() {
             el.style.borderColor = 'rgba(255, 255, 255, 0.08)';
           }}
         >
-          <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-4 transition-all group-hover:scale-110">
-             <MousePointer2 className="w-6 h-6 text-white/40" />
+          <div className="w-12 h-12 rounded-[8px] card flex items-center justify-center mb-4 transition-all group-hover:scale-110">
+             <MousePointer2 className="w-6 h-6 text-[var(--text-secondary)]" />
           </div>
-          <p className="text-sm font-black text-white/60 tracking-widest uppercase">Hover Me</p>
+          <p className="text-sm font-black text-[var(--text-tertiary)] tracking-widest uppercase">Hover Me</p>
           <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
              <MoveUpRight className="w-4 h-4 text-white/20" />
           </div>
@@ -212,8 +212,8 @@ export function HoverGenerator() {
       </div>
       
       <div className="absolute bottom-8 flex items-center gap-2 opacity-30">
-         <Sparkles className="w-3 h-3 text-brand-primary" />
-         <span className="text-[9px] font-black uppercase tracking-widest text-white">Focus for transition states</span>
+         <Sparkles className="w-3 h-3 text-[var(--text-primary)]" />
+         <span className="text-xs font-medium text-white">Focus for transition states</span>
       </div>
     </div>
   );

@@ -109,17 +109,17 @@ export function ColorPaletteGenerator() {
   const controls = (
     <div className="space-y-8">
       <div className="space-y-4">
-        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">What to copy</label>
+        <label className="text-sm font-medium text-[var(--text-secondary)]">What to copy</label>
         <div className="grid grid-cols-2 gap-2">
           {["class", "hex", "rgb", "hsl", "oklch"].map((format) => (
             <button
               key={format}
               onClick={() => setSelectedFormat(format as any)}
               className={cn(
-                "px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all flex items-center justify-between",
+                "px-3 py-2 rounded-xl text-sm font-medium border transition-all flex items-center justify-between",
                 selectedFormat === format 
-                  ? "bg-brand-primary/10 border-brand-primary/50 text-brand-primary shadow-lg shadow-brand-primary/5" 
-                  : "bg-white/5 border-white/5 text-slate-500 hover:text-slate-300"
+                  ? "bg-[var(--bg-card)] border-[var(--border-hover)] text-[var(--text-primary)] shadow-lg shadow-brand-primary/5" 
+                  : "bg-[var(--bg-card)] border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
               )}
             >
               {format}
@@ -130,18 +130,18 @@ export function ColorPaletteGenerator() {
       </div>
 
       <div className="space-y-4">
-        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Class Prefix</label>
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Class Prefix</label>
         <div className="relative">
            <button 
              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-             className="w-full h-12 bg-white/5 border border-white/10 rounded-xl px-4 flex items-center justify-between text-sm font-bold text-slate-200 hover:border-brand-primary/30 transition-all"
+             className="w-full h-12 card px-4 flex items-center justify-between text-sm font-bold text-[var(--text-primary)] hover:border-[var(--border-hover)] transition-all"
            >
               <span>{prefixOptions.find(o => o.value === classPrefix)?.label}</span>
               <MousePointer2 className={cn("w-4 h-4 transition-transform", isDropdownOpen ? "rotate-180" : "")} />
            </button>
            
            {isDropdownOpen && (
-             <div className="absolute top-full left-0 right-0 mt-2 bg-[#0f172a] border border-white/10 rounded-xl shadow-2xl z-[100] overflow-hidden p-1">
+             <div className="absolute top-full left-0 right-0 mt-2 bg-[#0f172a] border border-[var(--border)] rounded-xl shadow-2xl z-[100] overflow-hidden p-1">
                 {prefixOptions.map((opt) => (
                   <button
                     key={opt.value}
@@ -151,7 +151,7 @@ export function ColorPaletteGenerator() {
                     }}
                     className={cn(
                       "w-full px-3 py-2.5 rounded-lg text-left text-xs font-bold transition-all",
-                      classPrefix === opt.value ? "bg-brand-primary/10 text-brand-primary" : "text-slate-400 hover:bg-white/5 hover:text-white"
+                      classPrefix === opt.value ? "bg-[var(--bg-card)] text-[var(--text-primary)]" : "text-[var(--text-secondary)] hover:bg-[var(--bg-card)] hover:text-[var(--text-primary)]"
                     )}
                   >
                     {opt.label}
@@ -168,17 +168,17 @@ export function ColorPaletteGenerator() {
                placeholder="e.g. shadow-*"
                value={customPrefix}
                onChange={(e) => setCustomPrefix(e.target.value)}
-               className="w-full h-11 bg-white/5 border border-brand-primary/20 rounded-xl px-4 text-xs font-bold text-white outline-none focus:border-brand-primary/50 transition-all"
+               className="w-full h-11 bg-[var(--bg-card)] border border-[var(--border)] rounded-xl px-4 text-xs font-bold text-white outline-none focus:border-[var(--border-hover)] transition-all"
              />
-             <p className="text-[9px] text-slate-500 italic">Use * as a placeholder for the color name.</p>
+             <p className="text-[9px] text-[var(--text-secondary)] italic">Use * as a placeholder for the color name.</p>
           </div>
         )}
       </div>
 
-      <div className="pt-6 border-t border-white/5 space-y-4">
-        <div className="flex items-center gap-2 text-brand-primary">
+      <div className="pt-6 border-t border-[var(--border)] space-y-4">
+        <div className="flex items-center gap-2 text-[var(--text-primary)]">
           <Info className="w-3.5 h-3.5" />
-          <span className="text-[10px] font-black uppercase tracking-widest">Active Selection</span>
+          <span className="text-sm font-medium">Active Selection</span>
         </div>
         <div className="space-y-2">
            {[
@@ -190,13 +190,13 @@ export function ColorPaletteGenerator() {
              <button 
                key={item.label}
                onClick={() => handleCopy(item.val)}
-               className="w-full flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5 hover:border-brand-primary/30 group/copy transition-all"
+               className="w-full flex items-center justify-between p-3 rounded-xl bg-[var(--bg-card)] border border-[var(--border)] hover:border-[var(--border-hover)] group/copy transition-all"
              >
                 <div className="flex flex-col items-start gap-0.5">
-                   <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest">{item.label}</span>
-                   <span className="text-[11px] font-bold text-slate-300 group-hover/copy:text-brand-primary transition-colors">{item.val}</span>
+                   <span className="text-xs font-medium text-[var(--text-secondary)] uppercase tracking-widest">{item.label}</span>
+                   <span className="text-[11px] font-bold text-[var(--text-primary)] group-hover/copy:text-[var(--text-primary)] transition-colors">{item.val}</span>
                 </div>
-                {copied === item.val ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5 text-slate-600 group-hover/copy:text-brand-primary" />}
+                {copied === item.val ? <Check className="w-3.5 h-3.5 text-[var(--text-primary)]" /> : <Copy className="w-3.5 h-3.5 text-[var(--text-tertiary)] group-hover/copy:text-[var(--text-primary)]" />}
              </button>
            ))}
         </div>
@@ -205,7 +205,7 @@ export function ColorPaletteGenerator() {
   );
 
   const preview = (
-    <div className="w-full min-h-[500px] rounded-[1.5rem] bg-[#020617] border border-white/5 overflow-hidden flex flex-col relative group">
+    <div className="w-full min-h-[500px] rounded-[1.5rem] bg-[var(--bg)] border border-[var(--border)] overflow-hidden flex flex-col relative group">
        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
             style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 0.5px, transparent 0)', backgroundSize: '24px 24px' }} />
        
@@ -215,7 +215,7 @@ export function ColorPaletteGenerator() {
                <div key={name} className="flex flex-col gap-2 group/col">
                   <span className={cn(
                     "text-[8px] text-center font-black uppercase tracking-widest  mb-4 block origin-bottom-left transition-all group-hover/col:scale-110",
-                    selectedColor.name === name ? "text-brand-primary" : "text-slate-600"
+                    selectedColor.name === name ? "text-[var(--text-primary)]" : "text-[var(--text-tertiary)]"
                   )}>
                     {name}
                   </span>
@@ -235,8 +235,8 @@ export function ColorPaletteGenerator() {
                          >
                             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/item:opacity-100 transition-opacity">
                                <span className={cn(
-                                 "text-[10px] font-black tracking-tighter",
-                                 i > 5 ? "text-white/40" : "text-black/40"
+                                 "text-sm font-medium tracking-tighter",
+                                 i > 5 ? "text-[var(--text-secondary)]" : "text-black/40"
                                )}>
                                  {shade}
                                </span>
@@ -250,7 +250,7 @@ export function ColorPaletteGenerator() {
           </div>
        </div>
 
-       <div className="mt-auto p-5 bg-white/[0.02] border-t border-white/5 backdrop-blur-xl relative z-10">
+       <div className="mt-auto p-5 bg-[var(--bg)] border-t border-[var(--border)] backdrop-blur-xl relative z-10">
           <div className="flex items-center justify-between gap-4">
              <div className="flex items-center gap-4">
                 <div 
@@ -259,12 +259,12 @@ export function ColorPaletteGenerator() {
                 />
                 <div>
                    <h4 className="text-sm font-black text-white tracking-tighter uppercase">{selectedColor.name}-{selectedColor.shade}</h4>
-                   <p className="text-[8px] font-black text-brand-primary uppercase tracking-[0.2em]">{selectedColor.hex}</p>
+                   <p className="text-xs font-medium text-[var(--text-primary)] uppercase tracking-[0.2em]">{selectedColor.hex}</p>
                 </div>
              </div>
              <button 
                onClick={() => handleCopy(getFormattedValue(selectedColor.name, selectedColor.shade, selectedColor.hex))}
-               className="px-5 py-2.5 rounded-xl bg-brand-primary text-white text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-xl shadow-brand-primary/20 flex items-center gap-2 shrink-0"
+               className="px-5 py-2.5 rounded-xl bg-[var(--text-primary)] text-[var(--bg)] text-sm font-medium hover:scale-105 transition-all  flex items-center gap-2 shrink-0"
              >
                 {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                 {copied ? "Copied!" : `Copy ${selectedFormat}`}
@@ -281,19 +281,19 @@ export function ColorPaletteGenerator() {
         <div className="space-y-4">
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 text-[10px] font-black text-slate-500 hover:text-brand-primary uppercase tracking-widest transition-colors group"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] uppercase tracking-widest transition-colors group"
           >
             <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
             Back to Hub
           </Link>
           <div className="space-y-2">
             <h1 className="text-4xl font-black tracking-tighter text-white flex items-center gap-3">
-              <div className="text-brand-primary"><Palette className="w-8 h-8" /></div>
+              <div className="text-[var(--text-primary)]"><Palette className="w-8 h-8" /></div>
               <div>
-                Color <span className="text-brand-primary">Palette</span>
+                Color <span className="text-[var(--text-primary)]">Palette</span>
               </div>
             </h1>
-            <p className="text-slate-400 text-sm font-medium max-w-xl">
+            <p className="text-[var(--text-secondary)] text-sm font-medium max-w-xl">
               Professional Tailwind-inspired color system with multi-format export capabilities.
             </p>
           </div>
@@ -304,7 +304,7 @@ export function ColorPaletteGenerator() {
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Compact Sidebar */}
         <div className="w-full lg:w-62 space-y-6 shrink-0">
-          <div className="p-5 rounded-[1.5rem] bg-slate-900/50 border border-white/5 backdrop-blur-xl space-y-6">
+          <div className="p-5 rounded-[1.5rem] bg-[var(--bg-card)] border border-[var(--border)] backdrop-blur-xl space-y-6">
              <div className="space-y-1">
                 <h2 className="text-sm font-black text-white tracking-tighter uppercase italic">Options</h2>
                 <div className="h-0.5 w-8 bg-brand-primary rounded-full" />
@@ -315,18 +315,18 @@ export function ColorPaletteGenerator() {
 
         {/* Compact Color Laboratory */}
         <div className="flex-1 space-y-6 min-w-0">
-          <div className="p-5 rounded-[1.5rem] bg-slate-900/50 border border-white/5 backdrop-blur-xl space-y-6">
+          <div className="p-5 rounded-[1.5rem] bg-[var(--bg-card)] border border-[var(--border)] backdrop-blur-xl space-y-6">
              <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                   <div className="w-10 h-10 rounded-xl bg-brand-primary/10 flex items-center justify-center text-brand-primary border border-brand-primary/20">
+                   <div className="w-10 h-10 rounded-xl bg-[var(--bg-card)] flex items-center justify-center text-[var(--text-primary)] border border-[var(--border)]">
                       <Palette className="w-5 h-5" />
                    </div>
                    <div className="flex flex-col">
-                      <span className="text-[10px] font-black text-brand-primary uppercase tracking-[0.2em]">Active Laboratory</span>
-                      <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Real-time Sync</span>
+                      <span className="text-sm font-medium text-[var(--text-primary)] uppercase tracking-[0.2em]">Active Laboratory</span>
+                      <span className="text-[9px] font-bold text-[var(--text-secondary)] uppercase tracking-widest">Real-time Sync</span>
                    </div>
                 </div>
-                <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/5 text-[9px] font-black text-slate-400 uppercase tracking-widest">
+                <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--bg-card)] border border-[var(--border)] text-xs font-medium text-[var(--text-secondary)] uppercase tracking-widest">
                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                    Online
                 </div>
@@ -337,19 +337,19 @@ export function ColorPaletteGenerator() {
 
         {/* Code Console */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-           <div className="p-5 rounded-[1.5rem] bg-slate-950 border border-white/5 space-y-3">
+           <div className="p-5 rounded-[1.5rem] bg-[var(--bg)] border border-[var(--border)] space-y-3">
               <div className="flex items-center justify-between">
-                 <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">CSS Variables</span>
-                 <button onClick={() => handleCopy(cssCode)} className="text-brand-primary hover:text-white transition-colors"><Copy className="w-3 h-3" /></button>
+                 <span className="text-xs font-medium text-[var(--text-secondary)] uppercase tracking-widest">CSS Variables</span>
+                 <button onClick={() => handleCopy(cssCode)} className="text-[var(--text-primary)] transition-colors"><Copy className="w-3 h-3" /></button>
               </div>
-              <pre className="text-[10px] text-brand-primary font-mono bg-brand-primary/5 p-3 rounded-xl border border-brand-primary/10 overflow-x-auto">
+              <pre className="text-[10px] text-[var(--text-primary)] font-mono bg-[var(--bg-card)] p-3 rounded-xl border border-[var(--border)] overflow-x-auto">
                  {cssCode}
               </pre>
            </div>
-           <div className="p-5 rounded-[1.5rem] bg-slate-950 border border-white/5 space-y-3">
+           <div className="p-5 rounded-[1.5rem] bg-[var(--bg)] border border-[var(--border)] space-y-3">
               <div className="flex items-center justify-between">
-                 <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Tailwind Snippet</span>
-                 <button onClick={() => handleCopy(tailwindCode)} className="text-brand-primary hover:text-white transition-colors"><Copy className="w-3 h-3" /></button>
+                 <span className="text-xs font-medium text-[var(--text-secondary)] uppercase tracking-widest">Tailwind Snippet</span>
+                 <button onClick={() => handleCopy(tailwindCode)} className="text-[var(--text-primary)] transition-colors"><Copy className="w-3 h-3" /></button>
               </div>
               <pre className="text-[10px] text-indigo-400 font-mono bg-indigo-500/5 p-3 rounded-xl border border-indigo-500/10 overflow-x-auto">
                  {tailwindCode}

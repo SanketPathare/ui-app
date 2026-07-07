@@ -60,43 +60,43 @@ export function SvgShapeGenerator() {
     <div className="space-y-6">
       <div className="space-y-4">
         <div className="flex justify-between">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Waviness</label>
-          <span className="text-[10px] font-bold text-brand-primary font-mono">{waviness}</span>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Waviness</label>
+          <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{waviness}</span>
         </div>
         <input 
           type="range" min={0} max={60} step={1}
           value={waviness} onChange={(e) => setWaviness(parseInt(e.target.value))}
-          className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+          className="w-full h-1.5 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
         />
       </div>
 
       <div className="space-y-4">
         <div className="flex justify-between">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Complexity</label>
-          <span className="text-[10px] font-bold text-brand-primary font-mono">{complexity}</span>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Complexity</label>
+          <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{complexity}</span>
         </div>
         <input 
           type="range" min={3} max={12} step={1}
           value={complexity} onChange={(e) => setComplexity(parseInt(e.target.value))}
-          className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+          className="w-full h-1.5 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
         />
       </div>
 
       <div className="space-y-4">
         <div className="flex justify-between">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Size</label>
-          <span className="text-[10px] font-bold text-brand-primary font-mono">{size}px</span>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Size</label>
+          <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{size}px</span>
         </div>
         <input 
           type="range" min={100} max={450} step={1}
           value={size} onChange={(e) => setSize(parseInt(e.target.value))}
-          className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+          className="w-full h-1.5 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
         />
       </div>
 
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Fill Color</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Fill Color</label>
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 rounded-full" style={{ backgroundColor: color }} />
             <input 
@@ -109,7 +109,7 @@ export function SvgShapeGenerator() {
 
       <button 
         onClick={() => setSeed(Math.random() * 100)}
-        className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-brand-primary text-white text-xs font-bold uppercase tracking-widest hover:bg-brand-accent transition-all active:scale-95 shadow-lg shadow-brand-primary/20"
+        className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-[8px] bg-[var(--text-primary)] text-[var(--bg)] text-xs font-bold uppercase tracking-widest hover:opacity-80 transition-all active:scale-95 "
       >
         <RefreshCcw className="w-4 h-4" />
         Regenerate Shape

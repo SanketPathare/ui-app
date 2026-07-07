@@ -32,25 +32,25 @@ export function ObjectFitGenerator() {
   const controls = (
     <div className="space-y-6">
       <div className="space-y-4">
-        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Fit Strategy</label>
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Fit Strategy</label>
         <div className="grid grid-cols-1 gap-2">
           {FITS.map((f) => (
             <button
               key={f.id}
               onClick={() => setFit(f.id as any)}
               className={cn(
-                "flex items-center justify-between p-4 rounded-2xl border transition-all text-left group",
+                "flex items-center justify-between p-4 rounded-[8px] border transition-all text-left group",
                 fit === f.id 
-                  ? "bg-emerald-500/10 border-emerald-500 text-emerald-500 shadow-lg shadow-emerald-500/10" 
-                  : "bg-white/5 border-white/5 text-slate-500 hover:border-white/10"
+                  ? "bg-emerald-500/10 border-emerald-500 text-[var(--text-primary)] shadow-lg shadow-emerald-500/10" 
+                  : "bg-[var(--bg-card)] border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--border)]"
               )}
             >
               <div className="flex items-center gap-3">
-                 <div className={cn("p-2 rounded-lg transition-colors", fit === f.id ? "bg-emerald-500 text-white" : "bg-white/5 group-hover:bg-white/10")}>
+                 <div className={cn("p-2 rounded-lg transition-colors", fit === f.id ? "bg-emerald-500 text-white" : "bg-[var(--bg-card)] group-hover:bg-[var(--bg-hover)]")}>
                     {f.icon}
                  </div>
                  <div>
-                    <p className="text-[10px] font-black uppercase tracking-widest">{f.name}</p>
+                    <p className="text-sm font-medium">{f.name}</p>
                     <p className="text-[9px] font-bold opacity-60">{f.desc}</p>
                  </div>
               </div>
@@ -60,20 +60,20 @@ export function ObjectFitGenerator() {
         </div>
       </div>
 
-      <div className="space-y-4 border-t border-white/5 pt-6">
-        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Object Position</label>
+      <div className="space-y-4 border-t border-[var(--border)] pt-6">
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Object Position</label>
         <div className="space-y-4">
           <div className="space-y-2">
-            <div className="flex justify-between text-[10px] font-bold text-slate-500">
+            <div className="flex justify-between text-[10px] font-bold text-[var(--text-secondary)]">
                <span>Horizontal</span>
-               <span className="text-emerald-500">{positionX}%</span>
+               <span className="text-[var(--text-primary)]">{positionX}%</span>
             </div>
             <input type="range" min="0" max="100" value={positionX} onChange={(e) => setPositionX(parseInt(e.target.value))} className="w-full accent-emerald-500" />
           </div>
           <div className="space-y-2">
-            <div className="flex justify-between text-[10px] font-bold text-slate-500">
+            <div className="flex justify-between text-[10px] font-bold text-[var(--text-secondary)]">
                <span>Vertical</span>
-               <span className="text-emerald-500">{positionY}%</span>
+               <span className="text-[var(--text-primary)]">{positionY}%</span>
             </div>
             <input type="range" min="0" max="100" value={positionY} onChange={(e) => setPositionY(parseInt(e.target.value))} className="w-full accent-emerald-500" />
           </div>
@@ -83,19 +83,19 @@ export function ObjectFitGenerator() {
   );
 
   const preview = (
-    <div className="w-full h-96 rounded-[2.5rem] bg-[#020617] border border-white/5 overflow-hidden flex flex-col relative">
-       <div className="p-4 bg-white/[0.02] border-b border-white/5 flex items-center justify-between">
+    <div className="w-full h-96 rounded-[12px] bg-[var(--bg)] border border-[var(--border)] overflow-hidden flex flex-col relative">
+       <div className="p-4 bg-[var(--bg)] border-b border-[var(--border)] flex items-center justify-between">
           <div className="flex gap-1.5">
              <div className="w-2.5 h-2.5 rounded-full bg-rose-500/20" />
-             <div className="w-2.5 h-2.5 rounded-full bg-amber-500/20" />
+             <div className="w-2.5 h-2.5 rounded-full bg-[var(--text-primary)]/20" />
              <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/20" />
           </div>
-          <span className="text-[9px] font-black text-slate-600 uppercase tracking-widest">Media Container (4:3)</span>
+          <span className="text-xs font-medium text-[var(--text-tertiary)] uppercase tracking-widest">Media Container (4:3)</span>
           <div className="w-10" />
        </div>
        
        <div className="flex-1 p-8">
-          <div className="w-full h-full border-2 border-dashed border-white/5 rounded-2xl overflow-hidden bg-slate-950 shadow-inner">
+          <div className="w-full h-full border-2 border-dashed border-[var(--border)] rounded-[8px] overflow-hidden bg-[var(--bg)] shadow-inner">
              <img 
                src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop" 
                alt="Object Fit Test"
@@ -108,7 +108,7 @@ export function ObjectFitGenerator() {
           </div>
        </div>
 
-       <div className="absolute bottom-12 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full bg-black/60 backdrop-blur-xl border border-white/10 text-[9px] font-black text-white/60 uppercase tracking-widest">
+       <div className="absolute bottom-12 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full bg-black/60 backdrop-blur-xl border border-[var(--border)] text-xs font-medium text-[var(--text-tertiary)] uppercase tracking-widest">
           {fit} / {positionX}% {positionY}%
        </div>
     </div>

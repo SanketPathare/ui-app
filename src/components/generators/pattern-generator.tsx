@@ -174,17 +174,17 @@ export function PatternGenerator() {
   const controls = (
     <div className="space-y-6">
       <div className="space-y-3">
-        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Pattern Engine</label>
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Pattern Engine</label>
         <div className="grid grid-cols-3 gap-2">
           {patternTypes.map((p) => (
             <button
               key={p.id}
               onClick={() => setType(p.id)}
               className={cn(
-                "px-2 py-2 rounded-lg text-[9px] font-black uppercase tracking-tighter transition-all",
+                "px-2 py-2 rounded-lg text-xs font-medium transition-all",
                 type === p.id 
-                  ? "bg-brand-primary text-white shadow-lg border-brand-primary" 
-                  : "bg-white/5 border border-white/10 text-slate-500 hover:text-brand-primary"
+                  ? "bg-[var(--text-primary)] text-[var(--bg)] shadow-lg border-[var(--border-hover)]" 
+                  : "card text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
               )}
             >
               {p.name}
@@ -193,7 +193,7 @@ export function PatternGenerator() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-5 pt-4 border-t border-white/10">
+      <div className="grid grid-cols-1 gap-5 pt-4 border-t border-[var(--border)]">
         {[
           { label: "Density", value: size, setter: setSize, min: 4, max: 200, unit: "px" },
           { label: "Thickness", value: thickness, setter: setThickness, min: 1, max: 20, unit: "px" },
@@ -201,8 +201,8 @@ export function PatternGenerator() {
         ].map((item) => (
           <div key={item.label} className="space-y-2.5">
             <div className="flex justify-between items-center">
-              <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">{item.label}</label>
-              <span className="text-[10px] font-black text-brand-primary font-mono">{item.value}{item.unit}</span>
+              <label className="text-sm font-medium text-[var(--text-secondary)]">{item.label}</label>
+              <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{item.value}{item.unit}</span>
             </div>
             <input
               type="range"
@@ -210,15 +210,15 @@ export function PatternGenerator() {
               max={item.max}
               value={item.value}
               onChange={(e) => item.setter(parseInt(e.target.value))}
-              className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+              className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
             />
           </div>
         ))}
 
         <div className="space-y-2.5">
           <div className="flex justify-between items-center">
-            <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Intensity</label>
-            <span className="text-[10px] font-black text-brand-primary font-mono">{Math.round(opacity * 100)}%</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Intensity</label>
+            <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{Math.round(opacity * 100)}%</span>
           </div>
           <input
             type="range"
@@ -226,27 +226,27 @@ export function PatternGenerator() {
             max="100"
             value={opacity * 100}
             onChange={(e) => setOpacity(parseInt(e.target.value) / 100)}
-            className="w-full h-1 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-slate-200 dark:bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
       </div>
 
-      <div className="space-y-3 pt-4 border-t border-white/10">
-        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Preview Scale</label>
+      <div className="space-y-3 pt-4 border-t border-[var(--border)]">
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Preview Scale</label>
         <input
           type="range"
           min="100"
           max="500"
           value={previewSize}
           onChange={(e) => setPreviewSize(parseInt(e.target.value))}
-          className="w-full h-1 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+          className="w-full h-1 bg-slate-200 dark:bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
         />
       </div>
 
-      <div className="pt-6 border-t border-white/10 grid grid-cols-2 gap-4">
+      <div className="pt-6 border-t border-[var(--border)] grid grid-cols-2 gap-4">
         <div className="space-y-3">
-          <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Foreground</label>
-          <div className="flex gap-2 p-1.5 rounded-xl bg-white/5 border border-white/10">
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Foreground</label>
+          <div className="flex gap-2 p-1.5 rounded-xl card">
             <input 
               type="color" 
               value={color} 
@@ -256,8 +256,8 @@ export function PatternGenerator() {
           </div>
         </div>
         <div className="space-y-3 relative group">
-          <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Background</label>
-          <div className="flex gap-2 p-1.5 rounded-xl bg-white/5 border border-white/10">
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Background</label>
+          <div className="flex gap-2 p-1.5 rounded-xl card">
             <input 
               type="color" 
               value={bgColor} 
@@ -267,7 +267,7 @@ export function PatternGenerator() {
           </div>
           <button 
             onClick={() => { const temp = color; setColor(bgColor); setBgColor(temp); }}
-            className="absolute -top-1 right-0 p-1.5 rounded-lg bg-brand-primary/10 text-brand-primary opacity-0 group-hover:opacity-100 transition-all active:scale-90"
+            className="absolute -top-1 right-0 p-1.5 rounded-lg bg-[var(--bg-card)] text-[var(--text-primary)] opacity-0 group-hover:opacity-100 transition-all active:scale-90"
             title="Swap Colors"
           >
             <RefreshCcw className="w-3 h-3" />
@@ -279,7 +279,7 @@ export function PatternGenerator() {
 
   const preview = (
     <div 
-      className="rounded-[2.5rem] shadow-2xl transition-all duration-300"
+      className="rounded-[12px] shadow-2xl transition-all duration-300"
       style={{
         ...styles,
         width: `${previewSize}px`,

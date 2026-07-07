@@ -99,41 +99,41 @@ export function CurveShapeGenerator() {
   const controls = (
     <div className="space-y-6">
       <div className="space-y-4">
-        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Presets</label>
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Presets</label>
         <div className="grid grid-cols-2 gap-2">
           {Object.keys(PRESETS).map(name => (
             <button
               key={name}
               onClick={() => setPoints(PRESETS[name])}
-              className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5 hover:border-brand-primary/50 transition-all group"
+              className="flex items-center gap-3 p-3 rounded-xl bg-[var(--bg-card)] border border-[var(--border)] hover:border-[var(--border-hover)] transition-all group"
             >
-              <div className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/5 group-hover:bg-brand-primary/10 group-hover:text-brand-primary transition-colors">
+              <div className="w-8 h-8 flex items-center justify-center rounded-lg bg-[var(--bg-card)] group-hover:bg-[var(--bg-hover)] group-hover:text-[var(--text-primary)] transition-colors">
                 {name === "Wave" && <Waves className="w-4 h-4" />}
                 {name === "Loop" && <RefreshCcw className="w-4 h-4" />}
                 {name === "S-Curve" && <Activity className="w-4 h-4" />}
                 {name === "Arc" && <CircleDot className="w-4 h-4" />}
               </div>
-              <span className="text-[9px] font-bold text-slate-400 group-hover:text-white uppercase tracking-tighter">{name}</span>
+              <span className="text-[9px] font-bold text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] uppercase tracking-tighter">{name}</span>
             </button>
           ))}
         </div>
       </div>
 
-      <div className="space-y-4 pt-4 border-t border-white/5">
+      <div className="space-y-4 pt-4 border-t border-[var(--border)]">
         <div className="flex justify-between">
-          <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Stroke Width</label>
-          <span className="text-[10px] font-bold text-brand-primary font-mono">{strokeWidth}px</span>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Stroke Width</label>
+          <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{strokeWidth}px</span>
         </div>
         <input 
           type="range" min={1} max={10} step={0.5}
           value={strokeWidth} onChange={(e) => setStrokeWidth(parseFloat(e.target.value))}
-          className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+          className="w-full h-1.5 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
         />
       </div>
 
       <div className="space-y-4">
-        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Stroke Style</label>
-        <div className="flex gap-2 p-1 rounded-xl bg-white/5 border border-white/5">
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Stroke Style</label>
+        <div className="flex gap-2 p-1 rounded-xl bg-[var(--bg-card)] border border-[var(--border)]">
           {[
             { label: "Solid", value: "0" },
             { label: "Dashed", value: "8 4" },
@@ -143,8 +143,8 @@ export function CurveShapeGenerator() {
               key={style.label}
               onClick={() => setDashArray(style.value)}
               className={cn(
-                "flex-1 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all",
-                dashArray === style.value ? "bg-brand-primary text-white" : "text-slate-500 hover:text-slate-300"
+                "flex-1 py-2 rounded-lg text-xs font-medium transition-all",
+                dashArray === style.value ? "bg-[var(--text-primary)] text-[var(--bg)]" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
               )}
             >
               {style.label}
@@ -153,12 +153,12 @@ export function CurveShapeGenerator() {
         </div>
       </div>
 
-      <div className="space-y-4 pt-4 border-t border-white/5">
+      <div className="space-y-4 pt-4 border-t border-[var(--border)]">
         <div className="flex items-center justify-between">
-           <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Fill Shape</label>
+           <label className="text-sm font-medium text-[var(--text-secondary)]">Fill Shape</label>
            <button 
              onClick={() => setFillEnabled(!fillEnabled)}
-             className={`w-10 h-5 rounded-full transition-all relative ${fillEnabled ? 'bg-emerald-500' : 'bg-slate-700'}`}
+             className={`w-10 h-5 rounded-full transition-all relative ${fillEnabled ? 'bg-emerald-500' : 'bg-[var(--bg-active)]'}`}
            >
              <div className={`absolute top-1 w-3 h-3 rounded-full bg-white transition-all ${fillEnabled ? 'left-6' : 'left-1'}`} />
            </button>
@@ -166,7 +166,7 @@ export function CurveShapeGenerator() {
         
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Stroke</label>
+            <label className="text-[9px] font-bold text-[var(--text-secondary)] uppercase tracking-widest">Stroke</label>
             <div className="flex items-center gap-2">
               <input 
                 type="color" value={strokeColor} onChange={(e) => setStrokeColor(e.target.value)}
@@ -175,7 +175,7 @@ export function CurveShapeGenerator() {
             </div>
           </div>
           <div className="space-y-2">
-            <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Fill</label>
+            <label className="text-[9px] font-bold text-[var(--text-secondary)] uppercase tracking-widest">Fill</label>
             <div className="flex items-center gap-2">
               <input 
                 type="color" value={fillColor.substring(0, 7)} onChange={(e) => setFillColor(e.target.value + "33")}
@@ -187,33 +187,33 @@ export function CurveShapeGenerator() {
         </div>
       </div>
 
-      <div className="space-y-4 pt-4 border-t border-white/5">
+      <div className="space-y-4 pt-4 border-t border-[var(--border)]">
         <div className="flex items-center justify-between">
-          <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Nodes ({points.length})</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Nodes ({points.length})</label>
           <button 
             onClick={() => setPoints([...points, { x: 50, y: 50 }])}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 text-slate-300 text-[9px] font-black uppercase tracking-widest hover:bg-brand-primary/10 hover:text-brand-primary transition-all"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--bg-card)] text-[var(--text-primary)] text-xs font-medium hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] transition-all"
           >
             <Plus className="w-3 h-3" /> Add Node
           </button>
         </div>
         <div className="grid grid-cols-1 gap-1 max-h-[150px] overflow-y-auto custom-scrollbar pr-2">
           {points.map((p, i) => (
-            <div key={i} className="flex items-center gap-3 p-2 rounded-lg bg-white/5 border border-white/5 group/node">
+            <div key={i} className="flex items-center gap-3 p-2 rounded-lg bg-[var(--bg-card)] border border-[var(--border)] group/node">
               <div className={cn(
                 "w-5 h-5 rounded-md flex items-center justify-center text-[8px] font-bold transition-colors",
-                i === 0 ? "bg-emerald-500 text-white" : i === points.length - 1 ? "bg-rose-500 text-white" : "bg-white/10 text-slate-500"
+                i === 0 ? "bg-emerald-500 text-white" : i === points.length - 1 ? "bg-rose-500 text-white" : "bg-[var(--bg-hover)] text-[var(--text-secondary)]"
               )}>
                 {i === 0 ? "S" : i === points.length - 1 ? "E" : i}
               </div>
-              <div className="flex-1 grid grid-cols-2 gap-2 text-[9px] font-mono text-slate-500">
+              <div className="flex-1 grid grid-cols-2 gap-2 text-[9px] font-mono text-[var(--text-secondary)]">
                 <span>X:{p.x}</span>
                 <span>Y:{p.y}</span>
               </div>
               {points.length > 2 && (
                 <button 
                   onClick={() => setPoints(points.filter((_, idx) => idx !== i))}
-                  className="opacity-0 group-hover/node:opacity-100 p-1 rounded-md hover:bg-rose-500/10 hover:text-rose-500 text-slate-500 transition-all"
+                  className="opacity-0 group-hover/node:opacity-100 p-1 rounded-md hover:bg-rose-500/10 hover:text-rose-500 text-[var(--text-secondary)] transition-all"
                 >
                   <Trash2 className="w-3 h-3" />
                 </button>
@@ -229,11 +229,11 @@ export function CurveShapeGenerator() {
     <div className="relative w-[280px] h-[280px] md:w-[350px] md:h-[350px]">
       <div 
         ref={containerRef}
-        className="absolute inset-0 bg-slate-950 rounded-[2.5rem] overflow-hidden border border-white/5 shadow-2xl"
+        className="absolute inset-0 bg-[var(--bg)] rounded-[12px] overflow-hidden border border-[var(--border)] shadow-2xl"
       >
         <div className="absolute inset-0 grid grid-cols-10 grid-rows-10 opacity-[0.05] pointer-events-none">
           {Array.from({ length: 100 }).map((_, i) => (
-            <div key={i} className="border-[0.5px] border-white/10" />
+            <div key={i} className="border-[0.5px] border-[var(--border)]" />
           ))}
         </div>
 
@@ -262,14 +262,14 @@ export function CurveShapeGenerator() {
             onMouseDown={() => handleMouseDown(i)}
             className={cn(
               "absolute w-5 h-5 -ml-2.5 -mt-2.5 rounded-full border-2 cursor-move transition-all active:scale-125 z-20 flex items-center justify-center shadow-lg",
-              draggingIdx === i ? "bg-white border-brand-primary scale-125" : 
-              i === 0 ? "bg-emerald-500 border-white/50" : 
-              i === points.length - 1 ? "bg-rose-500 border-white/50" : 
-              "bg-slate-700 border-white/20"
+              draggingIdx === i ? "bg-white border-[var(--border-hover)] scale-125" : 
+              i === 0 ? "bg-emerald-500 border-[var(--border)]0" : 
+              i === points.length - 1 ? "bg-rose-500 border-[var(--border)]0" : 
+              "bg-[var(--bg-active)] border-[var(--border-hover)]"
             )}
             style={{ left: `${p.x}%`, top: `${p.y}%` }}
           >
-             <div className="w-1 h-1 rounded-full bg-white/20" />
+             <div className="w-1 h-1 rounded-full bg-[var(--bg-active)]" />
           </div>
         ))}
       </div>

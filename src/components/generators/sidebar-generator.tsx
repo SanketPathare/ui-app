@@ -50,9 +50,9 @@ export function SidebarGenerator() {
   font-weight: 500;
 }`;
 
-  const tailwindCode = `<aside class="h-screen sticky top-0 flex flex-col transition-all duration-500 ${isCollapsed ? `w-[${collapsedWidth}px]` : `w-[${width}px]`} bg-slate-900/80 backdrop-blur-2xl border-r border-white/10">
+  const tailwindCode = `<aside class="h-screen sticky top-0 flex flex-col transition-all duration-500 ${isCollapsed ? `w-[${collapsedWidth}px]` : `w-[${width}px]`} bg-[var(--bg-card)]/80 backdrop-blur-2xl border-r border-[var(--border)]">
   <div class="flex items-center gap-3 mb-8 px-4 py-6">
-    <div class="w-9 h-9 rounded-xl bg-brand-primary flex items-center justify-center font-black text-white shadow-lg shadow-brand-primary/20 ring-1 ring-white/20">S</div>
+    <div class="w-9 h-9 rounded-xl bg-brand-primary flex items-center justify-center font-black text-white  ring-1 ring-white/20">S</div>
     ${!isCollapsed ? '<span class="text-sm font-black text-white uppercase tracking-widest">Brand</span>' : ''}
   </div>
 
@@ -61,14 +61,14 @@ export function SidebarGenerator() {
       <Home class="w-5 h-5 shrink-0" />
       ${!isCollapsed ? '<span class="text-xs font-bold uppercase tracking-wider">Dashboard</span>' : ''}
     </a>
-    <a href="#" class="flex items-center gap-4 px-3 py-2.5 rounded-[${itemRadius}px] text-slate-500 hover:text-slate-300 transition-colors">
+    <a href="#" class="flex items-center gap-4 px-3 py-2.5 rounded-[${itemRadius}px] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
       <Users class="w-5 h-5 shrink-0" />
       ${!isCollapsed ? '<span class="text-xs font-bold uppercase tracking-wider">Community</span>' : ''}
     </a>
   </nav>
 
   ${showProfile ? `
-  <div class="px-4 py-6 border-t border-white/10">
+  <div class="px-4 py-6 border-t border-[var(--border)]">
     <div class="flex items-center gap-3">
       <div class="w-9 h-9 rounded-full bg-gradient-to-br from-brand-primary to-brand-secondary ring-2 ring-white/10 shadow-xl" />
       ${!isCollapsed ? '<div class="h-2 w-20 bg-white rounded-full" />' : ''}
@@ -101,7 +101,7 @@ export function SidebarGenerator() {
     setCollapsedWidth(80);
     setIsCollapsed(false);
     setPosition("left");
-    setTheme("glass");
+    
   };
 
   const controls = (
@@ -109,8 +109,8 @@ export function SidebarGenerator() {
       <div className="grid grid-cols-1 gap-5">
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Sidebar Width</label>
-            <span className="text-[10px] font-bold text-brand-primary font-mono">{width}px</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Sidebar Width</label>
+            <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{width}px</span>
           </div>
           <input 
             type="range"
@@ -118,14 +118,14 @@ export function SidebarGenerator() {
             min={160} 
             max={320} 
             onChange={(e) => setWidth(parseInt(e.target.value))} 
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Item Radius</label>
-            <span className="text-[10px] font-bold text-brand-primary font-mono">{itemRadius}px</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Item Radius</label>
+            <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{itemRadius}px</span>
           </div>
           <input 
             type="range"
@@ -133,14 +133,14 @@ export function SidebarGenerator() {
             min={0} 
             max={24} 
             onChange={(e) => setItemRadius(parseInt(e.target.value))} 
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
 
-        <div className="pt-4 grid grid-cols-2 gap-4 border-t border-white/10">
+        <div className="pt-4 grid grid-cols-2 gap-4 border-t border-[var(--border)]">
           <div className="space-y-3">
-             <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Active Tint</span>
-             <div className="flex gap-2 p-1.5 rounded-xl bg-white/5 border border-white/10">
+             <span className="text-sm font-medium text-[var(--text-secondary)]">Active Tint</span>
+             <div className="flex gap-2 p-1.5 rounded-xl card">
                 <input 
                   type="color" 
                   value={activeColor} 
@@ -150,11 +150,11 @@ export function SidebarGenerator() {
              </div>
           </div>
           <div className="space-y-3">
-             <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Layout</span>
-             <div className="flex bg-white/5 rounded-lg p-1 border border-white/10 h-11 items-center">
+             <span className="text-sm font-medium text-[var(--text-secondary)]">Layout</span>
+             <div className="flex bg-[var(--bg-card)] rounded-lg p-1 border border-[var(--border)] h-11 items-center">
                 <button 
                   onClick={() => setIsCollapsed(!isCollapsed)}
-                  className={cn("flex-1 h-full rounded-md text-[9px] font-black uppercase transition-all", isCollapsed ? "bg-brand-primary text-white" : "text-slate-500")}
+                  className={cn("flex-1 h-full rounded-md text-xs font-medium transition-all", isCollapsed ? "bg-[var(--text-primary)] text-[var(--bg)]" : "text-[var(--text-secondary)]")}
                 >
                   {isCollapsed ? "Compact" : "Full"}
                 </button>
@@ -162,18 +162,18 @@ export function SidebarGenerator() {
           </div>
         </div>
 
-        <div className="pt-4 space-y-3 border-t border-white/10">
-           <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Display Modules</span>
+        <div className="pt-4 space-y-3 border-t border-[var(--border)]">
+           <span className="text-sm font-medium text-[var(--text-secondary)]">Display Modules</span>
            <div className="grid grid-cols-2 gap-2">
               <button 
                 onClick={() => setShowSearch(!showSearch)}
-                className={cn("px-3 py-2.5 rounded-xl text-[9px] font-black uppercase border transition-all", showSearch ? "bg-brand-primary/10 border-brand-primary/30 text-brand-primary" : "bg-white/5 border-white/10 text-slate-500")}
+                className={cn("px-3 py-2.5 rounded-xl text-xs font-medium border transition-all", showSearch ? "bg-[var(--bg-card)] border-[var(--border-hover)] text-[var(--text-primary)]" : "bg-[var(--bg-card)] border-[var(--border)] text-[var(--text-secondary)]")}
               >
                 Search Bar
               </button>
               <button 
                 onClick={() => setShowProfile(!showProfile)}
-                className={cn("px-3 py-2.5 rounded-xl text-[9px] font-black uppercase border transition-all", showProfile ? "bg-brand-primary/10 border-brand-primary/30 text-brand-primary" : "bg-white/5 border-white/10 text-slate-500")}
+                className={cn("px-3 py-2.5 rounded-xl text-xs font-medium border transition-all", showProfile ? "bg-[var(--bg-card)] border-[var(--border-hover)] text-[var(--text-primary)]" : "bg-[var(--bg-card)] border-[var(--border)] text-[var(--text-secondary)]")}
               >
                 User Profile
               </button>
@@ -184,27 +184,27 @@ export function SidebarGenerator() {
   );
 
   const preview = (
-    <div className="w-full h-[340px] bg-slate-950 rounded-[2.5rem] relative overflow-hidden border border-white/10 flex items-center justify-center p-4">
+    <div className="w-full h-[340px] bg-[var(--bg)] rounded-[12px] relative overflow-hidden border border-[var(--border)] flex items-center justify-center p-4">
       <div 
         className={cn(
-          "absolute h-full transition-all duration-500 border-white/10 flex flex-col py-4",
+          "absolute h-full transition-all duration-500 border-[var(--border)] flex flex-col py-4",
           position === "left" ? "left-0 border-r" : "right-0 border-l",
-          "bg-slate-900/80 backdrop-blur-2xl"
+          "bg-[var(--bg-card)]/80 backdrop-blur-2xl"
         )}
         style={{ width: `${isCollapsed ? collapsedWidth : width}px` }}
       >
         {/* Brand */}
         <div className="flex items-center gap-2.5 mb-6 px-4">
-           <div className="w-8 h-8 rounded-xl bg-brand-primary flex items-center justify-center font-black text-white shrink-0 shadow-lg shadow-brand-primary/20 ring-1 ring-white/20 text-xs">S</div>
+           <div className="w-8 h-8 rounded-xl bg-brand-primary flex items-center justify-center font-black text-white shrink-0  ring-1 ring-white/20 text-xs">S</div>
            {!isCollapsed && <span className="text-[11px] font-black text-white uppercase tracking-widest">Logo</span>}
         </div>
 
         {/* Search simulation */}
         {showSearch && (
           <div className="px-3 mb-5">
-            <div className="h-8 rounded-lg bg-white/5 border border-white/10 flex items-center px-2.5 gap-2">
-              <div className="w-3 h-3 rounded-full border-2 border-white/20" />
-              {!isCollapsed && <div className="h-1 w-12 bg-white/10 rounded-full" />}
+            <div className="h-8 rounded-lg card flex items-center px-2.5 gap-2">
+              <div className="w-3 h-3 rounded-full border-2 border-[var(--border-hover)]" />
+              {!isCollapsed && <div className="h-1 w-12 bg-[var(--bg-hover)] rounded-full" />}
             </div>
           </div>
         )}
@@ -221,7 +221,7 @@ export function SidebarGenerator() {
                key={i} 
                className={cn(
                  "flex items-center gap-3 px-3 py-2 transition-all group cursor-pointer",
-                 item.active ? "text-white" : "text-slate-500 hover:text-slate-300"
+                 item.active ? "text-white" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                )}
                style={{ 
                  borderRadius: `${itemRadius}px`,
@@ -230,20 +230,20 @@ export function SidebarGenerator() {
                }}
              >
                 <item.Icon className={cn("w-4 h-4 shrink-0 transition-transform", !item.active && "group-hover:scale-110")} />
-                {!isCollapsed && <span className="text-[10px] font-black uppercase tracking-wider">{item.label}</span>}
+                {!isCollapsed && <span className="text-sm font-medium uppercase tracking-wider">{item.label}</span>}
              </div>
            ))}
         </div>
 
         {/* User Profile */}
         {showProfile && (
-          <div className="px-3 pt-4 border-t border-white/10 mt-auto">
+          <div className="px-3 pt-4 border-t border-[var(--border)] mt-auto">
             <div className="flex items-center gap-2.5">
                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-brand-primary to-brand-secondary shrink-0 ring-2 ring-white/10 shadow-xl" />
                {!isCollapsed && (
                  <div className="space-y-0.5">
                    <div className="h-1.5 w-14 bg-white rounded-full" />
-                   <div className="h-1 w-8 bg-white/20 rounded-full" />
+                   <div className="h-1 w-8 bg-[var(--bg-active)] rounded-full" />
                  </div>
                )}
             </div>

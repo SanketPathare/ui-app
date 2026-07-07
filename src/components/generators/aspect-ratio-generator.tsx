@@ -55,17 +55,17 @@ export function AspectRatioGenerator() {
   const controls = (
     <div className="space-y-6">
       <div className="space-y-4">
-        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Popular Presets</label>
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Popular Presets</label>
         <div className="grid grid-cols-3 gap-2">
           {PRESETS.map((p) => (
             <button
               key={p.value}
               onClick={() => handlePreset(p)}
               className={cn(
-                "py-2 rounded-xl border text-[10px] font-black transition-all",
+                "py-2 rounded-xl border text-sm font-medium transition-all",
                 preset === p.value 
-                  ? "bg-amber-500/10 border-amber-500 text-amber-500 shadow-lg shadow-amber-500/10" 
-                  : "bg-white/5 border-white/5 text-slate-500 hover:border-white/10"
+                  ? "bg-[var(--text-primary)]/10 border-[var(--border-hover)] text-[var(--text-primary)] shadow-lg shadow-amber-500/10" 
+                  : "bg-[var(--bg-card)] border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--border)]"
               )}
             >
               {p.name}
@@ -76,32 +76,32 @@ export function AspectRatioGenerator() {
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-4">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Width Ratio</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Width Ratio</label>
           <input 
             type="number" value={ratioW} 
             onChange={(e) => {
               setRatioW(parseFloat(e.target.value) || 1);
               setPreset("custom");
             }}
-            className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-500/50 outline-none"
+            className="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl px-4 py-3 text-sm text-white focus:border-[var(--border-hover)]/50 outline-none"
           />
         </div>
         <div className="space-y-4">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Height Ratio</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Height Ratio</label>
           <input 
             type="number" value={ratioH} 
             onChange={(e) => {
               setRatioH(parseFloat(e.target.value) || 1);
               setPreset("custom");
             }}
-            className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-500/50 outline-none"
+            className="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl px-4 py-3 text-sm text-white focus:border-[var(--border-hover)]/50 outline-none"
           />
         </div>
       </div>
 
-      <div className="space-y-4 border-t border-white/5 pt-6">
-        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Preview Content</label>
-        <div className="flex p-1 rounded-xl bg-white/5 border border-white/5">
+      <div className="space-y-4 border-t border-[var(--border)] pt-6">
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Preview Content</label>
+        <div className="flex p-1 rounded-xl bg-[var(--bg-card)] border border-[var(--border)]">
            {[
              { id: "image", label: "Photo" },
              { id: "video", label: "Cinema" },
@@ -111,8 +111,8 @@ export function AspectRatioGenerator() {
                key={t.id}
                onClick={() => setContentType(t.id as any)}
                className={cn(
-                 "flex-1 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all",
-                 contentType === t.id ? "bg-amber-500 text-white shadow-lg" : "text-slate-500 hover:text-slate-300"
+                 "flex-1 py-1.5 rounded-lg text-xs font-medium transition-all",
+                 contentType === t.id ? "bg-[var(--text-primary)] text-white shadow-lg" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                )}
              >
                {t.label}
@@ -122,15 +122,15 @@ export function AspectRatioGenerator() {
       </div>
 
       <div className="space-y-4">
-        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Object Fit Strategy</label>
-        <div className="flex p-1 rounded-xl bg-white/5 border border-white/5">
+        <label className="text-sm font-medium text-[var(--text-secondary)]">Object Fit Strategy</label>
+        <div className="flex p-1 rounded-xl bg-[var(--bg-card)] border border-[var(--border)]">
            {["cover", "contain", "fill"].map(f => (
              <button
                key={f}
                onClick={() => setObjectFit(f as any)}
                className={cn(
-                 "flex-1 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all",
-                 objectFit === f ? "bg-amber-500/20 text-amber-500" : "text-slate-500 hover:text-slate-300"
+                 "flex-1 py-1.5 rounded-lg text-xs font-medium transition-all",
+                 objectFit === f ? "bg-[var(--text-primary)]/20 text-[var(--text-primary)]" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                )}
              >
                {f}
@@ -139,14 +139,14 @@ export function AspectRatioGenerator() {
         </div>
       </div>
 
-      <div className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/5 group cursor-pointer" onClick={() => setUseLegacy(!useLegacy)}>
+      <div className="flex items-center justify-between p-4 rounded-[8px] bg-[var(--bg-card)] border border-[var(--border)] group cursor-pointer" onClick={() => setUseLegacy(!useLegacy)}>
          <div className="space-y-1">
-            <p className="text-[10px] font-black text-white uppercase tracking-widest">Legacy Support</p>
-            <p className="text-[9px] font-bold text-slate-500">Use padding-top hack for older browsers</p>
+            <p className="text-sm font-medium text-white uppercase tracking-widest">Legacy Support</p>
+            <p className="text-[9px] font-bold text-[var(--text-secondary)]">Use padding-top hack for older browsers</p>
          </div>
          <div className={cn(
            "w-10 h-5 rounded-full relative transition-all",
-           useLegacy ? "bg-amber-500 shadow-lg shadow-amber-500/20" : "bg-white/10"
+           useLegacy ? "bg-[var(--text-primary)] " : "bg-[var(--bg-hover)]"
          )}>
             <div className={cn(
               "absolute top-1 w-3 h-3 rounded-full bg-white transition-all",
@@ -158,16 +158,16 @@ export function AspectRatioGenerator() {
   );
 
   const preview = (
-    <div className=" my-10 w-full h-[500px] rounded-[2.5rem] bg-[#020617] border border-white/5 overflow-hidden flex flex-col relative group">
+    <div className=" my-10 w-full h-[500px] rounded-[12px] bg-[var(--bg)] border border-[var(--border)] overflow-hidden flex flex-col relative group">
        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
             style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '32px 32px' }} />
        
-       <div className="p-6 border-b border-white/5 bg-white/[0.02] flex items-center justify-between relative z-10">
+       <div className="p-6 border-b border-[var(--border)] bg-[var(--bg)] flex items-center justify-between relative z-10">
           <div className="flex items-center gap-3">
-             <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-             <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Viewport Simulation</span>
+             <div className="w-2 h-2 rounded-full bg-[var(--text-primary)] animate-pulse" />
+             <span className="text-sm font-medium text-[var(--text-primary)] uppercase tracking-widest">Viewport Simulation</span>
           </div>
-          <div className="px-3 py-1 rounded-full bg-white/5 border border-white/5 text-[9px] font-black text-amber-500 uppercase">
+          <div className="px-3 py-1 rounded-full bg-[var(--bg-card)] border border-[var(--border)] text-xs font-medium text-[var(--text-primary)] uppercase">
              {useLegacy ? "Legacy Padding Mode" : "Native CSS Engine"}
           </div>
        </div>
@@ -175,8 +175,8 @@ export function AspectRatioGenerator() {
        <div className="flex-1 flex items-center justify-center p-12 overflow-auto">
           <div 
             className={cn(
-              "relative w-full max-w-[600px] shadow-2xl transition-all duration-700 rounded-2xl overflow-hidden group/box",
-              useLegacy ? "bg-slate-900" : "bg-transparent"
+              "relative w-full max-w-[600px] shadow-2xl transition-all duration-700 rounded-[8px] overflow-hidden group/box",
+              useLegacy ? "bg-[var(--bg-card)]" : "bg-transparent"
             )}
             style={!useLegacy ? { aspectRatio: `${ratioW} / ${ratioH}` } : { width: '100%', paddingTop: `${paddingValue}%` }}
           >
@@ -194,60 +194,60 @@ export function AspectRatioGenerator() {
                 {contentType === "video" && (
                    <div className="w-full h-full bg-black flex items-center justify-center relative">
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                      <div className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center">
+                      <div className="w-16 h-16 rounded-full bg-[var(--bg-hover)] backdrop-blur-xl border border-[var(--border-hover)] flex items-center justify-center">
                          <div className="w-0 h-0 border-t-[8px] border-t-transparent border-l-[12px] border-l-white border-b-[8px] border-b-transparent ml-1" />
                       </div>
-                      <div className="absolute bottom-6 left-6 right-6 h-1 bg-white/10 rounded-full overflow-hidden">
-                         <div className="w-1/3 h-full bg-amber-500" />
+                      <div className="absolute bottom-6 left-6 right-6 h-1 bg-[var(--bg-hover)] rounded-full overflow-hidden">
+                         <div className="w-1/3 h-full bg-[var(--text-primary)]" />
                       </div>
                    </div>
                 )}
                 {contentType === "skeleton" && (
-                   <div className="w-full h-full bg-slate-900 p-8 space-y-6">
+                   <div className="w-full h-full bg-[var(--bg-card)] p-8 space-y-6">
                       <div className="flex items-center gap-4">
-                         <div className="w-12 h-12 rounded-full bg-white/5 animate-pulse" />
+                         <div className="w-12 h-12 rounded-full bg-[var(--bg-card)] animate-pulse" />
                          <div className="flex-1 space-y-2">
-                            <div className="h-3 w-1/3 bg-white/10 rounded-full animate-pulse" />
-                            <div className="h-2 w-1/4 bg-white/5 rounded-full animate-pulse" />
+                            <div className="h-3 w-1/3 bg-[var(--bg-hover)] rounded-full animate-pulse" />
+                            <div className="h-2 w-1/4 bg-[var(--bg-card)] rounded-full animate-pulse" />
                          </div>
                       </div>
                       <div className="space-y-3">
-                         <div className="h-2 w-full bg-white/5 rounded-full animate-pulse" />
-                         <div className="h-2 w-5/6 bg-white/5 rounded-full animate-pulse" />
-                         <div className="h-2 w-4/6 bg-white/5 rounded-full animate-pulse" />
+                         <div className="h-2 w-full bg-[var(--bg-card)] rounded-full animate-pulse" />
+                         <div className="h-2 w-5/6 bg-[var(--bg-card)] rounded-full animate-pulse" />
+                         <div className="h-2 w-4/6 bg-[var(--bg-card)] rounded-full animate-pulse" />
                       </div>
                    </div>
                 )}
              </div>
 
-             <div className="absolute inset-0 border border-white/10 rounded-2xl pointer-events-none group-hover/box:border-amber-500/50 transition-colors" />
+             <div className="absolute inset-0 border border-[var(--border)] rounded-[8px] pointer-events-none group-hover/box:border-[var(--border-hover)]/50 transition-colors" />
              
              {/* Info Badge */}
-             <div className="absolute top-4 right-4 px-3 py-1.5 rounded-xl bg-black/60 backdrop-blur-xl border border-white/10 flex items-center gap-3 opacity-0 group-hover/box:opacity-100 transition-opacity">
+             <div className="absolute top-4 right-4 px-3 py-1.5 rounded-xl bg-black/60 backdrop-blur-xl border border-[var(--border)] flex items-center gap-3 opacity-0 group-hover/box:opacity-100 transition-opacity">
                 <div className="flex items-center gap-1.5">
-                   <Box className="w-3 h-3 text-amber-500" />
-                   <span className="text-[10px] font-black text-white">{ratioW}:{ratioH}</span>
+                   <Box className="w-3 h-3 text-[var(--text-primary)]" />
+                   <span className="text-sm font-medium text-white">{ratioW}:{ratioH}</span>
                 </div>
-                <div className="w-px h-3 bg-white/20" />
-                <span className="text-[10px] font-black text-white/60 lowercase">{objectFit}</span>
+                <div className="w-px h-3 bg-[var(--bg-active)]" />
+                <span className="text-sm font-medium text-[var(--text-tertiary)] lowercase">{objectFit}</span>
              </div>
           </div>
        </div>
 
-       <div className="p-6 bg-white/[0.02] border-t border-white/5 flex justify-center gap-8">
+       <div className="p-6 bg-[var(--bg)] border-t border-[var(--border)] flex justify-center gap-8">
           <div className="flex flex-col items-center gap-1">
-             <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Width Ratio</span>
+             <span className="text-xs font-medium text-[var(--text-secondary)] uppercase tracking-widest">Width Ratio</span>
              <span className="text-sm font-black text-white">{ratioW}</span>
           </div>
-          <div className="w-px h-8 bg-white/5" />
+          <div className="w-px h-8 bg-[var(--bg-card)]" />
           <div className="flex flex-col items-center gap-1">
-             <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Height Ratio</span>
+             <span className="text-xs font-medium text-[var(--text-secondary)] uppercase tracking-widest">Height Ratio</span>
              <span className="text-sm font-black text-white">{ratioH}</span>
           </div>
-          <div className="w-px h-8 bg-white/5" />
+          <div className="w-px h-8 bg-[var(--bg-card)]" />
           <div className="flex flex-col items-center gap-1">
-             <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Legacy Padding</span>
-             <span className="text-sm font-black text-amber-500">{paddingValue}%</span>
+             <span className="text-xs font-medium text-[var(--text-secondary)] uppercase tracking-widest">Legacy Padding</span>
+             <span className="text-sm font-black text-[var(--text-primary)]">{paddingValue}%</span>
           </div>
        </div>
     </div>

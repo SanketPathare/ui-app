@@ -44,10 +44,10 @@ export function CheckboxGenerator() {
 }`;
 
   const tailwindCode = `<label class="flex items-center gap-3 cursor-pointer group">
-  <div class="w-[${size}px] h-[${size}px] flex items-center justify-center border-2 transition-all duration-300 ${type === 'radio' ? 'rounded-full' : `rounded-[${borderRadius}px]`} ${checked ? `bg-[${accentColor}] border-[${accentColor}] shadow-[0_0_12px_${accentColor}40]` : 'border-white/20 group-hover:border-white/40'}">
+  <div class="w-[${size}px] h-[${size}px] flex items-center justify-center border-2 transition-all duration-300 ${type === 'radio' ? 'rounded-full' : `rounded-[${borderRadius}px]`} ${checked ? `bg-[${accentColor}] border-[${accentColor}] shadow-[0_0_12px_${accentColor}40]` : 'border-[var(--border-hover)] group-hover:border-white/40'}">
     <${type === 'checkbox' ? 'Check' : 'Circle'} class="w-[${size*0.6}px] h-[${size*0.6}px] text-white transition-all duration-300 ${checked ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}" />
   </div>
-  <span class="text-sm font-medium text-white/70 group-hover:text-white transition-colors">Select Option</span>
+  <span class="text-sm font-medium text-white/70 group-hover:text-[var(--text-primary)] transition-colors">Select Option</span>
 </label>`;
 
   const htmlCode = `<label class="checkbox-wrapper">
@@ -79,17 +79,17 @@ export function CheckboxGenerator() {
     <div className="space-y-6">
       <div className="space-y-4">
         <div className="space-y-2">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Type</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Type</label>
           <div className="grid grid-cols-2 gap-2">
             {(["checkbox", "radio"] as const).map((t) => (
               <button
                 key={t}
                 onClick={() => setType(t)}
                 className={cn(
-                  "px-2 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest border transition-all",
+                  "px-2 py-2 rounded-xl text-xs font-medium border transition-all",
                   type === t 
-                    ? "bg-brand-primary/20 border-brand-primary/50 text-brand-primary shadow-lg shadow-brand-primary/10" 
-                    : "bg-white/5 border-white/10 text-slate-500 hover:text-slate-300"
+                    ? "bg-[var(--bg-active)] border-[var(--border-hover)] text-[var(--text-primary)] " 
+                    : "bg-[var(--bg-card)] border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                 )}
               >
                 {t}
@@ -100,8 +100,8 @@ export function CheckboxGenerator() {
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Size</label>
-            <span className="text-[10px] font-bold text-brand-primary font-mono">{size}px</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Size</label>
+            <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{size}px</span>
           </div>
           <input 
             type="range"
@@ -110,15 +110,15 @@ export function CheckboxGenerator() {
             max={40} 
             step={2} 
             onChange={(e) => setSize(parseInt(e.target.value))} 
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
 
         {type === "checkbox" && (
           <div className="space-y-2">
             <div className="flex justify-between">
-              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Border Radius</label>
-              <span className="text-[10px] font-bold text-brand-primary font-mono">{borderRadius}px</span>
+              <label className="text-sm font-medium text-[var(--text-secondary)]">Border Radius</label>
+              <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{borderRadius}px</span>
             </div>
             <input 
               type="range"
@@ -127,13 +127,13 @@ export function CheckboxGenerator() {
               max={12} 
               step={1} 
               onChange={(e) => setBorderRadius(parseInt(e.target.value))} 
-              className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+              className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
             />
           </div>
         )}
 
         <div className="space-y-2">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Accent Color</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Accent Color</label>
           <div className="flex gap-2">
             {["#8b5cf6", "#06b6d4", "#ec4899", "#10b981", "#f59e0b"].map((color) => (
               <button
@@ -149,14 +149,14 @@ export function CheckboxGenerator() {
           </div>
         </div>
 
-        <div className="pt-4 border-t border-white/5">
+        <div className="pt-4 border-t border-[var(--border)]">
           <label className="flex items-center justify-between group cursor-pointer">
-            <span className="text-[11px] font-black uppercase tracking-widest text-slate-400 group-hover:text-slate-300 transition-colors">Default Checked</span>
+            <span className="text-sm font-medium text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] transition-colors">Default Checked</span>
             <div 
               onClick={() => setChecked(!checked)}
               className={cn(
                 "w-10 h-5 rounded-full relative transition-all duration-300",
-                checked ? "bg-brand-primary shadow-lg shadow-brand-primary/20" : "bg-white/10"
+                checked ? "bg-[var(--text-primary)]" : "bg-[var(--bg-hover)]"
               )}
             >
               <div className={cn(
@@ -171,7 +171,7 @@ export function CheckboxGenerator() {
   );
 
   const preview = (
-    <div className="w-full h-[300px] flex items-center justify-center bg-black/20 rounded-[2rem] p-12">
+    <div className="w-full h-[300px] flex items-center justify-center bg-[var(--bg)] rounded-[12px] p-12">
       <div className="flex flex-col gap-6">
         {[1, 2, 3].map((i) => (
           <label 
@@ -198,7 +198,7 @@ export function CheckboxGenerator() {
             </div>
             <span className={cn(
               "text-sm font-bold transition-colors",
-              (i === 1 ? checked : false) ? "text-white" : "text-slate-500 group-hover:text-slate-300"
+              (i === 1 ? checked : false) ? "text-white" : "text-[var(--text-secondary)] group-hover:text-[var(--text-primary)]"
             )}>
               {type === 'checkbox' ? `Check Option ${i}` : `Radio Option ${i}`}
             </span>

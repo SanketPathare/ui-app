@@ -24,7 +24,7 @@ export function ContainerGenerator() {
   border-radius: 24px;` : ""}
 }`;
 
-  const tailwindCode = `<div class="max-w-[${maxWidth}px] px-[${paddingX}px] py-[${paddingY}px] w-full ${centered ? "mx-auto" : ""} ${glassEffect ? "bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl" : ""}">
+  const tailwindCode = `<div class="max-w-[${maxWidth}px] px-[${paddingX}px] py-[${paddingY}px] w-full ${centered ? "mx-auto" : ""} ${glassEffect ? "bg-[var(--bg-card)] backdrop-blur-xl border border-[var(--border)] rounded-[12px]" : ""}">
   <!-- Content -->
 </div>`;
 
@@ -68,8 +68,8 @@ ${glassEffect ? `
       <div className="space-y-4">
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Max Width</label>
-            <span className="text-[10px] font-bold text-orange-500 font-mono">{maxWidth}px</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Max Width</label>
+            <span className="text-[10px] font-bold text-[var(--text-primary)] font-mono">{maxWidth}px</span>
           </div>
           <div className="grid grid-cols-4 gap-2 mb-2">
              {[640, 768, 1024, 1280].map(w => (
@@ -77,8 +77,8 @@ ${glassEffect ? `
                  key={w}
                  onClick={() => setMaxWidth(w)}
                  className={cn(
-                   "py-1 rounded-lg text-[8px] font-black border transition-all",
-                   maxWidth === w ? "bg-orange-500/20 border-orange-500 text-orange-500" : "bg-white/5 border-white/10 text-slate-500"
+                   "py-1 rounded-lg text-xs font-medium border transition-all",
+                   maxWidth === w ? "bg-[var(--bg-active)] border-[var(--border-hover)] text-[var(--text-primary)]" : "bg-[var(--bg-card)] border-[var(--border)] text-[var(--text-secondary)]"
                  )}
                >
                  {w === 640 ? "SM" : w === 768 ? "MD" : w === 1024 ? "LG" : "XL"}
@@ -92,14 +92,14 @@ ${glassEffect ? `
             max={2560} 
             step={10} 
             onChange={(e) => setMaxWidth(parseInt(e.target.value))} 
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-orange-500"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Horizontal Padding</label>
-            <span className="text-[10px] font-bold text-orange-500 font-mono">{paddingX}px</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Horizontal Padding</label>
+            <span className="text-[10px] font-bold text-[var(--text-primary)] font-mono">{paddingX}px</span>
           </div>
           <input 
             type="range"
@@ -108,14 +108,14 @@ ${glassEffect ? `
             max={120} 
             step={4} 
             onChange={(e) => setPaddingX(parseInt(e.target.value))} 
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-orange-500"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Vertical Padding</label>
-            <span className="text-[10px] font-bold text-orange-500 font-mono">{paddingY}px</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Vertical Padding</label>
+            <span className="text-[10px] font-bold text-[var(--text-primary)] font-mono">{paddingY}px</span>
           </div>
           <input 
             type="range"
@@ -124,18 +124,18 @@ ${glassEffect ? `
             max={200} 
             step={4} 
             onChange={(e) => setPaddingY(parseInt(e.target.value))} 
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-orange-500"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
 
-        <div className="pt-4 space-y-4 border-t border-white/5">
+        <div className="pt-4 space-y-4 border-t border-[var(--border)]">
           <label className="flex items-center justify-between group cursor-pointer">
-            <span className="text-[11px] font-black uppercase tracking-widest text-slate-400 group-hover:text-slate-300 transition-colors">Center Container</span>
+            <span className="text-sm font-medium text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] transition-colors">Center Container</span>
             <div 
               onClick={() => setCentered(!centered)}
               className={cn(
                 "w-10 h-5 rounded-full relative transition-all duration-300",
-                centered ? "bg-orange-500 shadow-lg shadow-orange-500/20" : "bg-white/10"
+                centered ? "bg-[var(--text-primary)] " : "bg-[var(--bg-hover)]"
               )}
             >
               <div className={cn(
@@ -146,12 +146,12 @@ ${glassEffect ? `
           </label>
 
           <label className="flex items-center justify-between group cursor-pointer">
-            <span className="text-[11px] font-black uppercase tracking-widest text-slate-400 group-hover:text-slate-300 transition-colors">Glass Aesthetic</span>
+            <span className="text-sm font-medium text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] transition-colors">Glass Aesthetic</span>
             <div 
               onClick={() => setGlassEffect(!glassEffect)}
               className={cn(
                 "w-10 h-5 rounded-full relative transition-all duration-300",
-                glassEffect ? "bg-orange-500 shadow-lg shadow-orange-500/20" : "bg-white/10"
+                glassEffect ? "bg-[var(--text-primary)] " : "bg-[var(--bg-hover)]"
               )}
             >
               <div className={cn(
@@ -166,14 +166,14 @@ ${glassEffect ? `
   );
 
   const preview = (
-    <div className="w-full h-[400px] flex items-center justify-center bg-black/20 rounded-[2rem] p-4 relative overflow-hidden">
+    <div className="w-full h-[400px] flex items-center justify-center bg-[var(--bg)] rounded-[12px] p-4 relative overflow-hidden">
       {/* Background Grid for context */}
       <div className="absolute inset-0 opacity-[0.05] pointer-events-none" 
            style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }} />
       
       <div 
         className={cn(
-          "h-full w-full border-2 border-dashed border-orange-500/20 transition-all duration-500",
+          "h-full w-full border-2 border-dashed border-[var(--border-hover)]/20 transition-all duration-500",
           centered ? "mx-auto" : "ml-0"
         )}
         style={{ 
@@ -183,14 +183,14 @@ ${glassEffect ? `
       >
         <div className={cn(
           "w-full h-full flex items-center justify-center relative overflow-hidden",
-          glassEffect ? "bg-white/5 backdrop-blur-xl border border-white/10 rounded-[2rem]" : "bg-orange-500/5 rounded-xl"
+          glassEffect ? "bg-[var(--bg-card)] backdrop-blur-xl border border-[var(--border)] rounded-[12px]" : "bg-[var(--bg-card)] rounded-xl"
         )}>
           <div className="text-center space-y-2 relative z-10">
-            <Layout className="w-8 h-8 text-orange-500/40 mx-auto" />
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-orange-500/60">
+            <Layout className="w-8 h-8 text-[var(--text-primary)]/40 mx-auto" />
+            <p className="text-sm font-medium text-[var(--text-primary)]/60">
               Container Viewport
             </p>
-            <p className="text-[9px] font-bold text-slate-500">
+            <p className="text-[9px] font-bold text-[var(--text-secondary)]">
               {maxWidth}px × Auto
             </p>
           </div>

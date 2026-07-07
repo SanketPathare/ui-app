@@ -81,8 +81,8 @@ export function KeyframesGenerator() {
       <div className="space-y-4">
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Duration (s)</label>
-            <span className="text-[10px] font-bold text-brand-primary font-mono">{duration}s</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Duration (s)</label>
+            <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{duration}s</span>
           </div>
           <input 
             type="range"
@@ -91,28 +91,28 @@ export function KeyframesGenerator() {
             max={10} 
             step={0.1} 
             onChange={(e) => setDuration(parseFloat(e.target.value))} 
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
 
-        <div className="pt-4 space-y-3 border-t border-white/5">
-           <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Keyframe Steps</label>
+        <div className="pt-4 space-y-3 border-t border-[var(--border)]">
+           <label className="text-sm font-medium text-[var(--text-secondary)]">Keyframe Steps</label>
            <div className="space-y-3">
               {steps.map((step) => (
-                <div key={step.id} className="p-3 bg-white/5 border border-white/10 rounded-xl space-y-3 group">
+                <div key={step.id} className="p-3 card space-y-3 group">
                    <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                         <span className="text-[10px] font-black text-brand-primary font-mono">{step.percentage}%</span>
+                         <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{step.percentage}%</span>
                          <input 
                            type="range" 
                            value={step.percentage} 
                            onChange={(e) => updateStep(step.id, { percentage: parseInt(e.target.value) })}
-                           className="w-24 h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+                           className="w-24 h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
                          />
                       </div>
                       <button 
                         onClick={() => removeStep(step.id)}
-                        className="p-1 text-slate-600 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100"
+                        className="p-1 text-[var(--text-tertiary)] hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100"
                       >
                         <Trash2 className="w-3 h-3" />
                       </button>
@@ -122,16 +122,16 @@ export function KeyframesGenerator() {
                         type="text" 
                         value={step.transform} 
                         onChange={(e) => updateStep(step.id, { transform: e.target.value })}
-                        className="w-full bg-black/20 border border-white/5 rounded-lg px-2 py-1 text-[9px] font-mono text-slate-300 outline-none"
+                        className="w-full bg-[var(--bg)] border border-[var(--border)] rounded-lg px-2 py-1 text-[9px] font-mono text-[var(--text-primary)] outline-none"
                       />
                       <div className="flex items-center gap-2">
-                         <span className="text-[9px] font-bold text-slate-500 uppercase">Opacity</span>
+                         <span className="text-[9px] font-bold text-[var(--text-secondary)] uppercase">Opacity</span>
                          <input 
                            type="range" 
                            value={step.opacity * 100} 
                            min={0} max={100}
                            onChange={(e) => updateStep(step.id, { opacity: parseInt(e.target.value)/100 })}
-                           className="flex-1 h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+                           className="flex-1 h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
                          />
                       </div>
                    </div>
@@ -139,7 +139,7 @@ export function KeyframesGenerator() {
               ))}
               <button 
                 onClick={addStep}
-                className="w-full py-2 border border-dashed border-white/10 rounded-xl text-[9px] font-black uppercase tracking-widest text-slate-500 hover:text-slate-300 hover:border-white/20 transition-all flex items-center justify-center gap-2"
+                className="w-full py-2 border border-dashed border-[var(--border)] rounded-xl text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-hover)] transition-all flex items-center justify-center gap-2"
               >
                 <Plus className="w-3 h-3" /> Add Step
               </button>
@@ -150,9 +150,9 @@ export function KeyframesGenerator() {
   );
 
   const preview = (
-    <div className="w-full h-[400px] flex items-center justify-center rounded-[2rem] p-12 overflow-hidden">
+    <div className="w-full h-[400px] flex items-center justify-center rounded-[12px] p-12 overflow-hidden">
       <div 
-        className="w-24 h-24 rounded-3xl bg-brand-primary relative flex items-center justify-center shadow-2xl"
+        className="w-24 h-24 rounded-[12px] bg-brand-primary relative flex items-center justify-center shadow-2xl"
         style={{ 
           animation: `custom-anim-${duration}-${steps.length} ${duration}s linear infinite`
         }}
@@ -167,8 +167,8 @@ export function KeyframesGenerator() {
       `}</style>
 
       <div className="absolute bottom-8 flex items-center gap-2 opacity-30">
-         <Sparkles className="w-3 h-3 text-brand-primary" />
-         <span className="text-[9px] font-black uppercase tracking-widest text-white">Timeline Sequence Preview</span>
+         <Sparkles className="w-3 h-3 text-[var(--text-primary)]" />
+         <span className="text-xs font-medium text-white">Timeline Sequence Preview</span>
       </div>
     </div>
   );

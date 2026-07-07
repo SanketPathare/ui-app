@@ -49,19 +49,19 @@ export function GradientBorderGenerator() {
     <div className="space-y-6">
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
-          <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Color 1</label>
-          <input type="color" value={color1} onChange={(e) => setColor1(e.target.value)} className="w-full h-10 p-1 bg-transparent border border-white/10 rounded-lg cursor-pointer" />
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Color 1</label>
+          <input type="color" value={color1} onChange={(e) => setColor1(e.target.value)} className="w-full h-10 p-1 bg-transparent border border-[var(--border)] rounded-lg cursor-pointer" />
         </div>
         <div className="space-y-2">
-          <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Color 2</label>
-          <input type="color" value={color2} onChange={(e) => setColor2(e.target.value)} className="w-full h-10 p-1 bg-transparent border border-white/10 rounded-lg cursor-pointer" />
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Color 2</label>
+          <input type="color" value={color2} onChange={(e) => setColor2(e.target.value)} className="w-full h-10 p-1 bg-transparent border border-[var(--border)] rounded-lg cursor-pointer" />
         </div>
       </div>
 
       <div className="space-y-4">
         <div className="flex justify-between">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Border Width</label>
-          <span className="text-[10px] font-bold text-brand-primary font-mono">{borderWidth}px</span>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Border Width</label>
+          <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{borderWidth}px</span>
         </div>
         <input 
           type="range"
@@ -70,14 +70,14 @@ export function GradientBorderGenerator() {
           max={20} 
           step={1} 
           onChange={(e) => setBorderWidth(parseInt(e.target.value))} 
-          className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+          className="w-full h-1.5 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
         />
       </div>
 
       <div className="space-y-4">
         <div className="flex justify-between">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Border Radius</label>
-          <span className="text-[10px] font-bold text-brand-primary font-mono">{borderRadius}px</span>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Border Radius</label>
+          <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{borderRadius}px</span>
         </div>
         <input 
           type="range"
@@ -86,14 +86,14 @@ export function GradientBorderGenerator() {
           max={100} 
           step={1} 
           onChange={(e) => setBorderRadius(parseInt(e.target.value))} 
-          className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+          className="w-full h-1.5 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
         />
       </div>
 
       <div className="space-y-4">
         <div className="flex justify-between">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Gradient Angle</label>
-          <span className="text-[10px] font-bold text-brand-primary font-mono">{angle}°</span>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Gradient Angle</label>
+          <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{angle}°</span>
         </div>
         <input 
           type="range"
@@ -102,13 +102,13 @@ export function GradientBorderGenerator() {
           max={360} 
           step={1} 
           onChange={(e) => setAngle(parseInt(e.target.value))} 
-          className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+          className="w-full h-1.5 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
         />
       </div>
 
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Inner Background</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Inner Background</label>
           <input 
             type="color" 
             value={bgColor} 
@@ -138,7 +138,7 @@ export function GradientBorderGenerator() {
             borderRadius: `${borderRadius + borderWidth}px`,
           }}
         />
-        <span className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
+        <span className="text-sm font-bold text-[var(--text-secondary)] dark:text-[var(--text-secondary)] uppercase tracking-widest">
           Gradient Border
         </span>
       </div>

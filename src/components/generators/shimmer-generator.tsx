@@ -52,35 +52,35 @@ export function ShimmerGenerator() {
   const controls = (
     <div className="space-y-6">
       <div className="space-y-4">
-        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500 flex justify-between">
+        <label className="text-sm font-medium text-[var(--text-secondary)] flex justify-between">
            Shimmer Speed <span>{speed}s</span>
         </label>
         <input 
           type="range" min="0.5" max="5" step="0.1" value={speed} 
           onChange={(e) => setSpeed(parseFloat(e.target.value))}
-          className="w-full accent-brand-primary"
+          className="w-full accent-[var(--text-primary)]"
         />
       </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-4">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Base Color</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Base Color</label>
           <input type="color" value={baseColor} onChange={(e) => setBaseColor(e.target.value)} className="w-full h-10 rounded-xl bg-transparent border-none cursor-pointer" />
         </div>
         <div className="space-y-4">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Highlight</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Highlight</label>
           <input type="color" value={highlightColor} onChange={(e) => setHighlightColor(e.target.value)} className="w-full h-10 rounded-xl bg-transparent border-none cursor-pointer" />
         </div>
       </div>
 
       <div className="space-y-4">
-        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500 flex justify-between">
+        <label className="text-sm font-medium text-[var(--text-secondary)] flex justify-between">
            Gradient Angle <span>{angle}°</span>
         </label>
         <input 
           type="range" min="0" max="360" value={angle} 
           onChange={(e) => setAngle(parseInt(e.target.value))}
-          className="w-full accent-brand-primary"
+          className="w-full accent-[var(--text-primary)]"
         />
       </div>
     </div>
@@ -129,7 +129,7 @@ export function ShimmerGenerator() {
           </div>
        </div>
        <div 
-         className="h-32 w-full rounded-2xl overflow-hidden relative"
+         className="h-32 w-full rounded-[8px] overflow-hidden relative"
          style={{ backgroundColor: baseColor }}
        >
           <div 

@@ -49,11 +49,11 @@ export function InputGenerator() {
 }`;
 
   const tailwindCode = `<div class="relative w-full">
-  ${showIcon ? `<Type class="absolute left-${Math.round(padding/4)} top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />` : ""}
+  ${showIcon ? `<Type class="absolute left-${Math.round(padding/4)} top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-secondary)]" />` : ""}
   <input 
     type="text" 
     placeholder="Enter text..." 
-    class="w-full ${showIcon ? `pl-${Math.round((padding+20)/4)}` : `px-${Math.round(padding/4)}`} py-${Math.round(padding/4)} bg-${variant === 'solid' ? 'slate-900' : 'white/5'} border-${variant === 'underlined' ? 'b' : ''} border-white/10 rounded-${borderRadius === 0 ? 'none' : borderRadius > 20 ? 'full' : 'xl'} text-white focus:outline-none focus:ring-4 focus:ring-[${focusAccent}20] focus:border-[${focusAccent}] transition-all"
+    class="w-full ${showIcon ? `pl-${Math.round((padding+20)/4)}` : `px-${Math.round(padding/4)}`} py-${Math.round(padding/4)} bg-${variant === 'solid' ? 'slate-900' : 'white/5'} border-${variant === 'underlined' ? 'b' : ''} border-[var(--border)] rounded-${borderRadius === 0 ? 'none' : borderRadius > 20 ? 'full' : 'xl'} text-white focus:outline-none focus:ring-4 focus:ring-[${focusAccent}20] focus:border-[${focusAccent}] transition-all"
   />
 </div>`;
 
@@ -91,17 +91,17 @@ export function InputGenerator() {
     <div className="space-y-6">
       <div className="space-y-4">
         <div className="space-y-2">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Variant</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Variant</label>
           <div className="grid grid-cols-3 gap-2">
             {(["glass", "solid", "underlined"] as const).map((v) => (
               <button
                 key={v}
                 onClick={() => setVariant(v)}
                 className={cn(
-                  "px-2 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest border transition-all",
+                  "px-2 py-2 rounded-xl text-xs font-medium border transition-all",
                   variant === v 
-                    ? "bg-brand-primary/20 border-brand-primary/50 text-brand-primary shadow-lg shadow-brand-primary/10" 
-                    : "bg-white/5 border-white/10 text-slate-500 hover:text-slate-300"
+                    ? "bg-[var(--bg-active)] border-[var(--border-hover)] text-[var(--text-primary)] " 
+                    : "bg-[var(--bg-card)] border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                 )}
               >
                 {v}
@@ -112,8 +112,8 @@ export function InputGenerator() {
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Border Radius</label>
-            <span className="text-[10px] font-bold text-brand-primary font-mono">{borderRadius}px</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Border Radius</label>
+            <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{borderRadius}px</span>
           </div>
           <input 
             type="range"
@@ -122,14 +122,14 @@ export function InputGenerator() {
             max={32} 
             step={1} 
             onChange={(e) => setBorderRadius(parseInt(e.target.value))} 
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Padding</label>
-            <span className="text-[10px] font-bold text-brand-primary font-mono">{padding}px</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Padding</label>
+            <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{padding}px</span>
           </div>
           <input 
             type="range"
@@ -138,12 +138,12 @@ export function InputGenerator() {
             max={24} 
             step={1} 
             onChange={(e) => setPadding(parseInt(e.target.value))} 
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
 
         <div className="space-y-2">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Focus Accent</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Focus Accent</label>
           <div className="flex gap-2">
             {["#8b5cf6", "#06b6d4", "#ec4899", "#10b981", "#f59e0b"].map((color) => (
               <button
@@ -159,14 +159,14 @@ export function InputGenerator() {
           </div>
         </div>
 
-        <div className="pt-4 border-t border-white/5">
+        <div className="pt-4 border-t border-[var(--border)]">
           <label className="flex items-center justify-between group cursor-pointer">
-            <span className="text-[11px] font-black uppercase tracking-widest text-slate-400 group-hover:text-slate-300 transition-colors">Show Icon</span>
+            <span className="text-sm font-medium text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] transition-colors">Show Icon</span>
             <div 
               onClick={() => setShowIcon(!showIcon)}
               className={cn(
                 "w-10 h-5 rounded-full relative transition-all duration-300",
-                showIcon ? "bg-brand-primary shadow-lg shadow-brand-primary/20" : "bg-white/10"
+                showIcon ? "bg-[var(--text-primary)]" : "bg-[var(--bg-hover)]"
               )}
             >
               <div className={cn(
@@ -181,7 +181,7 @@ export function InputGenerator() {
   );
 
   const preview = (
-    <div className="w-full h-[300px] flex items-center justify-center bg-black/20 rounded-[2rem] p-12">
+    <div className="w-full h-[300px] flex items-center justify-center bg-[var(--bg)] rounded-[12px] p-12">
       <div className="relative w-full max-w-sm">
         {showIcon && (
           <Type 
@@ -219,8 +219,8 @@ export function InputGenerator() {
           }}
         />
         <div className="absolute -bottom-6 left-2 flex items-center gap-1.5 opacity-40">
-           <Sparkles className="w-3 h-3 text-brand-primary" />
-           <span className="text-[9px] font-black uppercase tracking-widest text-white">Focus to see effects</span>
+           <Sparkles className="w-3 h-3 text-[var(--text-primary)]" />
+           <span className="text-xs font-medium text-white">Focus to see effects</span>
         </div>
       </div>
     </div>

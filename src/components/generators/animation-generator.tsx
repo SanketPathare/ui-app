@@ -39,7 +39,7 @@ export function AnimationGenerator() {
   50% { transform: translateY(-30px); }
 }`;
 
-  const tailwindCode = `<div class="animate-[${effect}_${duration}s_${timing}_${delay}s_${iteration}_${direction}] bg-brand-primary w-24 h-24 rounded-2xl shadow-xl shadow-brand-primary/20"></div>`;
+  const tailwindCode = `<div class="animate-[${effect}_${duration}s_${timing}_${delay}s_${iteration}_${direction}] bg-brand-primary w-24 h-24 rounded-[8px] "></div>`;
 
   const htmlCode = `<div class="animated-box"></div>
 
@@ -70,17 +70,17 @@ export function AnimationGenerator() {
     <div className="space-y-6">
       <div className="space-y-4">
         <div className="space-y-2">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Effect</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Effect</label>
           <div className="grid grid-cols-2 gap-2">
             {["float", "pulse", "spin", "bounce"].map((eff) => (
               <button
                 key={eff}
                 onClick={() => setEffect(eff)}
                 className={cn(
-                  "px-3 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest border transition-all",
+                  "px-3 py-2 rounded-xl text-xs font-medium border transition-all",
                   effect === eff 
-                    ? "bg-brand-primary/20 border-brand-primary/50 text-brand-primary shadow-lg shadow-brand-primary/10" 
-                    : "bg-white/5 border-white/10 text-slate-500 hover:text-slate-300"
+                    ? "bg-[var(--bg-active)] border-[var(--border-hover)] text-[var(--text-primary)] " 
+                    : "bg-[var(--bg-card)] border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                 )}
               >
                 {eff}
@@ -91,8 +91,8 @@ export function AnimationGenerator() {
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Duration (s)</label>
-            <span className="text-[10px] font-bold text-brand-primary font-mono">{duration}s</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Duration (s)</label>
+            <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{duration}s</span>
           </div>
           <input 
             type="range"
@@ -101,16 +101,16 @@ export function AnimationGenerator() {
             max={5} 
             step={0.1} 
             onChange={(e) => setDuration(parseFloat(e.target.value))} 
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
 
         <div className="space-y-2">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Timing Function</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Timing Function</label>
           <select 
             value={timing} 
             onChange={(e) => setTiming(e.target.value)}
-            className="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-2.5 text-[11px] font-bold text-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all"
+            className="w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-4 py-2.5 text-[11px] font-bold text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)]/30 transition-all"
           >
             {["linear", "ease", "ease-in", "ease-out", "ease-in-out", "step-start", "step-end"].map((opt) => (
               <option key={opt} value={opt}>{opt}</option>
@@ -118,15 +118,15 @@ export function AnimationGenerator() {
           </select>
         </div>
 
-        <div className="pt-4 border-t border-white/5 space-y-4">
+        <div className="pt-4 border-t border-[var(--border)] space-y-4">
            <div className="flex items-center justify-between">
-              <span className="text-[11px] font-black uppercase tracking-widest text-slate-400">Iteration</span>
-              <div className="flex bg-white/5 rounded-lg p-1 border border-white/10">
+              <span className="text-sm font-medium text-[var(--text-secondary)]">Iteration</span>
+              <div className="flex bg-[var(--bg-card)] rounded-lg p-1 border border-[var(--border)]">
                  {["1", "infinite"].map(v => (
                    <button 
                      key={v}
                      onClick={() => setIteration(v)}
-                     className={cn("px-3 py-1 rounded-md text-[9px] font-black uppercase transition-all", iteration === v ? "bg-brand-primary text-white" : "text-slate-500")}
+                     className={cn("px-3 py-1 rounded-md text-xs font-medium transition-all", iteration === v ? "bg-[var(--text-primary)] text-[var(--bg)]" : "text-[var(--text-secondary)]")}
                    >
                      {v}
                    </button>
@@ -139,9 +139,9 @@ export function AnimationGenerator() {
   );
 
   const preview = (
-    <div className="w-full h-[300px] flex items-center justify-center rounded-[2rem] p-12">
+    <div className="w-full h-[300px] flex items-center justify-center rounded-[12px] p-12">
       <div 
-        className="w-24 h-24 rounded-3xl bg-brand-primary relative flex items-center justify-center overflow-hidden group shadow-2xl"
+        className="w-24 h-24 rounded-[12px] bg-brand-primary relative flex items-center justify-center overflow-hidden group shadow-2xl"
         style={{ 
           animationName: effect,
           animationDuration: `${duration}s`,
@@ -154,12 +154,12 @@ export function AnimationGenerator() {
       >
          <Play className="w-8 h-8 text-white fill-white" />
          {/* Internal Glow */}
-         <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+         <div className="absolute inset-0 bg-[var(--bg-active)] opacity-0 group-hover:opacity-100 transition-opacity" />
       </div>
       
       <div className="absolute bottom-8 flex items-center gap-2 opacity-30">
-         <RotateCw className="w-3 h-3 text-brand-primary animate-spin" />
-         <span className="text-[9px] font-black uppercase tracking-widest text-white">Previewing Motion</span>
+         <RotateCw className="w-3 h-3 text-[var(--text-primary)] animate-spin" />
+         <span className="text-xs font-medium text-white">Previewing Motion</span>
       </div>
     </div>
   );

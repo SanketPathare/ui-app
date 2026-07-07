@@ -63,19 +63,19 @@ export function TypingGenerator() {
     <div className="space-y-6">
       <div className="space-y-4">
         <div className="space-y-2">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Content</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Content</label>
           <input 
             type="text" 
             value={text} 
             onChange={(e) => setText(e.target.value)}
-            className="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-2.5 text-[11px] font-bold text-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all"
+            className="w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-4 py-2.5 text-[11px] font-bold text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)]/30 transition-all"
           />
         </div>
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Typing Speed (s)</label>
-            <span className="text-[10px] font-bold text-brand-primary font-mono">{speed}s</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Typing Speed (s)</label>
+            <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{speed}s</span>
           </div>
           <input 
             type="range"
@@ -84,14 +84,14 @@ export function TypingGenerator() {
             max={10} 
             step={0.1} 
             onChange={(e) => setSpeed(parseFloat(e.target.value))} 
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Font Size</label>
-            <span className="text-[10px] font-bold text-brand-primary font-mono">{fontSize}px</span>
+            <label className="text-sm font-medium text-[var(--text-secondary)]">Font Size</label>
+            <span className="text-sm font-medium text-[var(--text-primary)] font-mono">{fontSize}px</span>
           </div>
           <input 
             type="range"
@@ -100,12 +100,12 @@ export function TypingGenerator() {
             max={64} 
             step={2} 
             onChange={(e) => setFontSize(parseInt(e.target.value))} 
-            className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-brand-primary"
+            className="w-full h-1 bg-[var(--bg-hover)] rounded-full appearance-none cursor-pointer accent-[var(--text-primary)]"
           />
         </div>
 
         <div className="space-y-2">
-          <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Cursor Color</label>
+          <label className="text-sm font-medium text-[var(--text-secondary)]">Cursor Color</label>
           <div className="flex gap-2">
             {["#8b5cf6", "#06b6d4", "#ec4899", "#10b981", "#f59e0b"].map((color) => (
               <button
@@ -121,14 +121,14 @@ export function TypingGenerator() {
           </div>
         </div>
 
-        <div className="pt-4 border-t border-white/5">
+        <div className="pt-4 border-t border-[var(--border)]">
           <label className="flex items-center justify-between group cursor-pointer">
-            <span className="text-[11px] font-black uppercase tracking-widest text-slate-400 group-hover:text-slate-300 transition-colors">Infinite Loop</span>
+            <span className="text-sm font-medium text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] transition-colors">Infinite Loop</span>
             <div 
               onClick={() => setInfinite(!infinite)}
               className={cn(
                 "w-10 h-5 rounded-full relative transition-all duration-300",
-                infinite ? "bg-brand-primary shadow-lg shadow-brand-primary/20" : "bg-white/10"
+                infinite ? "bg-[var(--text-primary)]" : "bg-[var(--bg-hover)]"
               )}
             >
               <div className={cn(
@@ -144,7 +144,7 @@ export function TypingGenerator() {
 
   const preview = (
     <>
-    <div className="w-full h-[300px] flex items-center justify-center rounded-[2rem] p-12 overflow-hidden">
+    <div className="w-full h-[300px] flex items-center justify-center rounded-[12px] p-12 overflow-hidden">
        <div 
          key={text + speed + infinite} // Force animation restart on change
          className="font-mono font-black text-white whitespace-nowrap overflow-hidden border-r-4 transition-all duration-300"

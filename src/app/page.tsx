@@ -337,6 +337,12 @@ const compilers = [
     href: "/compiler",
     icon: Terminal,
   },
+  {
+    title: "React Sandbox",
+    description: "Online React JS compiler with terminal, npm packages, and live preview.",
+    href: "/react-compiler",
+    icon: Cpu,
+  },
 ];
 
 export default function Home() {

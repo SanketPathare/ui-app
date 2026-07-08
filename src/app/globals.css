@@ -203,6 +203,29 @@
   border-radius: var(--radius-sm);
 }
 
+@utility custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 9999px;
+    border: 1px solid transparent;
+    background-clip: content-box;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--border-hover);
+    border: 1px solid transparent;
+    background-clip: content-box;
+  }
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
 @layer base {
   ::-webkit-scrollbar {
     width: 6px;
@@ -262,5 +285,27 @@
   .cm-tooltip-autocomplete > ul > li[aria-selected] {
     background-color: rgba(255, 255, 255, 0.1) !important;
     color: var(--text-primary) !important;
+  }
+}
+
+@layer base {
+  .term-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  .term-scrollbar::-webkit-scrollbar-track {
+    background: var(--term-bg, #0d1117);
+  }
+  .term-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 9999px;
+    border: 2px solid var(--term-bg, #0d1117);
+  }
+  .term-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--border-hover);
+  }
+  .term-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) var(--term-bg, #0d1117);
   }
 }

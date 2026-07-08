@@ -111,14 +111,10 @@ function GridBackground() {
 
       {/* Grid lines container */}
       <div className="absolute inset-0 max-w-7xl mx-auto w-full px-4 md:px-6 lg:px-8">
-        <div className="relative w-full h-full border-x border-dashed border-[var(--border)]">
-          {/* Horizontal lines */}
-          <div className="absolute top-[20%] left-0 w-full h-px border-t border-dashed border-[var(--border)]" />
-          <div className="absolute bottom-[20%] left-0 w-full h-px border-t border-dashed border-[var(--border)]" />
-
+        <div className="relative w-full h-full border-x border-dotted border-[var(--border)]">
           {/* Top-Left Intersection Circle Detail */}
           <div className="absolute left-0 top-[20%] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center z-10">
-            <div className="w-12 h-12 rounded-full border border-dashed border-[var(--border-hover)] bg-[var(--bg)]/80 backdrop-blur-sm animate-[spin_60s_linear_infinite]" />
+            <div className="w-12 h-12 rounded-full border border-dotted border-[var(--border-hover)] bg-[var(--bg)]/80 backdrop-blur-sm animate-[spin_60s_linear_infinite]" />
             <div className="absolute w-2 h-2 rounded-full bg-[var(--bg)] border border-[var(--border-active)]" />
             {/* Crosshair lines inside circle */}
             <div className="absolute w-6 h-px bg-[var(--border-active)]" />
@@ -127,7 +123,7 @@ function GridBackground() {
 
           {/* Bottom-Right Intersection Circle Detail */}
           <div className="absolute right-0 bottom-[20%] translate-x-1/2 translate-y-1/2 flex items-center justify-center z-10">
-            <div className="w-12 h-12 rounded-full border border-dashed border-[var(--border-hover)] bg-[var(--bg)]/80 backdrop-blur-sm animate-[spin_60s_linear_infinite]" />
+            <div className="w-12 h-12 rounded-full border border-dotted border-[var(--border-hover)] bg-[var(--bg)]/80 backdrop-blur-sm animate-[spin_60s_linear_infinite]" />
             <div className="absolute w-2 h-2 rounded-full bg-[var(--bg)] border border-[var(--border-active)]" />
             {/* Crosshair lines inside circle */}
             <div className="absolute w-6 h-px bg-[var(--border-active)]" />
@@ -161,7 +157,7 @@ function FeatureHighlight({ icon: Icon, title, description, index }: {
         <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-2">{title}</h3>
         <p className="text-sm text-[var(--text-secondary)] leading-relaxed">{description}</p>
       </div>
-    </motion.div>
+    </motion.div> 
   );
 }
 
@@ -201,7 +197,7 @@ export default function Home() {
   return (
     <Shell>
       <div className="space-y-24 md:space-y-32 pb-24">
-        <section ref={ref} className="relative overflow-hidden pt-16 md:pt-28 pb-16 md:pb-24 border-b border-dashed border-[var(--border)]">
+        <section ref={ref} className="relative overflow-hidden pt-16 md:pt-28 pb-16 md:pb-24 border-b border-dotted border-[var(--border)]">
           <GridBackground />
 
           <motion.div style={{ y: heroY, opacity: heroOpacity }} className="relative z-10">
@@ -212,7 +208,7 @@ export default function Home() {
                 transition={{ duration: 0.6, delay: 0.1 }}
                 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-[var(--text-primary)] leading-[1.05]"
               >
-                CSS design tools for modern developers
+                CSS Design Tools for Modern Developers
               </motion.h1>
 
               <motion.p
@@ -232,7 +228,7 @@ export default function Home() {
               >
                 <Link
                   href="/gradient"
-                  className="group inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-[var(--text-primary)] text-[var(--bg)] text-sm font-semibold hover:opacity-90 transition-all duration-200"
+                  className="group inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-[var(--text-primary)] text-[var(--bg)] text-sm font-semibold hover:opacity-90 border-0 transition-all duration-200"
                 >
                   Get Started
                 </Link>

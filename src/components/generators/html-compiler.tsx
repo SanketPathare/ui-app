@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { CompilerLoading } from "@/components/compiler-loading";
 import { cn } from "@/lib/utils";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
@@ -346,6 +347,12 @@ export function HtmlCompiler() {
   const [renameValue, setRenameValue] = useState("");
   const [showNewFile, setShowNewFile] = useState(false);
   const [newFileName, setNewFileName] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 10000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const consoleRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -796,6 +803,8 @@ export function HtmlCompiler() {
   const filteredLogs = logFilter === "all" ? logs : logs.filter(l => l.type === logFilter);
 
   // ─── Render ───
+
+  if (loading) return <CompilerLoading />;
 
   return (
     <>

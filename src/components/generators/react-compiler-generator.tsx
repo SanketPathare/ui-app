@@ -27,6 +27,7 @@ import * as estreeParser from "prettier/plugins/estree";
 import { useTheme as useNextTheme } from "next-themes";
 import * as Babel from "@babel/standalone";
 import { emmetHTML, emmetCSS, emmetJSX } from "emmet-monaco-es";
+import { CompilerLoading } from "@/components/compiler-loading";
 
 const MonacoEditor = dynamic(() => import("@monaco-editor/react"), { ssr: false });
 
@@ -779,6 +780,12 @@ export function ReactCompilerGenerator() {
   const [newFileName, setNewFileName] = useState("");
   const [creatingFolder, setCreatingFolder] = useState(false);
   const [newFilePath, setNewFilePath] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 10000);
+    return () => clearTimeout(timer);
+  }, []);
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set(["src", "public"]));
   const [emptyFolders, setEmptyFolders] = useState<Set<string>>(new Set());
   const [dragOverFolder, setDragOverFolder] = useState<string | null>(null);
@@ -1746,6 +1753,8 @@ ${bodyContent}
       }
     }
   }, [terminalInput, executeTerminalCommand, terminalHistory, terminalHistoryIndex]);
+
+  if (loading) return <CompilerLoading />;
 
   return (
     <>

@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "UI Engine | CSS Design Tools",
+  title: "UI Engine | Design Tools",
   description: "A collection of CSS generators for modern developers.",
   keywords: ["CSS", "UI", "design", "generator", "developer tools"],
 };

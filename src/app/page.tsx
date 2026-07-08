@@ -208,7 +208,7 @@ export default function Home() {
                 transition={{ duration: 0.6, delay: 0.1 }}
                 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-[var(--text-primary)] leading-[1.05]"
               >
-                CSS Design Tools for Modern Developers
+                 Design Tools for Modern Developers
               </motion.h1>
 
               <motion.p

@@ -3,7 +3,7 @@ import { BlobGenerator } from "@/components/generators/blob-generator";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Blob Shape Generator | CSS UI Engine",
+  title: "Blob Shape Generator | UI Engine",
   description: "Generate organic, fluid SVG-like shapes using the border-radius property.",
 };
 

@@ -95,7 +95,7 @@ const toolCategories = [
     tools: [
       { title: "HTML to TW", href: "/html-to-tw", icon: Code },
       { title: "CSS to TW", href: "/css-to-tw", icon: Terminal },
-      { title: "Online Compiler", href: "/compiler", icon: Cpu },
+      { title: "HTML Compiler", href: "/html-compiler", icon: Cpu },
       { title: "React Sandbox", href: "/react-compiler", icon: Box },
     ]
   }

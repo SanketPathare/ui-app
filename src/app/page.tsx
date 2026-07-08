@@ -334,7 +334,7 @@ const compilers = [
   {
     title: "HTML Compiler",
     description: "Real-time HTML, CSS, and JS editor with live preview.",
-    href: "/compiler",
+    href: "/html-compiler",
     icon: Terminal,
   },
   {

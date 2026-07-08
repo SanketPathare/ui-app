@@ -74,6 +74,7 @@ interface CommandItem {
 
 
 const SETTINGS_STORAGE_KEY = "compiler-settings";
+const FILES_STORAGE_KEY = "compiler-files";
 
 const DEFAULT_SETTINGS: EditorSettings = {
   fontSize: 13,
@@ -272,6 +273,18 @@ function getInitialSettings(): EditorSettings {
   return DEFAULT_SETTINGS;
 }
 
+function getInitialFiles(): FileData[] {
+  if (typeof window === "undefined") return makeDefaultFiles();
+  try {
+    const stored = localStorage.getItem(FILES_STORAGE_KEY);
+    if (stored) {
+      const parsed: FileData[] = JSON.parse(stored);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch {}
+  return makeDefaultFiles();
+}
+
 function getFileIcon(name: string, className?: string): React.ReactNode {
   const ext = name.split(".").pop()?.toLowerCase() || "";
   const cls = className || "w-4 h-4";
@@ -300,7 +313,7 @@ function getFileIcon(name: string, className?: string): React.ReactNode {
 // ─── Component ───
 
 export function HtmlCompiler() {
-  const [files, setFiles] = useState<FileData[]>(makeDefaultFiles);
+  const [files, setFiles] = useState<FileData[]>(getInitialFiles);
   const [activeFileId, setActiveFileId] = useState("index.html");
   const [viewport, setViewport] = useState<Viewport>("desktop");
   const [copied, setCopied] = useState(false);
@@ -356,6 +369,12 @@ export function HtmlCompiler() {
       modelListenerRef.current?.dispose();
     };
   }, []);
+
+  // ─── Persist files to localStorage ───
+
+  useEffect(() => {
+    try { localStorage.setItem(FILES_STORAGE_KEY, JSON.stringify(files)); } catch {}
+  }, [files]);
 
   const colors = THEMES[theme];
 

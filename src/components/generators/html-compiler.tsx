@@ -21,6 +21,7 @@ import * as htmlParser from "prettier/plugins/html";
 import * as cssParser from "prettier/plugins/postcss";
 import * as babelParser from "prettier/plugins/babel";
 import * as estreeParser from "prettier/plugins/estree";
+import { useTheme as useNextTheme } from "next-themes";
 
 const MonacoEditor = dynamic(() => import("@monaco-editor/react"), { ssr: false });
 
@@ -71,7 +72,7 @@ interface CommandItem {
 
 // ─── Constants ───
 
-const THEME_STORAGE_KEY = "compiler-theme";
+
 const SETTINGS_STORAGE_KEY = "compiler-settings";
 
 const DEFAULT_SETTINGS: EditorSettings = {
@@ -260,13 +261,7 @@ function detectLanguage(filename: string): string {
   return EXTENSION_LANGUAGE_MAP[ext] || "plaintext";
 }
 
-function getStoredTheme(): "dark" | "light" {
-  try {
-    const stored = localStorage.getItem(THEME_STORAGE_KEY);
-    if (stored === "light" || stored === "dark") return stored;
-  } catch {}
-  return "dark";
-}
+
 
 function getInitialSettings(): EditorSettings {
   if (typeof window === "undefined") return DEFAULT_SETTINGS;
@@ -320,11 +315,15 @@ export function HtmlCompiler() {
   const [bottomTab, setBottomTab] = useState<BottomTab>("console");
   const [cursorPos, setCursorPos] = useState({ line: 1, column: 1 });
   const [logFilter, setLogFilter] = useState<LogType | "all">("all");
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const { theme: nextTheme, setTheme: setNextTheme, resolvedTheme } = useNextTheme();
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setTheme(getStoredTheme());
+    setMounted(true);
   }, []);
+
+  const theme: "dark" | "light" = mounted && (nextTheme === "light" || resolvedTheme === "light") ? "light" : "dark";
+  const setTheme = (val: "dark" | "light") => setNextTheme(val);
   const [settings, setSettings] = useState<EditorSettings>(getInitialSettings);
   const [showCommandPalette, setShowCommandPalette] = useState(false);
   const [commandQuery, setCommandQuery] = useState("");
@@ -654,10 +653,9 @@ export function HtmlCompiler() {
   // ─── Handlers ───
 
   const toggleTheme = useCallback(() => {
-    const next = theme === "dark" ? "light" : "dark";
+    const next = theme === "dark" || resolvedTheme === "dark" ? "light" : "dark";
     setTheme(next);
-    try { localStorage.setItem(THEME_STORAGE_KEY, next); } catch {}
-  }, [theme]);
+  }, [theme, resolvedTheme]);
 
   const handleCopy = useCallback(() => {
     const text = files.map(f => `// ${f.name}\n${f.content}`).join("\n\n");

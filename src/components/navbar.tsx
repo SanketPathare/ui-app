@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTheme as useNextTheme } from "next-themes";
 
 const toolCategories = [
   {
@@ -100,27 +101,20 @@ const toolCategories = [
 ];
 
 function useTheme() {
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const { theme, setTheme, resolvedTheme } = useNextTheme();
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem("theme") as "dark" | "light" | null;
-    if (stored) setTheme(stored);
+    setMounted(true);
   }, []);
 
   const toggle = () => {
-    const next = theme === "dark" ? "light" : "dark";
-    setTheme(next);
-    localStorage.setItem("theme", next);
-    if (next === "light") {
-      document.documentElement.classList.remove("dark");
-      document.documentElement.classList.add("light");
-    } else {
-      document.documentElement.classList.remove("light");
-      document.documentElement.classList.add("dark");
-    }
+    setTheme(theme === "dark" || resolvedTheme === "dark" ? "light" : "dark");
   };
 
-  return { theme, toggle };
+  const activeTheme = mounted ? (theme || resolvedTheme || "dark") : "dark";
+
+  return { theme: activeTheme, toggle };
 }
 
 export function Navbar() {

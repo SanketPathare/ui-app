@@ -349,24 +349,72 @@ export default function Home() {
   return (
     <Shell>
       <div className="space-y-16">
-        <div className="max-w-2xl space-y-4">
-          <h1 className="text-3xl md:text-5xl font-semibold tracking-tight text-[var(--text-primary)] leading-tight">
-            CSS design tools for{" "}
-            <span className="text-[var(--text-primary)]">modern developers</span>
-          </h1>
-          <p className="text-base text-[var(--text-secondary)] leading-relaxed max-w-lg">
-            A collection of generators for gradients, shadows, layouts, animations, and more.
-            Copy-ready CSS and Tailwind code.
-          </p>
-          <div className="flex gap-3 pt-2">
-            <Link href="/gradient" className="btn-primary text-sm">
-              Get Started
-            </Link>
-            <Link href="/docs" className="btn-secondary text-sm">
-              Documentation
-            </Link>
+        <section className="relative overflow-hidden rounded-[32px] border border-[var(--border)] bg-[rgba(255,255,255,0.03)] p-8 shadow-[0_30px_80px_rgba(0,0,0,0.24)]">
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(circle_at_top,_rgba(94,255,212,0.16),transparent_25%)] opacity-80" />
+          <div className="pointer-events-none absolute -right-16 top-16 h-60 w-60 rounded-full bg-[radial-gradient(circle,_rgba(139,92,246,0.16),transparent_60%)]" />
+          <div className="pointer-events-none absolute left-10 bottom-0 h-52 w-52 rounded-full bg-[radial-gradient(circle,_rgba(59,130,246,0.14),transparent_60%)]" />
+
+          <div className="relative grid gap-10 lg:grid-cols-[1.05fr_0.95fr] items-center">
+            <div className="max-w-2xl space-y-6">
+              <h1 className="text-3xl md:text-5xl font-semibold tracking-tight text-[var(--text-primary)] leading-tight">
+                CSS design tools for{" "}
+                <span className="text-[var(--text-primary)]">modern developers</span>
+              </h1>
+              <p className="text-base text-[var(--text-secondary)] leading-relaxed max-w-lg">
+                A collection of generators for gradients, shadows, layouts, animations, and more.
+                Copy-ready CSS and Tailwind code.
+              </p>
+              <div className="flex flex-wrap gap-3 pt-2">
+                <Link href="/gradient" className="btn-primary text-sm">
+                  Get Started
+                </Link>
+                <Link href="/docs" className="btn-secondary text-sm">
+                  Documentation
+                </Link>
+              </div>
+            </div>
+
+            <div className="relative">
+              <div className="relative overflow-hidden rounded-[32px] border border-[var(--border)] bg-[var(--bg-card)] p-5 shadow-[0_30px_60px_rgba(0,0,0,0.28)]">
+                <div className="flex items-center justify-between gap-4 pb-4">
+                  <div className="flex items-center gap-2">
+                    <span className="h-2.5 w-2.5 rounded-full bg-[#f97316]" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-[#facc15]" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-[#34d399]" />
+                  </div>
+                  <span className="text-[10px] uppercase tracking-[0.25em] text-[var(--text-secondary)]">
+                    Preview
+                  </span>
+                </div>
+
+                <div className="grid gap-3">
+                  <div className="rounded-[28px] border border-[var(--border)] bg-gradient-to-br from-slate-900/70 via-slate-900/40 to-slate-900/25 p-4">
+                    <div className="h-44 rounded-[24px] bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.18),transparent_55%)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04)]" />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="rounded-[28px] border border-[var(--border)] bg-[var(--bg)] p-3">
+                      <div className="h-24 rounded-3xl bg-[linear-gradient(180deg,rgba(255,255,255,0.07),rgba(255,255,255,0.02))]" />
+                      <div className="mt-3 h-2.5 w-14 rounded-full bg-[var(--border)]" />
+                      <div className="mt-2 h-2.5 w-8 rounded-full bg-[var(--border)]" />
+                    </div>
+                    <div className="rounded-[28px] border border-[var(--border)] bg-[var(--bg)] p-3">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-3xl bg-gradient-to-br from-indigo-500 to-cyan-400 shadow-[0_20px_50px_rgba(59,130,246,0.12)]" />
+                        <div className="flex-1 space-y-2">
+                          <div className="h-2.5 w-14 rounded-full bg-[var(--border)]" />
+                          <div className="h-2.5 w-10 rounded-full bg-[var(--border)]" />
+                        </div>
+                      </div>
+                      <div className="mt-3 h-16 rounded-3xl bg-[radial-gradient(circle_at_top,_rgba(148,163,184,0.18),transparent_55%)]" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="pointer-events-none absolute -bottom-10 left-4 h-24 w-24 rounded-full bg-[radial-gradient(circle,_rgba(59,130,246,0.18),transparent_65%)] blur-2xl" />
+            </div>
           </div>
-        </div>
+        </section>
 
         <div className="space-y-6">
           <div className="flex items-center gap-2">
@@ -378,10 +426,12 @@ export default function Home() {
               <Link
                 key={tool.href}
                 href={tool.href}
-                className="card p-4 hover:border-[var(--border-hover)] transition-colors group"
+                className="card p-4 transition-all duration-200 hover:scale-[1.01] hover:border-[rgba(255,255,255,0.16)] hover:bg-[rgba(255,255,255,0.08)] group"
               >
                 <div className="flex items-start gap-3">
-                  <tool.icon className="w-5 h-5 text-[var(--text-secondary)] mt-0.5" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[rgba(255,255,255,0.06)] border border-[rgba(255,255,255,0.12)] shadow-[0_14px_30px_rgba(0,0,0,0.08)]">
+                    <tool.icon className="w-5 h-5 text-[var(--text-secondary)]" />
+                  </div>
                   <div className="min-w-0">
                     <h3 className="text-sm font-medium text-[var(--text-primary)]">{tool.title}</h3>
                     <p className="text-sm text-[var(--text-secondary)] mt-0.5 line-clamp-2">{tool.description}</p>
@@ -402,10 +452,12 @@ export default function Home() {
               <Link
                 key={tool.href}
                 href={tool.href}
-                className="card p-4 hover:border-[var(--border-hover)] transition-colors group"
+                className="card p-4 transition-all duration-200 hover:scale-[1.01] hover:border-[rgba(255,255,255,0.16)] hover:bg-[rgba(255,255,255,0.08)] group"
               >
                 <div className="flex items-start gap-3">
-                  <tool.icon className="w-5 h-5 text-[var(--text-secondary)] mt-0.5 shrink-0" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[rgba(255,255,255,0.06)] border border-[rgba(255,255,255,0.12)] shadow-[0_14px_30px_rgba(0,0,0,0.08)]">
+                    <tool.icon className="w-5 h-5 text-[var(--text-secondary)]" />
+                  </div>
                   <div className="min-w-0">
                     <h3 className="text-sm font-medium text-[var(--text-primary)]">{tool.title}</h3>
                     <p className="text-sm text-[var(--text-secondary)] mt-0.5 line-clamp-2">{tool.description}</p>

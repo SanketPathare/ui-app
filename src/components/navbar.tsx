@@ -166,10 +166,11 @@ export function Navbar() {
       );
 
   return (
-    <nav className="sticky top-0 z-[100] w-full bg-[var(--bg)] border-b border-[var(--border)]">
+    <nav className="sticky top-0 z-[100] w-full bg-[var(--bg)]/80 backdrop-blur-xl border-b border-[rgba(255,255,255,0.08)]">
       <div className="max-w-7xl mx-auto px-4 md:px-6 h-14 flex items-center justify-between">
         <div className="flex items-center gap-6">
           <Link href="/" className="flex items-center gap-2 shrink-0">
+            <Zap className="w-4 h-4 text-[var(--text-primary)]" />
             <span className="font-sans font-semibold text-base text-[var(--text-primary)] tracking-tight">
               UI Engine
             </span>
@@ -183,13 +184,13 @@ export function Navbar() {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "flex items-center gap-1.5 px-2.5 py-1.5 rounded-[6px] text-sm font-medium transition-colors duration-150",
+                    "flex items-center gap-2 px-3 py-1.5 rounded-[10px] text-sm font-medium transition-all duration-150",
                     isActive
-                      ? "bg-[var(--bg-card)] text-[var(--text-primary)]"
-                      : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card)]"
+                      ? "bg-[rgba(255,255,255,0.08)] text-[var(--text-primary)]"
+                      : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[rgba(255,255,255,0.05)]"
                   )}
                 >
-                  <item.icon className="w-3.5 h-3.5" />
+                  <item.icon className="w-4 h-4" />
                   {item.title}
                 </Link>
               );
@@ -206,7 +207,7 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="relative hidden md:flex items-center bg-[var(--bg)] border border-[var(--border)] rounded-[6px] px-3 h-8 gap-2 group focus-within:border-[var(--text-primary)] transition-colors">
+          <div className="relative hidden md:flex items-center bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.08)] rounded-[10px] px-3 h-8 gap-2 group focus-within:border-[var(--text-primary)] transition-colors backdrop-blur-xl">
             <Search className="w-3.5 h-3.5 text-[var(--text-secondary)]" />
             <input
               id="nav-search"

@@ -166,7 +166,7 @@ export function Navbar() {
       );
 
   return (
-    <nav className="sticky top-0 z-[100] w-full bg-[var(--bg)]/80 backdrop-blur-xl border-b border-[rgba(255,255,255,0.08)]">
+    <nav className="sticky top-0 z-[100] w-full bg-[var(--bg)]/80 backdrop-blur-xl border-b border-[var(--border)]">
       <div className="max-w-7xl mx-auto px-4 md:px-6 h-14 flex items-center justify-between">
         <div className="flex items-center gap-6">
           <Link href="/" className="flex items-center gap-2 shrink-0">
@@ -186,8 +186,8 @@ export function Navbar() {
                   className={cn(
                     "flex items-center gap-2 px-3 py-1.5 rounded-[10px] text-sm font-medium transition-all duration-150",
                     isActive
-                      ? "bg-[rgba(255,255,255,0.08)] text-[var(--text-primary)]"
-                      : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[rgba(255,255,255,0.05)]"
+                      ? "bg-[var(--bg-active)] text-[var(--text-primary)]"
+                      : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)]"
                   )}
                 >
                   <item.icon className="w-4 h-4" />
@@ -207,7 +207,7 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="relative hidden md:flex items-center bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.08)] rounded-[10px] px-3 h-8 gap-2 group focus-within:border-[var(--text-primary)] transition-colors backdrop-blur-xl">
+          <div className="relative hidden md:flex items-center bg-[var(--bg-card)] border border-[var(--border)] rounded-[10px] px-3 h-8 gap-2 group focus-within:border-[var(--text-primary)] transition-colors backdrop-blur-xl">
             <Search className="w-3.5 h-3.5 text-[var(--text-secondary)]" />
             <input
               id="nav-search"
@@ -215,7 +215,7 @@ export function Navbar() {
               placeholder="Search..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-transparent border-none outline-none text-sm w-24 focus:w-36 transition-all text-[var(--text-primary)] placeholder:text-[var(--text-secondary)]"
+              className="bg-transparent border-0 outline-none text-sm w-24 focus:w-36 transition-all text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-none"
             />
             {searchQuery && (
               <button
@@ -232,7 +232,7 @@ export function Navbar() {
             )}
 
             {filteredTools.length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-1.5 bg-[var(--bg-card)] border border-[var(--border)] rounded-[6px] shadow-lg overflow-hidden z-[300] max-h-64 overflow-y-auto p-1">
+              <div className="absolute top-full left-0 right-0 mt-1.5 bg-[var(--bg)] border border-[var(--border)] rounded-[6px] shadow-lg overflow-hidden z-[300] max-h-64 overflow-y-auto p-1">
                 {filteredTools.map((tool) => (
                   <Link
                     key={tool.href}
@@ -288,7 +288,7 @@ export function Navbar() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: -12 }}
               transition={{ duration: 0.2, ease: [0.175, 0.885, 0.32, 1.1] }}
-              className="relative w-full max-w-4xl bg-[var(--bg-card)] border border-[var(--border)] rounded-[12px] shadow-lg overflow-hidden"
+              className="relative w-full max-w-4xl bg-[var(--bg)] border border-[var(--border)] rounded-[12px] shadow-lg overflow-hidden"
             >
               <div className="p-6 max-h-[70vh] overflow-y-auto">
                 <div className="flex items-center justify-between mb-6">

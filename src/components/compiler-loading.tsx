@@ -63,9 +63,9 @@ export function CompilerLoading() {
 
       {/* Animated gradient background */}
       <div
-        className="absolute inset-0 opacity-30"
+        className="absolute inset-0 opacity-20"
         style={{
-          background: "linear-gradient(135deg, #0f0c29, #302b63, #24243e, #0f0c29)",
+          background: "linear-gradient(135deg, #000000, #0a0a0a, #111111, #000000)",
           backgroundSize: "400% 400%",
           animation: "gradient-shift 8s ease infinite",
         }}
@@ -75,7 +75,7 @@ export function CompilerLoading() {
       {codeSnippets.map((snippet, i) => (
         <div
           key={i}
-          className="absolute text-[#ffffff10] font-mono text-xs select-none pointer-events-none"
+          className="absolute text-[#ffffff08] font-mono text-xs select-none pointer-events-none"
           style={{
             left: `${Math.random() * 90 + 5}%`,
             top: `${Math.random() * 40 + 60}%`,
@@ -91,7 +91,7 @@ export function CompilerLoading() {
       {particles.map((p) => (
         <motion.div
           key={p.id}
-          className="absolute rounded-full bg-white/10"
+          className="absolute rounded-full bg-white/[0.06]"
           style={{
             width: p.size,
             height: p.size,
@@ -118,25 +118,25 @@ export function CompilerLoading() {
         {/* Animated rings */}
         <div className="relative flex items-center justify-center">
           <div
-            className="absolute w-32 h-32 rounded-full border border-[#ffffff20]"
+            className="absolute w-32 h-32 rounded-full border border-[#ffffff12]"
             style={{ animation: "ring-rotate 4s linear infinite" }}
           />
           <div
-            className="absolute w-24 h-24 rounded-full border border-[#ffffff15] border-t-white/40"
+            className="absolute w-24 h-24 rounded-full border border-[#ffffff08] border-t-white/20"
             style={{ animation: "ring-rotate-reverse 3s linear infinite" }}
           />
           <div
-            className="absolute w-16 h-16 rounded-full border border-[#ffffff10] border-b-white/30"
+            className="absolute w-16 h-16 rounded-full border border-[#ffffff06] border-b-white/15"
             style={{ animation: "ring-rotate 2s linear infinite" }}
           />
 
           {/* Inner icon */}
           <motion.div
-            className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center"
+            className="w-10 h-10 rounded-full bg-white/[0.03] flex items-center justify-center"
             animate={{ scale: [1, 1.1, 1] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
           >
-            <svg className="w-5 h-5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <svg className="w-5 h-5 text-white/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M14.25 9.75L16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
             </svg>
           </motion.div>
@@ -145,7 +145,7 @@ export function CompilerLoading() {
         {/* Title */}
         <div className="flex flex-col items-center gap-2">
           <motion.h1
-            className="text-2xl font-semibold text-white/90 tracking-tight"
+            className="text-2xl font-semibold text-white/80 tracking-tight"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
@@ -153,7 +153,7 @@ export function CompilerLoading() {
             Initializing Environment
           </motion.h1>
           <motion.p
-            className="text-sm text-white/40 font-mono"
+            className="text-sm text-white/30 font-mono"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.4 }}
@@ -173,11 +173,11 @@ export function CompilerLoading() {
             />
           </div>
           <div className="flex justify-between mt-2">
-            <span className="text-[10px] text-white/30 font-mono">Initializing</span>
+            <span className="text-[10px] text-white/25 font-mono">Initializing</span>
             <AnimatePresence mode="wait">
               <motion.span
                 key={Math.floor(progress / 10)}
-                className="text-[10px] text-white/40 font-mono tabular-nums"
+                className="text-[10px] text-white/30 font-mono tabular-nums"
                 initial={{ opacity: 0, y: -4 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 4 }}
@@ -194,7 +194,7 @@ export function CompilerLoading() {
           {[0, 1, 2].map((i) => (
             <div
               key={i}
-              className="w-1.5 h-1.5 rounded-full bg-white/40"
+              className="w-1.5 h-1.5 rounded-full bg-white/25"
               style={{
                 animation: "pulse-dot 1.4s ease-in-out infinite",
                 animationDelay: `${i * 0.2}s`,
@@ -206,7 +206,7 @@ export function CompilerLoading() {
 
       {/* Bottom text */}
       <motion.p
-        className="absolute bottom-8 text-[11px] text-white/20 font-mono z-10"
+        className="absolute bottom-8 text-[11px] text-white/15 font-mono z-10"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 1 }}

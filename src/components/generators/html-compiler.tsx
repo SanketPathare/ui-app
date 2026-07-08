@@ -347,12 +347,19 @@ export function HtmlCompiler() {
   const [renameValue, setRenameValue] = useState("");
   const [showNewFile, setShowNewFile] = useState(false);
   const [newFileName, setNewFileName] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => {
+    if (typeof window === "undefined") return true;
+    try { return !localStorage.getItem("compiler-loaded-before"); } catch { return true; }
+  });
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 10000);
+    if (!loading) return;
+    const timer = setTimeout(() => {
+      setLoading(false);
+      try { localStorage.setItem("compiler-loaded-before", "true"); } catch {}
+    }, 10000);
     return () => clearTimeout(timer);
-  }, []);
+  }, [loading]);
 
   const consoleRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);

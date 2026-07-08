@@ -810,12 +810,19 @@ export function ReactCompilerGenerator() {
   const [newFileName, setNewFileName] = useState("");
   const [creatingFolder, setCreatingFolder] = useState(false);
   const [newFilePath, setNewFilePath] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => {
+    if (typeof window === "undefined") return true;
+    try { return !localStorage.getItem("compiler-loaded-before"); } catch { return true; }
+  });
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 10000);
+    if (!loading) return;
+    const timer = setTimeout(() => {
+      setLoading(false);
+      try { localStorage.setItem("compiler-loaded-before", "true"); } catch {}
+    }, 10000);
     return () => clearTimeout(timer);
-  }, []);
+  }, [loading]);
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set(["src", "public"]));
   const [emptyFolders, setEmptyFolders] = useState<Set<string>>(new Set());
   const [dragOverFolder, setDragOverFolder] = useState<string | null>(null);

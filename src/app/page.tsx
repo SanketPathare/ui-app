@@ -244,16 +244,6 @@ export default function Home() {
                 </Link>
               </motion.div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                className="mt-8 font-mono text-xs text-[var(--text-tertiary)] flex items-center gap-2 pointer-events-none select-none"
-              >
-                <span className="text-[var(--text-tertiary)] opacity-60">▲</span>
-                <span>~</span>
-                <span className="text-[var(--text-secondary)]">npx create-css-ui@latest</span>
-              </motion.div>
             </div>
           </motion.div>
         </section>

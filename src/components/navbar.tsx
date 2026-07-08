@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
   Palette, Box, Square, Layers, Sparkles, Grid, BookOpen,
@@ -118,8 +118,19 @@ function useTheme() {
   return { theme: activeTheme, toggle };
 }
 
+const docsList = [
+  { title: "Introduction", href: "/docs", icon: BookOpen },
+  { title: "Getting Started", href: "/docs/getting-started", icon: BookOpen },
+  { title: "Visual FX Guide", href: "/docs/visual-fx", icon: BookOpen },
+  { title: "Layout Lab Guide", href: "/docs/layout", icon: BookOpen },
+  { title: "Color Palettes Docs", href: "/docs/colors", icon: BookOpen },
+  { title: "API Reference", href: "/docs/api", icon: BookOpen },
+  { title: "CLI Tool Usage", href: "/docs/cli", icon: BookOpen },
+];
+
 export function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const { theme, toggle } = useTheme();
 
@@ -132,6 +143,9 @@ export function Navbar() {
   ];
 
   const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchCategory, setSearchCategory] = useState<"tools" | "docs">("tools");
+  const [activeIndex, setActiveIndex] = useState(0);
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
 
   const allTools = [
@@ -139,12 +153,19 @@ export function Navbar() {
     ...toolCategories.flatMap(c => c.tools)
   ];
 
+  const searchResults = searchCategory === "tools"
+    ? (searchQuery.trim() === ""
+        ? allTools.slice(0, 7)
+        : allTools.filter(tool => tool.title.toLowerCase().includes(searchQuery.toLowerCase())))
+    : (searchQuery.trim() === ""
+        ? docsList
+        : docsList.filter(doc => doc.title.toLowerCase().includes(searchQuery.toLowerCase())));
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
-        const searchInput = document.getElementById("nav-search");
-        searchInput?.focus();
+        setIsSearchOpen(prev => !prev);
       }
       if ((e.metaKey || e.ctrlKey) && e.key === "l") {
         e.preventDefault();
@@ -152,21 +173,35 @@ export function Navbar() {
       }
       if (e.key === "Escape") {
         setIsLibraryOpen(false);
+        setIsSearchOpen(false);
         setSearchQuery("");
+      }
+
+      if (isSearchOpen) {
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          setActiveIndex(prev => (prev + 1) % Math.max(1, searchResults.length));
+        } else if (e.key === "ArrowUp") {
+          e.preventDefault();
+          setActiveIndex(prev => (prev - 1 + searchResults.length) % Math.max(1, searchResults.length));
+        } else if (e.key === "Enter") {
+          e.preventDefault();
+          const activeItem = searchResults[activeIndex];
+          if (activeItem) {
+            router.push(activeItem.href);
+            setIsSearchOpen(false);
+            setSearchQuery("");
+          }
+        }
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
-
-  const filteredTools = searchQuery.trim() === ""
-    ? []
-    : allTools.filter(tool =>
-        tool.title.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+  }, [isSearchOpen, activeIndex, searchResults, router]);
 
   return (
-    <nav className="sticky top-0 z-[100] w-full bg-[var(--bg)]/80 backdrop-blur-xl border-b border-[var(--border)]">
+    <>
+      <nav className="sticky top-0 z-[100] w-full bg-[var(--bg)]/80 backdrop-blur-xl border-b border-[var(--border)]">
       <div className="max-w-7xl mx-auto px-4 md:px-6 h-14 flex items-center justify-between">
         <div className="flex items-center gap-6">
           <Link href="/" className="flex items-center gap-2 shrink-0">
@@ -207,46 +242,20 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="relative hidden md:flex items-center bg-[var(--bg-card)] border border-[var(--border)] rounded-[10px] px-3 h-8 gap-2 group focus-within:border-[var(--text-primary)] transition-colors backdrop-blur-xl">
+          <button
+            onClick={() => {
+              setIsSearchOpen(true);
+              setSearchQuery("");
+              setActiveIndex(0);
+            }}
+            className="relative hidden md:flex items-center bg-[var(--bg-card)] border border-[var(--border)] rounded-[10px] px-3 h-8 gap-2 group hover:border-[var(--border-hover)] transition-colors backdrop-blur-xl text-left cursor-pointer"
+          >
             <Search className="w-3.5 h-3.5 text-[var(--text-secondary)]" />
-            <input
-              id="nav-search"
-              type="text"
-              placeholder="Search..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-transparent border-0 outline-none text-sm w-24 focus:w-36 transition-all text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-none"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery("")}
-                className="hover:text-[var(--text-primary)] transition-colors"
-              >
-                <X className="w-3 h-3 text-[var(--text-secondary)]" />
-              </button>
-            )}
-            {!searchQuery && (
-              <kbd className="hidden sm:inline-flex h-4 select-none items-center gap-1 rounded border border-[var(--border)] bg-[var(--bg-card)] px-1 font-mono text-[10px] text-[var(--text-secondary)]">
-                <span>⌘</span>K
-              </kbd>
-            )}
-
-            {filteredTools.length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-1.5 bg-[var(--bg)] border border-[var(--border)] rounded-[6px] shadow-lg overflow-hidden z-[300] max-h-64 overflow-y-auto p-1">
-                {filteredTools.map((tool) => (
-                  <Link
-                    key={tool.href}
-                    href={tool.href}
-                    onClick={() => setSearchQuery("")}
-                    className="flex items-center gap-2 px-2.5 py-2 rounded-[4px] hover:bg-[var(--bg-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors text-sm"
-                  >
-                    <tool.icon className="w-3.5 h-3.5" />
-                    <span>{tool.title}</span>
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
+            <span className="text-sm text-[var(--text-secondary)] w-24 sm:w-28 font-medium">Search...</span>
+            <kbd className="hidden sm:inline-flex h-4 select-none items-center gap-1 rounded border border-[var(--border)] bg-[var(--bg-card)] px-1 font-mono text-[10px] text-[var(--text-secondary)]">
+              <span>⌘</span>K
+            </kbd>
+          </button>
 
           <Link
             href="/docs"
@@ -272,8 +281,9 @@ export function Navbar() {
           </button>
         </div>
       </div>
+    </nav>
 
-      <AnimatePresence>
+    <AnimatePresence>
         {isLibraryOpen && (
           <div className="fixed inset-0 z-[200] flex items-start justify-center pt-16 px-4">
             <motion.div
@@ -365,6 +375,121 @@ export function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+
+      <AnimatePresence>
+        {isSearchOpen && (
+          <div className="fixed inset-0 z-[250] flex items-start justify-center pt-24 px-4">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsSearchOpen(false)}
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            />
+            {/* Modal Dialog Content Container */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.97, y: -8 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.97, y: -8 }}
+              transition={{ duration: 0.15, ease: "easeOut" }}
+              className="relative w-full max-w-2xl bg-[var(--bg)] border border-[var(--border)] rounded-2xl shadow-2xl overflow-hidden z-[260]"
+            >
+              {/* Header: Tabs */}
+              <div className="p-4 pb-2 flex gap-2 border-b border-[var(--border)] bg-[var(--bg-card)]">
+                <button
+                  onClick={() => {
+                    setSearchCategory("tools");
+                    setActiveIndex(0);
+                  }}
+                  className={cn(
+                    "px-3 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer",
+                    searchCategory === "tools"
+                      ? "bg-blue-500/10 text-blue-600 dark:text-blue-400"
+                      : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)]"
+                  )}
+                >
+                  App
+                </button>
+                <button
+                  onClick={() => {
+                    setSearchCategory("docs");
+                    setActiveIndex(0);
+                  }}
+                  className={cn(
+                    "px-3 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer",
+                    searchCategory === "docs"
+                      ? "bg-blue-500/10 text-blue-600 dark:text-blue-400"
+                      : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)]"
+                  )}
+                >
+                  Pages
+                </button>
+              </div>
+
+              {/* Input Area */}
+              <div className="relative flex items-center px-4 py-3 h-14">
+                <Search className="w-5 h-5 text-[var(--text-secondary)] mr-3 shrink-0" />
+                <input
+                  autoFocus
+                  type="text"
+                  placeholder="What are you searching for?"
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setActiveIndex(0);
+                  }}
+                  className="bg-transparent border-0 outline-none w-full text-base md:text-lg text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-none"
+                />
+                <span className="hidden sm:inline-block border border-[var(--border)] rounded px-1.5 py-0.5 text-[10px] text-[var(--text-secondary)] bg-[var(--bg-card)] font-mono">
+                  Esc
+                </span>
+              </div>
+
+              {/* Separator */}
+              <div className="h-px bg-[var(--border)]" />
+
+              {/* Results List */}
+              <div className="p-2 max-h-[350px] overflow-y-auto custom-scrollbar">
+                {searchResults.length > 0 ? (
+                  <div className="space-y-0.5">
+                    {searchResults.map((item, index) => {
+                      const Icon = item.icon;
+                      const isActive = index === activeIndex;
+                      return (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          onClick={() => {
+                            setIsSearchOpen(false);
+                            setSearchQuery("");
+                          }}
+                          onMouseEnter={() => setActiveIndex(index)}
+                          className={cn(
+                            "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-sm font-medium cursor-pointer",
+                            isActive
+                              ? "bg-[var(--bg-hover)] text-[var(--text-primary)]"
+                              : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                          )}
+                        >
+                          <Icon className="w-4.5 h-4.5 shrink-0 text-[var(--text-secondary)]" />
+                          <div className="min-w-0 flex-1">
+                            <span className="block truncate">{item.title}</span>
+                          </div>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="py-12 text-center">
+                    <p className="text-sm text-[var(--text-secondary)]">No results found for &ldquo;{searchQuery}&rdquo;</p>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

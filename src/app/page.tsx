@@ -73,6 +73,7 @@ const tools = [
 const compilers = [
   { title: "HTML Compiler", description: "Real-time HTML, CSS, and JS editor with live preview.", href: "/html-compiler", icon: Terminal },
   { title: "React Sandbox", description: "Online React JS compiler with terminal, npm packages, and live preview.", href: "/react-compiler", icon: Cpu },
+  { title: "Python Compiler", description: "Online Python compiler powered by WebAssembly. Run Python code in your browser.", href: "/python-compiler", icon: Code },
 ];
 
 const containerVariants = {

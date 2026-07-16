@@ -8,7 +8,7 @@ import {
   Settings2, Grid, Layout, Columns, Maximize, PanelLeft,
   Navigation, Monitor, CheckSquare, ToggleLeft, Tag, Info,
   ClipboardList, Play, Loader2, Scissors, Hexagon, Spline,
-  Image, Activity, Zap, Code, Terminal, Cpu,
+  Image, Activity, Zap, Code, Terminal, Cpu, Coffee,
   ChevronRight
 } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -74,6 +74,7 @@ const compilers = [
   { title: "HTML Compiler", description: "Real-time HTML, CSS, and JS editor with live preview.", href: "/html-compiler", icon: Terminal },
   { title: "React Sandbox", description: "Online React JS compiler with terminal, npm packages, and live preview.", href: "/react-compiler", icon: Cpu },
   { title: "Python Compiler", description: "Online Python compiler powered by WebAssembly. Run Python code in your browser.", href: "/python-compiler", icon: Code },
+  { title: "Java Compiler", description: "Online Java compiler powered by CheerpJ. Write, compile, and run Java code in your browser.", href: "/java-compiler", icon: Coffee },
 ];
 
 const containerVariants = {

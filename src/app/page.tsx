@@ -9,7 +9,7 @@ import {
   Navigation, Monitor, CheckSquare, ToggleLeft, Tag, Info,
   ClipboardList, Play, Loader2, Scissors, Hexagon, Spline,
   Image, Activity, Zap, Code, Terminal, Cpu, Coffee,
-  ChevronRight
+  ChevronRight, BarChart2
 } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
@@ -77,6 +77,7 @@ const compilers = [
   { title: "Java Compiler", description: "Online Java compiler powered by CheerpJ. Write, compile, and run Java code in your browser.", href: "/java-compiler", icon: Coffee },
   { title: "C Compiler", description: "Online C compiler powered by WebAssembly. Write, compile, and run C code in your browser.", href: "/c-compiler", icon: Terminal },
   { title: "C++ Compiler", description: "Online C++ compiler powered by WebAssembly/Clang. Write, compile, and run C++ code in your browser.", href: "/cpp-compiler", icon: Terminal },
+  { title: "R Compiler", description: "Online R compiler powered by WebAssembly/WebR. Write, run, and analyze R code in your browser.", href: "/r-compiler", icon: BarChart2 },
 ];
 
 const containerVariants = {

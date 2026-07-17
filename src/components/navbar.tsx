@@ -10,7 +10,7 @@ import {
   Info, ClipboardList, Play, RotateCw, Loader2, Type as TypeIcon,
   Scissors, Hexagon, Spline, Image, Activity, Code, Terminal, Cpu,
   Component, ArrowDownCircle, Star, Laptop, Braces, Wind, Ghost,
-  Settings2, Frame, Type, MousePointer2, Coffee
+  Settings2, Frame, Type, MousePointer2, Coffee, BarChart2
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -101,6 +101,7 @@ const toolCategories = [
       { title: "Java Compiler", href: "/java-compiler", icon: Coffee },
       { title: "C Compiler", href: "/c-compiler", icon: Terminal },
       { title: "C++ Compiler", href: "/cpp-compiler", icon: Terminal },
+      { title: "R Compiler", href: "/r-compiler", icon: BarChart2 },
     ]
   }
 ];

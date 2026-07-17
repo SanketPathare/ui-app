@@ -5,7 +5,7 @@ import {
   Play, Square, RotateCcw, Download, Terminal, File,
   Settings, ArrowLeft, ChevronDown,
   PanelRight, PanelLeft, X, FilePlus, Trash2, Pencil, Check,
-  FileCode, FileJson
+  FileCode, FileJson, AlertCircle
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { cn } from "@/lib/utils";
@@ -17,26 +17,13 @@ const MonacoEditor = dynamic(() => import("@monaco-editor/react"), { ssr: false 
 const DEFAULT_CODE = `#include <stdio.h>
 
 int main() {
-    int a, b, sum, diff, prod;
+    int a, b, sum;
 
-    a = 15;
-    b = 4;
+    printf("Enter two numbers: ");
+    scanf("%d %d", &a, &b);
     sum = a + b;
-    diff = a - b;
-    prod = a * b;
 
-    printf("Hello, Welcome to C Compiler!\\n");
-    printf("\\n=== Calculator ===\\n");
-    printf("a = %d, b = %d\\n\\n", a, b);
-    printf("Results:\\n");
     printf("%d + %d = %d\\n", a, b, sum);
-    printf("%d - %d = %d\\n", a, b, diff);
-    printf("%d * %d = %d\\n", a, b, prod);
-
-    if (b != 0) {
-        printf("%d / %d = %d\\n", a, b, a / b);
-    }
-
     return 0;
 }
 `;
@@ -141,6 +128,8 @@ function getStoredFiles(): FileData[] | null {
   return null;
 }
 
+let msgIdCounter = 0;
+
 function CEditor() {
   const storedFiles = getStoredFiles();
   const initialFiles = storedFiles?.length ? storedFiles : makeDefaultFiles();
@@ -149,10 +138,8 @@ function CEditor() {
   const [openFileIds, setOpenFileIds] = useState<string[]>([initialFiles[0]?.id || "main.c"]);
   const [isCompilerReady, setIsCompilerReady] = useState(false);
   const [isCompilerLoading, setIsCompilerLoading] = useState(true);
-  const [isCompiling, setIsCompiling] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
-  const [compileError, setCompileError] = useState<string | null>(null);
-  const [outputText, setOutputText] = useState("");
+  const [outputLines, setOutputLines] = useState<{ text: string; type: "info" | "error" | "output" | "input" }[]>([]);
   const [showSidebar, setShowSidebar] = useState(false);
   const [showOutput, setShowOutput] = useState(true);
   const [sidebarTab, setSidebarTab] = useState<SidebarTab>("explorer");
@@ -171,21 +158,25 @@ function CEditor() {
   const [showNewFile, setShowNewFile] = useState(false);
   const [newFileName, setNewFileName] = useState("");
   const [compilerStatus, setCompilerStatus] = useState<string>("Loading compiler...");
-  const [inputHistory, setInputHistory] = useState<string[]>([]);
-  const [currentInput, setCurrentInput] = useState("");
+  // Interactive stdin state
+  const [isAwaitingInput, setIsAwaitingInput] = useState(false);
+  const [inputId, setInputId] = useState("");
+  const [inputValue, setInputValue] = useState("");
+  const [promptStr, setPromptStr] = useState("");
+  const swRegRef = useRef<ServiceWorkerRegistration | null>(null);
 
   const renameInputRef = useRef<HTMLInputElement>(null);
   const newFileInputRef = useRef<HTMLInputElement>(null);
   const editorRef = useRef<any>(null);
   const outputRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
   const isRunningRef = useRef(false);
   const activeFileIdRef = useRef(activeFileId);
   const workerRef = useRef<Worker | null>(null);
-  const [outputHeight, setOutputHeight] = useState(200);
-  const outputHeightRef = useRef(200);
+  const [outputHeight, setOutputHeight] = useState(250);
+  const outputHeightRef = useRef(250);
   const isDraggingRef = useRef(false);
   const [mounted, setMounted] = useState(false);
+  const pendingRequests = useRef<Map<number, string>>(new Map());
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -221,7 +212,16 @@ function CEditor() {
     if (outputRef.current) {
       outputRef.current.scrollTop = outputRef.current.scrollHeight;
     }
-  }, [outputText]);
+  }, [outputLines]);
+
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/react-py-sw.js", { scope: "/" }).then(
+        (reg) => { swRegRef.current = reg; },
+        () => {}
+      );
+    }
+  }, []);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -230,7 +230,7 @@ function CEditor() {
       if (!container) return;
       const rect = container.getBoundingClientRect();
       const fromBottom = rect.bottom - e.clientY;
-      const h = Math.max(100, Math.min(fromBottom, rect.height * 0.6));
+      const h = Math.max(150, Math.min(fromBottom, rect.height * 0.6));
       outputHeightRef.current = h;
       setOutputHeight(h);
     };
@@ -243,13 +243,31 @@ function CEditor() {
     };
   }, []);
 
+  const addOutput = useCallback((text: string, type: "info" | "error" | "output" | "input") => {
+    setOutputLines(prev => [...prev, { text, type }]);
+  }, []);
+
+  const appendStreamingOutput = useCallback((text: string, type: "info" | "error" | "output" | "input") => {
+    setOutputLines(prev => {
+      if (prev.length === 0) {
+        return [{ text, type }];
+      }
+      const last = prev[prev.length - 1];
+      if (last.type === type && !last.text.endsWith("\n")) {
+        return [...prev.slice(0, -1), { ...last, text: last.text + text }];
+      } else {
+        return [...prev, { text, type }];
+      }
+    });
+  }, []);
+
   const initWorker = useCallback(() => {
     if (workerRef.current) {
       workerRef.current.terminate();
       workerRef.current = null;
     }
 
-    const worker = new Worker("/c-worker.js");
+    const worker = new Worker("/c-worker.js?v=" + Date.now());
     workerRef.current = worker;
 
     worker.onmessage = (event) => {
@@ -264,22 +282,53 @@ function CEditor() {
         case "error":
           setIsCompilerLoading(false);
           setCompilerStatus("Error: " + msg.message);
+          addOutput("Failed to load compiler: " + msg.message, "error");
           break;
-        case "result":
-          setIsCompiling(false);
+        case "check-result":
+          if (msg.exitCode !== 0) {
+            addOutput("Syntax check failed:", "error");
+            msg.stderr.split("\n").filter((l: string) => l.trim()).forEach((l: string) => addOutput(l, "error"));
+          }
+          break;
+        case "run-result":
           setIsRunning(false);
           isRunningRef.current = false;
-          setOutputText(msg.output || "");
+          setIsAwaitingInput(false);
+          setPromptStr("");
           if (msg.stderr) {
-            setCompileError(msg.stderr);
+            msg.stderr.split("\n").filter((l: string) => l.trim()).forEach((l: string) => addOutput(l, "error"));
           }
-          setCompilerStatus("Finished");
+          addOutput("Process exited with code " + msg.exitCode, msg.exitCode === 0 ? "info" : "error");
+          setCompilerStatus(msg.exitCode === 0 ? "Finished" : "Error");
+          break;
+        case "stdout":
+          appendStreamingOutput(msg.text, "output");
+          break;
+        case "stderr":
+          appendStreamingOutput(msg.text, "error");
+          break;
+        case "awaiting-input":
+          setIsAwaitingInput(true);
+          setInputId(msg.id);
+          // Extract the last output line as a prompt suggestion
+          setOutputLines((prev) => {
+            const lastOutput = [...prev].reverse().find((l) => l.type === "output");
+            if (lastOutput) {
+              setPromptStr(lastOutput.text.trim());
+            } else {
+              setPromptStr("");
+            }
+            return prev;
+          });
+          break;
+        case "stdout-echo":
+          appendStreamingOutput(msg.text, "input");
           break;
       }
     };
 
     worker.postMessage({ type: "init" });
-  }, []);
+  }, [addOutput, appendStreamingOutput]);
 
   useEffect(() => {
     initWorker();
@@ -292,53 +341,65 @@ function CEditor() {
   }, [initWorker]);
 
   const handleRun = useCallback(() => {
-    if (!isCompilerReady || !activeFile || isRunning || isCompiling) return;
+    if (!isCompilerReady || !activeFile || isRunning) return;
 
-    setIsCompiling(true);
+    const runId = (typeof crypto !== "undefined" && crypto.randomUUID)
+      ? crypto.randomUUID()
+      : Math.random().toString(36).substring(2) + Date.now();
+
     setIsRunning(true);
     isRunningRef.current = true;
-    setCompileError(null);
-    setOutputText("");
     setShowOutput(true);
+    setOutputLines([]);
     setCompilerStatus("Compiling...");
+    addOutput("=== Compiling " + activeFile.name + " ===", "info");
 
-    const allInput = inputHistory.join("\n") + (currentInput ? "\n" + currentInput : "");
+    setInputId(runId);
+    setIsAwaitingInput(false);
+    setPromptStr("");
 
     if (workerRef.current) {
       workerRef.current.postMessage({
-        type: "compile",
+        type: "run",
         code: activeFile.content,
-        input: allInput,
+        inputId: runId,
+        input: "",
       });
     }
-  }, [isCompilerReady, activeFile, isRunning, isCompiling, inputHistory, currentInput]);
+  }, [isCompilerReady, activeFile, isRunning, addOutput]);
 
-  const handleSendInput = useCallback((text: string) => {
-    if (!text.trim()) return;
-    setInputHistory(prev => [...prev, text]);
-    setCurrentInput("");
-    setOutputText(prev => prev + text + "\n");
-  }, []);
+  const handleSendInput = useCallback(() => {
+    const sw = swRegRef.current?.active || navigator.serviceWorker.controller;
+    if (!inputId || !sw) return;
+    sw.postMessage({
+      type: "REACT_PY_INPUT",
+      id: inputId,
+      value: inputValue,
+    });
+    setInputValue("");
+    setIsAwaitingInput(false);
+  }, [inputId, inputValue]);
+
+
 
   const handleStop = useCallback(() => {
-    if (isRunning || isCompiling) {
+    if (isRunning) {
       if (workerRef.current) {
         workerRef.current.terminate();
         workerRef.current = null;
       }
       setIsRunning(false);
-      setIsCompiling(false);
       isRunningRef.current = false;
       setCompilerStatus("Stopped");
+      addOutput("=== Stopped ===", "info");
+      setPromptStr("");
       initWorker();
     }
-  }, [isRunning, isCompiling, initWorker]);
+  }, [isRunning, initWorker, addOutput]);
 
   const handleClear = useCallback(() => {
-    setOutputText("");
-    setCompileError(null);
-    setInputHistory([]);
-    setCurrentInput("");
+    setOutputLines([]);
+    setPromptStr("");
   }, []);
 
   const handleReset = useCallback(() => {
@@ -348,10 +409,8 @@ function CEditor() {
     setOpenFileIds(["main.c"]);
     setShowNewFile(false);
     setNewFileName("");
-    setOutputText("");
-    setCompileError(null);
-    setInputHistory([]);
-    setCurrentInput("");
+    setOutputLines([]);
+    setPromptStr("");
   }, []);
 
   const handleDownload = useCallback(() => {
@@ -465,6 +524,10 @@ function CEditor() {
     setSidebarTab(tab);
   }, [sidebarTab]);
 
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInputText(e.target.value);
+  }, []);
+
   const activityItems = [
     { tab: "explorer" as SidebarTab, icon: File, label: "Explorer" },
     { tab: "settings" as SidebarTab, icon: Settings, label: "Settings" },
@@ -480,6 +543,7 @@ function CEditor() {
         .c-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .c-scrollbar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
         .c-scrollbar::-webkit-scrollbar-thumb:hover { background: #555; }
+        .c-input-area textarea { resize: none; }
       `}</style>
 
       <div className="flex items-center justify-between px-4 h-9 bg-[var(--bg-title)] border-b border-[var(--border)] shrink-0">
@@ -621,10 +685,7 @@ function CEditor() {
                     >
                       {getFileIcon(file.name, "w-4 h-4 shrink-0")}
                       <span className="truncate flex-1 text-left">{file.name}</span>
-                      {isCompiling && activeFileId === file.id && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse shrink-0 ml-1.5" />
-                      )}
-                      {isRunning && activeFileId === file.id && !isCompiling && (
+                      {isRunning && activeFileId === file.id && (
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0 ml-1.5" />
                       )}
                     </button>
@@ -725,7 +786,7 @@ function CEditor() {
                   ) : (
                     <Play className="w-3.5 h-3.5 fill-emerald-500 text-emerald-500" />
                   )}
-                  <span>{isCompilerLoading ? "Loading..." : isCompiling ? "Compiling..." : "Run"}</span>
+                  <span>{isCompilerLoading ? "Loading..." : isRunning ? "Running..." : "Run"}</span>
                 </button>
               )}
               <button onClick={() => setShowOutput(!showOutput)} className="px-2 h-full flex items-center gap-1 text-[11px] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-colors shrink-0" title={showOutput ? "Hide output" : "Show output"}>
@@ -776,11 +837,10 @@ function CEditor() {
                 <div className="flex items-center gap-2 min-w-0">
                   <Terminal className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
                   <span className="text-xs font-medium text-[var(--text-secondary)] truncate">Output{activeFile ? `: ${activeFile.name}` : ""}</span>
-                  {isCompiling && <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse shrink-0" />}
-                  {isRunning && !isCompiling && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />}
+                  {isRunning && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />}
                 </div>
                 <div className="flex items-center gap-1 shrink-0">
-                  {(outputText || compileError) && (
+                  {outputLines.length > 0 && (
                     <button onClick={handleClear} className="p-1 rounded text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] transition-colors" title="Clear output">
                       <RotateCcw className="w-3 h-3" />
                     </button>
@@ -794,54 +854,76 @@ function CEditor() {
               <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
                 <div
                   ref={outputRef}
-                  className="flex-1 overflow-y-auto p-3 font-mono text-sm leading-relaxed bg-[var(--bg)] c-scrollbar"
+                  className="flex-1 overflow-y-auto p-3 font-mono text-sm leading-relaxed bg-[var(--bg)] c-scrollbar space-y-0.5"
                 >
-                  {!outputText && !compileError && !isRunning ? (
+                  {outputLines.length === 0 ? (
                     <div className="flex items-center justify-center h-full">
                       <p className="text-xs text-[var(--text-tertiary)]">
                         {isCompilerLoading
                           ? "Loading C compiler runtime..."
                           : activeFile
-                          ? `Run "${activeFile.name}" to see output`
+                          ? `Run "${activeFile.name}" to execute`
                           : "No file selected"}
                       </p>
                     </div>
-                  ) : compileError ? (
-                    <div className="whitespace-pre-wrap break-all py-0.5 text-red-400">
-                      <span className="text-red-500 font-semibold">
-                        {outputText === compileError ? "Compilation Error:" : "Error: "}
-                      </span>
-                      {"\n"}{compileError}
-                    </div>
-                  ) : outputText ? (
-                    <div className="whitespace-pre-wrap break-all py-0.5 text-[var(--text-primary)]">
-                      {outputText}
-                    </div>
-                  ) : null}
-                  {isRunning && !outputText && !compileError && (
+                  ) : (
+                    outputLines.map((line, i) => (
+                      <div
+                        key={i}
+                        className={cn(
+                          "whitespace-pre-wrap break-all py-0.5",
+                          line.type === "error" && "text-red-400",
+                          line.type === "info" && "text-[var(--text-tertiary)]",
+                          line.type === "output" && "text-[var(--text-primary)]",
+                          line.type === "input" && "text-emerald-400",
+                        )}
+                      >
+                        {line.type === "error" && <AlertCircle className="w-3 h-3 inline mr-1 -mt-0.5 shrink-0" />}
+                        {line.text}
+                      </div>
+                    ))
+                  )}
+                  {isRunning && outputLines.length <= 1 && (
                     <div className="flex items-center justify-center h-full">
-                      <span className="text-xs text-emerald-500/80">
-                        {isCompiling ? "Compiling..." : "Running..."}
-                      </span>
+                      <span className="text-xs text-emerald-500/80">Running...</span>
                     </div>
                   )}
                 </div>
-                {isRunning && !isCompiling && (
-                  <div className="flex items-center gap-2 border-t border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-1.5 shrink-0">
-                    <span className="text-emerald-500 text-xs shrink-0 font-mono">&gt;</span>
-                    <input
-                      ref={inputRef}
-                      type="text"
-                      placeholder="Input (all input sent before run)..."
-                      className="flex-1 bg-transparent text-[var(--text-primary)] text-xs outline-none border-none placeholder:text-[var(--text-tertiary)] font-mono"
-                      value={currentInput}
-                      onChange={(e) => setCurrentInput(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          handleSendInput(e.currentTarget.value);
-                        }
-                      }}
-                    />
+
+                {/* Simple Stdin Input Bar (Only visible when awaiting input) */}
+                {isRunning && isAwaitingInput && (
+                  <div className="c-input-area border-t border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-2 shrink-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[var(--text-tertiary)] text-xs font-mono shrink-0">&gt;</span>
+                      <input
+                        type="text"
+                        value={inputValue}
+                        onChange={e => setInputValue(e.target.value)}
+                        onKeyDown={e => {
+                          if (e.key === "Enter" && inputValue.trim() !== "") {
+                            e.preventDefault();
+                            handleSendInput();
+                          }
+                        }}
+                        placeholder="Enter input value..."
+                        className="flex-1 bg-transparent text-[var(--input-text)] text-xs outline-none border-none placeholder:text-[var(--input-placeholder)] font-mono"
+                        autoComplete="off"
+                        spellCheck={false}
+                        autoFocus
+                      />
+                      <button
+                        onClick={handleSendInput}
+                        disabled={!inputValue.trim()}
+                        className={cn(
+                          "px-3 py-1 rounded text-[10px] font-semibold transition-colors shrink-0",
+                          inputValue.trim()
+                            ? "bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20"
+                            : "bg-[var(--bg-hover)] text-[var(--text-tertiary)] cursor-not-allowed"
+                        )}
+                      >
+                        Send
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
@@ -884,9 +966,7 @@ function CEditor() {
           <span>C</span>
           <span className="w-px h-2.5 bg-[var(--border)]" />
           <span>
-            {isCompiling
-              ? "Compiling..."
-              : isRunning
+            {isRunning
               ? "Running..."
               : isCompilerLoading
               ? "Loading Compiler..."

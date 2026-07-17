@@ -99,6 +99,7 @@ const toolCategories = [
       { title: "React Sandbox", href: "/react-compiler", icon: Box },
       { title: "Python Compiler", href: "/python-compiler", icon: Braces },
       { title: "Java Compiler", href: "/java-compiler", icon: Coffee },
+      { title: "C Compiler", href: "/c-compiler", icon: Terminal },
     ]
   }
 ];

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import {
@@ -200,14 +200,138 @@ function JavaEditor() {
   const outputObserverRef = useRef<MutationObserver | null>(null);
   const isRunningRef = useRef(false);
   const activeFileIdRef = useRef(activeFileId);
+
+  const readByteResolverRef = useRef<((value: number) => void) | null>(null);
+  const readByteQueueRef = useRef<number[]>([]);
+
+  const compileHelpers = useCallback(async () => {
+    const inputStreamCode = `
+package cheerpj;
+import java.io.InputStream;
+import java.io.IOException;
+
+public class CheerpJInputStream extends InputStream {
+    public static native int readByte();
+    public static native int bytesAvailable();
+
+    @Override
+    public int read() throws IOException {
+        return readByte();
+    }
+
+    @Override
+    public int available() throws IOException {
+        return bytesAvailable();
+    }
+    
+    @Override
+    public int read(byte[] b, int off, int len) throws IOException {
+        if (b == null) {
+            throw new NullPointerException();
+        } else if (off < 0 || len < 0 || len > b.length - off) {
+            throw new IndexOutOfBoundsException();
+        } else if (len == 0) {
+            return 0;
+        }
+
+        int c = read();
+        if (c == -1) {
+            return -1;
+        }
+        b[off] = (byte)c;
+
+        int i = 1;
+        try {
+            while (i < len && available() > 0) {
+                c = read();
+                if (c == -1) {
+                    break;
+                }
+                b[off + i] = (byte)c;
+                i++;
+            }
+        } catch (IOException ee) {
+        }
+        return i;
+    }
+}
+    `;
+    
+    const runnerCode = `
+package cheerpj;
+public class CheerpJRunner {
+    public static void main(String[] args) throws Exception {
+        if (args.length == 0) return;
+        System.setIn(new CheerpJInputStream());
+        Class<?> clazz = Class.forName(args[0]);
+        java.lang.reflect.Method mainMethod = clazz.getMethod("main", String[].class);
+        
+        String[] targetArgs = new String[args.length - 1];
+        System.arraycopy(args, 1, targetArgs, 0, targetArgs.length);
+        mainMethod.invoke(null, (Object) targetArgs);
+    }
+}
+    `;
+
+    const encoder = new TextEncoder();
+    try {
+      if (typeof window.cheerpOSAddStringFile === "function") {
+        window.cheerpOSAddStringFile("/str/CheerpJInputStream.java", encoder.encode(inputStreamCode));
+        window.cheerpOSAddStringFile("/str/CheerpJRunner.java", encoder.encode(runnerCode));
+      } else {
+        window.cheerpjAddStringFile("/str/CheerpJInputStream.java", encoder.encode(inputStreamCode));
+        window.cheerpjAddStringFile("/str/CheerpJRunner.java", encoder.encode(runnerCode));
+      }
+
+      await window.cheerpjRunMain(
+        "org.eclipse.jdt.internal.compiler.batch.Main",
+        "/app/ecj.jar:/files/",
+        "-d", "/files/",
+        "-source", "1.8",
+        "-target", "1.8",
+        "-nowarn",
+        "/str/CheerpJInputStream.java",
+        "/str/CheerpJRunner.java"
+      );
+    } catch (e) {
+      console.error("Helper compilation failed:", e);
+    }
+  }, []);
+
+  const handleSendInput = useCallback((text: string) => {
+    const textWithNewline = text + "\n";
+    
+    setOutputText(prev => prev + text + "\n");
+    
+    if (consoleRef.current) {
+      consoleRef.current.appendChild(document.createTextNode(text + "\n"));
+    }
+
+    const chars = Array.from(textWithNewline).map(c => c.charCodeAt(0));
+    
+    if (readByteResolverRef.current) {
+      const firstChar = chars.shift()!;
+      readByteQueueRef.current.push(...chars);
+      const resolve = readByteResolverRef.current;
+      readByteResolverRef.current = null;
+      resolve(firstChar);
+    } else {
+      readByteQueueRef.current.push(...chars);
+    }
+  }, []);
   const filesRef = useRef<FileData[]>(files);
   const outputHeightRef = useRef(200);
   const isDraggingRef = useRef(false);
   const [outputHeight, setOutputHeight] = useState(200);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const { resolvedTheme } = useNextTheme();
   const theme = resolvedTheme || "dark";
-  const colors = THEMES[theme === "dark" ? "dark" : "light"];
+  const colors = THEMES[mounted && theme === "light" ? "light" : "dark"];
 
   const activeFile = files.find(f => f.id === activeFileId) || files[0];
 
@@ -259,6 +383,21 @@ function JavaEditor() {
     };
   }, []);
 
+  useEffect(() => {
+    (window as any).__cheerpjReadByte = async () => {
+      return new Promise<number>((resolve) => {
+        if (readByteQueueRef.current.length > 0) {
+          resolve(readByteQueueRef.current.shift()!);
+        } else {
+          readByteResolverRef.current = resolve;
+        }
+      });
+    };
+    (window as any).__cheerpjBytesAvailable = () => {
+      return readByteQueueRef.current.length;
+    };
+  });
+
   const cheerpjVersions = ["4.3", "4.2", "4.1"];
   const cheerpjRef = useRef<{ version: string; retries: number }>({
     version: cheerpjVersions[0],
@@ -270,6 +409,11 @@ function JavaEditor() {
       setIsCheerpjLoading(false);
       setIsCheerpjReady(true);
       setCheerpjStatus("Ready");
+      try {
+        await compileHelpers();
+      } catch (e) {
+        console.error("Failed to compile helpers:", e);
+      }
       return;
     }
 
@@ -282,7 +426,26 @@ function JavaEditor() {
     script.onload = async () => {
       try {
         setCheerpjStatus("Initializing JVM...");
-        await window.cheerpjInit({ version: 8, status: "none" });
+        await window.cheerpjInit({
+          version: 8,
+          status: "none",
+          natives: {
+            Java_cheerpj_CheerpJInputStream_readByte: async function() {
+              if (typeof (window as any).__cheerpjReadByte === "function") {
+                return await (window as any).__cheerpjReadByte();
+              }
+              return -1;
+            },
+            Java_cheerpj_CheerpJInputStream_bytesAvailable: function() {
+              if (typeof (window as any).__cheerpjBytesAvailable === "function") {
+                return (window as any).__cheerpjBytesAvailable();
+              }
+              return 0;
+            }
+          }
+        });
+        setCheerpjStatus("Initializing interop helpers...");
+        await compileHelpers();
         setIsCheerpjReady(true);
         setCheerpjStatus("Ready");
       } catch (err: any) {
@@ -432,19 +595,9 @@ function JavaEditor() {
       const mainClass = deriveMainClass(activeFile);
 
       try {
-        const originalPrompt = window.prompt;
-        try {
-          (window as any).prompt = function (message?: string, defaultValue?: string) {
-            const result = originalPrompt.call(window, message ?? "", defaultValue);
-            if (result !== null && consoleRef.current) {
-              consoleRef.current.appendChild(document.createTextNode(result + "\n"));
-            }
-            return result;
-          };
-          await window.cheerpjRunMain(mainClass, "/files/");
-        } finally {
-          (window as any).prompt = originalPrompt;
-        }
+        readByteQueueRef.current = [];
+        readByteResolverRef.current = null;
+        await window.cheerpjRunMain("cheerpj.CheerpJRunner", "/files/", mainClass);
       } catch (runErr: any) {
         const isNormalExit =
           runErr?.name === "CheerpException" &&
@@ -970,6 +1123,23 @@ function JavaEditor() {
                       <span className="text-xs text-emerald-500/80">
                         {isCompiling ? "Compiling..." : "Running..."}
                       </span>
+                    </div>
+                  )}
+                  {isRunning && !isCompiling && (
+                    <div className="flex items-center gap-2 border-t border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-1.5 shrink-0">
+                      <span className="text-emerald-500 text-xs shrink-0 font-mono">&gt;</span>
+                      <input
+                        type="text"
+                        placeholder="Type input and press Enter..."
+                        className="flex-1 bg-transparent text-[var(--text-primary)] text-xs outline-none border-none placeholder:text-[var(--text-tertiary)] font-mono"
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            const val = e.currentTarget.value;
+                            e.currentTarget.value = "";
+                            handleSendInput(val);
+                          }
+                        }}
+                      />
                     </div>
                   )}
                 </div>

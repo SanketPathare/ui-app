@@ -170,6 +170,7 @@ function JavaEditor() {
   const [isCheerpjLoading, setIsCheerpjLoading] = useState(true);
   const [isCompiling, setIsCompiling] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
+  const [isAwaitingInput, setIsAwaitingInput] = useState(false);
   const [compileError, setCompileError] = useState<string | null>(null);
   const [outputText, setOutputText] = useState("");
   const [showSidebar, setShowSidebar] = useState(false);
@@ -389,7 +390,11 @@ public class CheerpJRunner {
         if (readByteQueueRef.current.length > 0) {
           resolve(readByteQueueRef.current.shift()!);
         } else {
-          readByteResolverRef.current = resolve;
+          setIsAwaitingInput(true);
+          readByteResolverRef.current = (byte) => {
+            setIsAwaitingInput(false);
+            resolve(byte);
+          };
         }
       });
     };
@@ -554,7 +559,9 @@ public class CheerpJRunner {
     try {
       await syncFilesToCheerpj();
 
-      const sourceFilePath = "/str/" + activeFile.name;
+      const javaFiles = filesRef.current
+        .filter(f => f.name.endsWith(".java"))
+        .map(f => "/str/" + f.name);
       const outputDir = "/files/";
       const classPath = "/app/ecj.jar:/files/";
 
@@ -569,7 +576,7 @@ public class CheerpJRunner {
           "-source", "1.8",
           "-target", "1.8",
           "-nowarn",
-          sourceFilePath
+          ...javaFiles
         );
       } catch (compileErr: any) {
         if (compileErr?.name === "CheerpException" && compileErr?.code === 0) {
@@ -618,6 +625,7 @@ public class CheerpJRunner {
       setIsCompiling(false);
       setIsRunning(false);
       isRunningRef.current = false;
+      setIsAwaitingInput(false);
     }
   }, [isCheerpjReady, activeFile, isRunning, isCompiling, syncFilesToCheerpj, deriveMainClass]);
 
@@ -631,6 +639,12 @@ public class CheerpJRunner {
       setIsCompiling(false);
       isRunningRef.current = false;
       setCheerpjStatus("Stopped");
+      setIsAwaitingInput(false);
+      if (readByteResolverRef.current) {
+        const resolve = readByteResolverRef.current;
+        readByteResolverRef.current = null;
+        resolve(-1);
+      }
     }
   }, [isRunning, isCompiling]);
 
@@ -1125,8 +1139,12 @@ public class CheerpJRunner {
                       </span>
                     </div>
                   )}
-                  {isRunning && !isCompiling && (
-                    <div className="flex items-center gap-2 border-t border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-1.5 shrink-0">
+                </div>
+
+                {/* Stdin input bar at the bottom */}
+                {isRunning && isAwaitingInput && (
+                  <div className="border-t border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-2 shrink-0">
+                    <div className="flex items-center gap-2">
                       <span className="text-emerald-500 text-xs shrink-0 font-mono">&gt;</span>
                       <input
                         type="text"
@@ -1141,8 +1159,8 @@ public class CheerpJRunner {
                         }}
                       />
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             </div>
           )}

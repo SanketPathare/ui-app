@@ -100,6 +100,7 @@ const toolCategories = [
       { title: "Python Compiler", href: "/python-compiler", icon: Braces },
       { title: "Java Compiler", href: "/java-compiler", icon: Coffee },
       { title: "C Compiler", href: "/c-compiler", icon: Terminal },
+      { title: "C++ Compiler", href: "/cpp-compiler", icon: Terminal },
     ]
   }
 ];

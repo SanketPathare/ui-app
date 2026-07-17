@@ -75,6 +75,8 @@ const compilers = [
   { title: "React Sandbox", description: "Online React JS compiler with terminal, npm packages, and live preview.", href: "/react-compiler", icon: Cpu },
   { title: "Python Compiler", description: "Online Python compiler powered by WebAssembly. Run Python code in your browser.", href: "/python-compiler", icon: Code },
   { title: "Java Compiler", description: "Online Java compiler powered by CheerpJ. Write, compile, and run Java code in your browser.", href: "/java-compiler", icon: Coffee },
+  { title: "C Compiler", description: "Online C compiler powered by WebAssembly. Write, compile, and run C code in your browser.", href: "/c-compiler", icon: Terminal },
+  { title: "C++ Compiler", description: "Online C++ compiler powered by WebAssembly/Clang. Write, compile, and run C++ code in your browser.", href: "/cpp-compiler", icon: Terminal },
 ];
 
 const containerVariants = {

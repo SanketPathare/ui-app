@@ -524,10 +524,6 @@ function CEditor() {
     setSidebarTab(tab);
   }, [sidebarTab]);
 
-  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInputText(e.target.value);
-  }, []);
-
   const activityItems = [
     { tab: "explorer" as SidebarTab, icon: File, label: "Explorer" },
     { tab: "settings" as SidebarTab, icon: Settings, label: "Settings" },

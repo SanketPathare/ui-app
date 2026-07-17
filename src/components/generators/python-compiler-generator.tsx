@@ -10,6 +10,7 @@ import dynamic from "next/dynamic";
 import { cn } from "@/lib/utils";
 import { useTheme as useNextTheme } from "next-themes";
 import Link from "next/link";
+import { CompilerLoading } from "@/components/compiler-loading";
 
 const MonacoEditor = dynamic(() => import("@monaco-editor/react"), { ssr: false });
 
@@ -163,6 +164,19 @@ function PythonEditor() {
   const [pendingRunFileId, setPendingRunFileId] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState("");
   const [isReady, setIsReady] = useState(false);
+  const [loading, setLoading] = useState(() => {
+    if (typeof window === "undefined") return true;
+    try { return !localStorage.getItem("compiler-loaded-before"); } catch { return true; }
+  });
+
+  useEffect(() => {
+    if (!loading) return;
+    const timer = setTimeout(() => {
+      setLoading(false);
+      try { localStorage.setItem("compiler-loaded-before", "true"); } catch {}
+    }, 10000);
+    return () => clearTimeout(timer);
+  }, [loading]);
   const [isAwaitingInput, setIsAwaitingInput] = useState(false);
   const [promptStr, setPromptStr] = useState("");
   const [showSidebar, setShowSidebar] = useState(false);
@@ -581,6 +595,10 @@ function PythonEditor() {
   ];
 
 
+
+  if (loading) {
+    return <CompilerLoading />;
+  }
 
   return (
     <div className="python-compiler h-screen flex flex-col bg-[var(--bg)] overflow-hidden">

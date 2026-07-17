@@ -11,6 +11,7 @@ import dynamic from "next/dynamic";
 import { cn } from "@/lib/utils";
 import { useTheme as useNextTheme } from "next-themes";
 import Link from "next/link";
+import { CompilerLoading } from "@/components/compiler-loading";
 
 const MonacoEditor = dynamic(() => import("@monaco-editor/react"), { ssr: false });
 
@@ -171,6 +172,19 @@ function JavaEditor() {
   const [isCompiling, setIsCompiling] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
   const [isAwaitingInput, setIsAwaitingInput] = useState(false);
+  const [loading, setLoading] = useState(() => {
+    if (typeof window === "undefined") return true;
+    try { return !localStorage.getItem("compiler-loaded-before"); } catch { return true; }
+  });
+
+  useEffect(() => {
+    if (!loading) return;
+    const timer = setTimeout(() => {
+      setLoading(false);
+      try { localStorage.setItem("compiler-loaded-before", "true"); } catch {}
+    }, 10000);
+    return () => clearTimeout(timer);
+  }, [loading]);
   const [compileError, setCompileError] = useState<string | null>(null);
   const [outputText, setOutputText] = useState("");
   const [showSidebar, setShowSidebar] = useState(false);
@@ -781,6 +795,10 @@ public class CheerpJRunner {
     { tab: "explorer" as SidebarTab, icon: File, label: "Explorer" },
     { tab: "settings" as SidebarTab, icon: Settings, label: "Settings" },
   ];
+
+  if (loading) {
+    return <CompilerLoading />;
+  }
 
   return (
     <div className="java-compiler h-screen flex flex-col bg-[var(--bg)] overflow-hidden">

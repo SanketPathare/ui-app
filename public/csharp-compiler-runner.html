@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>C# Runtime</title>
+  <base href="/" />
+  <style>
+    html, body { margin: 0; background: #000; color: #ccc; font-family: monospace; font-size: 13px; height: 100%; }
+    .status { padding: 24px; text-align: center; }
+    .spinner { width: 18px; height: 18px; border: 2px solid #333; border-top-color: #a855f7; border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 12px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .ready { color: #22c55e; }
+    .error { color: #ef4444; }
+    #status-detail { font-size: 11px; color: #555; margin-top: 6px; }
+  </style>
+</head>
+<body>
+  <div class="status" id="status-wrapper">
+    <div class="spinner" id="spinner"></div>
+    <div id="status-text">Loading Blazor WASM runtime...</div>
+    <div id="status-detail">Initializing .NET 8 in browser</div>
+  </div>
+
+  <!-- Blazor WASM bootstrap — loads and initializes the MyRunnyApp Blazor app -->
+  <script src="/_framework/blazor.webassembly.js" autostart="false"></script>
+
+  <script>
+    const statusText = document.getElementById('status-text');
+    const statusDetail = document.getElementById('status-detail');
+    const spinner = document.getElementById('spinner');
+
+    function postToParent(type, data) {
+      try { window.parent.postMessage({ type: type, ...data }, '*'); } catch(e) {}
+    }
+
+    let blazorReady = false;
+    let pendingRequests = {};
+
+    // Initialize Blazor WASM manually
+    async function init() {
+      try {
+        statusDetail.textContent = 'Starting Blazor runtime...';
+
+        await Blazor.start({
+          loadBootResource: function (type, name, defaultUri, integrity) {
+            // Use default loading from /_framework/
+            return defaultUri;
+          }
+        });
+
+        blazorReady = true;
+        statusText.textContent = '.NET runtime ready';
+        statusText.className = 'ready';
+        spinner.style.display = 'none';
+        statusDetail.textContent = 'MyRunnyApp loaded — Roslyn C# compiler active';
+
+        postToParent('runner-ready');
+
+      } catch (err) {
+        statusText.textContent = 'Blazor failed to load';
+        statusText.className = 'error';
+        spinner.style.display = 'none';
+        statusDetail.textContent = err.message || String(err);
+        postToParent('runner-error', { message: String(err) });
+      }
+    }
+
+    // Listen for compile requests from parent window
+    window.addEventListener('message', async function(e) {
+      if (e.data.type !== 'compile') return;
+
+      const { id, code, input } = e.data;
+
+      if (!blazorReady) {
+        postToParent('compile-result', {
+          id: id,
+          result: 'RUNTIME_ERROR\nBlazor runtime not ready yet. Please wait.'
+        });
+        return;
+      }
+
+      try {
+        // Invoke the [JSInvokable("RunCode")] method in MyRunnyApp
+        const result = await DotNet.invokeMethodAsync('MyRunnyApp', 'RunCode', code || '', input || '');
+
+        if (result.success) {
+          postToParent('compile-result', {
+            id: id,
+            result: 'SUCCESS\n' + (result.output || '')
+          });
+        } else {
+          // Could be compile errors or runtime error
+          const errors = result.errors || 'Unknown error';
+          postToParent('compile-result', {
+            id: id,
+            result: 'COMPILATION_ERRORS\n' + errors
+          });
+        }
+      } catch (err) {
+        postToParent('compile-result', {
+          id: id,
+          result: 'RUNTIME_ERROR\n' + (err.message || String(err))
+        });
+      }
+    });
+
+    init();
+  </script>
+</body>
+</html>

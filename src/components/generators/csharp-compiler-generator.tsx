@@ -15,6 +15,45 @@ import { CompilerLoading } from "@/components/compiler-loading";
 
 const MonacoEditor = dynamic(() => import("@monaco-editor/react"), { ssr: false });
 
+const THEMES: Record<string, Record<string, string>> = {
+  dark: {
+    "--bg-title": "#000000",
+    "--bg-secondary": "#000000",
+    "--bg-activity": "#000000",
+    "--bg-hover": "#1a1a1a",
+    "--bg-active": "#222222",
+    "--border": "#333333",
+    "--text-primary": "#ffffff",
+    "--text-secondary": "#999999",
+    "--text-tertiary": "#666666",
+    "--text-highlight": "#ffffff",
+    "--status-bar": "#ffffff",
+    "--tab-active-bg": "#000000",
+    "--tab-inactive-bg": "#111111",
+    "--input-bg": "#1a1a1a",
+    "--input-text": "#ffffff",
+    "--input-placeholder": "#666666",
+  },
+  light: {
+    "--bg-title": "#ffffff",
+    "--bg-secondary": "#ffffff",
+    "--bg-activity": "#ffffff",
+    "--bg-hover": "#eeeeee",
+    "--bg-active": "#e0e0e0",
+    "--border": "#cccccc",
+    "--text-primary": "#000000",
+    "--text-secondary": "#666666",
+    "--text-tertiary": "#999999",
+    "--text-highlight": "#000000",
+    "--status-bar": "#000000",
+    "--tab-active-bg": "#ffffff",
+    "--tab-inactive-bg": "#f5f5f5",
+    "--input-bg": "#f5f5f5",
+    "--input-text": "#000000",
+    "--input-placeholder": "#999999",
+  },
+};
+
 const DEFAULT_CODE = `using System;
 using System.Collections.Generic;
 
@@ -191,6 +230,12 @@ function CSharpEditor() {
   const compilerInitRef = useRef(false);
   const [compilationMode, setCompilationMode] = useState<"wasm" | "api">("api");
   const [runtimeInfo, setRuntimeInfo] = useState<string>("");
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+
+  const { resolvedTheme } = useNextTheme();
+  const theme = resolvedTheme || "dark";
+  const colors = THEMES[mounted && theme === "light" ? "light" : "dark"];
 
   useEffect(() => {
     if (!loading) return;
@@ -200,9 +245,6 @@ function CSharpEditor() {
     }, 3000);
     return () => clearTimeout(timer);
   }, [loading]);
-
-  const { resolvedTheme } = useNextTheme();
-  const theme = resolvedTheme || "dark";
 
   const activeFile = files.find(f => f.id === activeFileId) || files[0];
 
@@ -591,125 +633,152 @@ function CSharpEditor() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden font-mono select-none">
-      <div className="relative z-10 flex items-center justify-between px-4 h-10 bg-[var(--bg-title)] border-b border-[var(--border)]">
-        <Link href="/" className="flex items-center gap-2 text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
-          <ArrowLeft className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">Back</span>
-        </Link>
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold text-purple-500">C# Compiler</span>
-          <span className="text-[10px] text-[var(--text-tertiary)]">Blazor WebAssembly</span>
+    <div className="csharp-compiler h-screen flex flex-col bg-[var(--bg)] overflow-hidden">
+      <style>{`
+        .csharp-compiler {
+          ${Object.entries(colors).map(([key, val]) => `${key}: ${val};`).join("\n")}
+        }
+        .c-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .c-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .c-scrollbar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        .c-scrollbar::-webkit-scrollbar-thumb:hover { background: #555; }
+        .c-input-area textarea { resize: none; }
+      `}</style>
+
+      <div className="flex items-center justify-between px-4 h-9 bg-[var(--bg-title)] border-b border-[var(--border)] shrink-0">
+        <div className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-1.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span className="text-xs font-medium">Back</span>
+          </Link>
+          <span className="w-px h-4 bg-[var(--border)]" />
+          <div className="flex items-center gap-2">
+            <Terminal className="w-4 h-4 text-purple-500" />
+            <span className="text-sm font-semibold text-[var(--text-primary)]">C# Compiler</span>
+          </div>
         </div>
-        <div className="flex items-center gap-1.5">
-          <button onClick={handleReset} className="p-1.5 rounded text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] transition-colors" title="Reset to defaults">
-            <RotateCcw className="w-3.5 h-3.5" />
+        <div className="flex items-center gap-2">
+          <button onClick={handleReset} className="flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-colors">
+            <RotateCcw className="w-3 h-3" />
+            Reset
           </button>
-          <button onClick={handleDownload} disabled={!activeFile} className="p-1.5 rounded text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] transition-colors disabled:opacity-30" title="Download file">
-            <Download className="w-3.5 h-3.5" />
+          <button onClick={handleDownload} disabled={!activeFile} className="flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-colors disabled:opacity-30">
+            <Download className="w-3 h-3" />
+            Export
           </button>
         </div>
       </div>
 
-      <div id="csharp-main-body" className="flex h-[calc(100vh-3.5rem-1.25rem)]">
-        <div className="w-10 flex flex-col items-center py-2 gap-2 bg-[var(--bg-activity)] border-r border-[var(--border)] shrink-0">
-          {activityItems.map((item) => (
+      <div id="csharp-main-body" className="flex-1 flex min-h-0">
+        <div className="w-12 flex flex-col items-center py-2 gap-2 bg-[var(--bg-activity)] border-r border-[var(--border)] shrink-0">
+          {activityItems.map(({ tab, icon: Icon, label }) => (
             <button
-              key={item.tab}
-              onClick={() => toggleSidebar(item.tab)}
+              key={tab}
+              onClick={() => toggleSidebar(tab)}
+              title={label}
               className={cn(
-                "p-1.5 rounded transition-colors relative",
-                showSidebar && sidebarTab === item.tab
-                  ? "text-purple-500 bg-[var(--bg-active)]"
-                  : "text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]"
+                "w-9 h-9 flex items-center justify-center rounded-md transition-colors",
+                showSidebar && sidebarTab === tab
+                  ? "bg-[var(--bg-active)] text-[var(--text-primary)]"
+                  : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)]"
               )}
-              title={item.label}
             >
-              <item.icon className="w-4 h-4" />
-              {showSidebar && sidebarTab === item.tab && (
-                <span className="absolute -left-[5px] top-1/2 -translate-y-1/2 w-[3px] h-4 bg-purple-500 rounded-full" />
-              )}
+              <Icon className="w-4 h-4" />
             </button>
           ))}
+          <div className="flex-1" />
+          {isRunning ? (
+            <button onClick={handleStop} title="Stop" className="w-9 h-9 flex items-center justify-center rounded-md text-red-500 hover:bg-red-500/10 transition-colors">
+              <Square className="w-4 h-4" />
+            </button>
+          ) : (
+            <button
+              onClick={handleRun}
+              disabled={!isCompilerReady || isCompilerLoading}
+              title={isCompilerReady ? "Run" : "Loading..."}
+              className={cn(
+                "w-9 h-9 flex items-center justify-center rounded-md transition-colors",
+                isCompilerReady ? "text-purple-500 hover:bg-purple-500/10" : "text-[var(--text-tertiary)] cursor-not-allowed"
+              )}
+            >
+              {isCompilerLoading ? (
+                <span className="w-4 h-4 border-2 border-[var(--text-tertiary)] border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <Play className="w-4 h-4" />
+              )}
+            </button>
+          )}
         </div>
 
         {showSidebar && sidebarTab === "explorer" && (
           <div className="w-56 flex flex-col bg-[var(--bg-secondary)] border-r border-[var(--border)] shrink-0">
             <div className="flex items-center justify-between px-3 h-9 border-b border-[var(--border)]">
-              <span className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider">Explorer</span>
-              <button onClick={() => setShowSidebar(false)} className="p-1 rounded text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] transition-colors">
-                <PanelRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
-            <div className="flex-1 overflow-y-auto c-scrollbar">
-              <div className="flex items-center justify-between px-3 py-1.5">
-                <span className="text-[11px] font-semibold text-[var(--text-tertiary)] uppercase">Files</span>
+              <span className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider">Files</span>
+              <div className="flex items-center gap-0.5">
                 <button
-                  onClick={() => { setShowNewFile(!showNewFile); setNewFileName(""); setTimeout(() => newFileInputRef.current?.focus(), 50); }}
-                  className="p-0.5 rounded text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-colors"
-                  title="New file"
+                  onClick={() => { setNewFileName(""); setShowNewFile(true); setTimeout(() => newFileInputRef.current?.focus(), 50); }}
+                  className="p-1 rounded text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] transition-colors"
+                  title="New File"
                 >
                   <FilePlus className="w-3.5 h-3.5" />
                 </button>
+                <button onClick={() => setShowSidebar(false)} className="p-1 rounded text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] transition-colors">
+                  <PanelRight className="w-3.5 h-3.5" />
+                </button>
               </div>
+            </div>
+            <div className="flex-1 overflow-y-auto py-1 c-scrollbar">
               {showNewFile && (
-                <div className="px-2 pb-1">
-                  <div className="flex items-center gap-1 bg-[var(--input-bg)] border border-[var(--border)] rounded px-2 py-1">
-                    <input
-                      ref={newFileInputRef}
-                      type="text"
-                      value={newFileName}
-                      onChange={(e) => setNewFileName(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" && newFileName.trim()) {
-                          createFile(newFileName);
-                        }
-                        if (e.key === "Escape") {
-                          setShowNewFile(false);
-                          setNewFileName("");
-                        }
-                      }}
-                      placeholder="filename.cs"
-                      className="flex-1 bg-transparent text-xs text-[var(--input-text)] outline-none placeholder:text-[var(--input-placeholder)]"
-                      autoComplete="off"
-                    />
-                    <button
-                      onClick={() => createFile(newFileName)}
-                      disabled={!newFileName.trim()}
-                      className="p-0.5 rounded text-purple-500 hover:text-purple-400 disabled:text-[var(--text-tertiary)] transition-colors"
-                    >
-                      <Check className="w-3 h-3" />
-                    </button>
-                  </div>
+                <div className="flex items-center gap-1 px-3 py-0.5">
+                  <File className="w-4 h-4 text-[var(--text-secondary)] shrink-0" />
+                  <input
+                    ref={newFileInputRef}
+                    type="text"
+                    value={newFileName}
+                    onChange={e => setNewFileName(e.target.value)}
+                    onKeyDown={e => {
+                      if (e.key === "Enter") createFile(newFileName);
+                      if (e.key === "Escape") { setShowNewFile(false); setNewFileName(""); }
+                    }}
+                    placeholder="filename.cs"
+                    className="flex-1 bg-[var(--input-bg)] text-[var(--input-text)] text-xs px-1.5 py-0.5 rounded border border-[var(--border)] outline-none placeholder:text-[var(--input-placeholder)]"
+                    autoFocus
+                  />
+                  <button onClick={() => { setShowNewFile(false); setNewFileName(""); }} className="text-[var(--text-secondary)] hover:text-[var(--text-highlight)]">
+                    <X className="w-3 h-3" />
+                  </button>
                 </div>
               )}
               {files.map((file) => (
                 <div key={file.id}>
                   {renamingFileId === file.id ? (
-                    <div className="flex items-center gap-1 px-3 py-1">
+                    <div className="flex items-center gap-1 px-3 py-0.5">
+                      {getFileIcon(file.name, "w-4 h-4 shrink-0")}
                       <input
                         ref={renameInputRef}
                         type="text"
                         value={renameValue}
-                        onChange={(e) => setRenameValue(e.target.value)}
-                        onKeyDown={(e) => {
+                        onChange={e => setRenameValue(e.target.value)}
+                        onKeyDown={e => {
                           if (e.key === "Enter") commitRename();
-                          if (e.key === "Escape") setRenamingFileId(null);
+                          if (e.key === "Escape") { setRenamingFileId(null); setContextMenu(null); }
                         }}
-                        onBlur={commitRename}
-                        className="flex-1 bg-[var(--input-bg)] border border-purple-500/50 rounded px-1.5 py-0.5 text-xs text-[var(--input-text)] outline-none"
-                        autoComplete="off"
+                        className="flex-1 bg-[var(--input-bg)] text-[var(--input-text)] text-xs px-1.5 py-0.5 rounded border border-[var(--border)] outline-none"
+                        autoFocus
                       />
+                      <button onClick={commitRename} className="text-[var(--text-secondary)] hover:text-[var(--text-highlight)]">
+                        <Check className="w-3 h-3" />
+                      </button>
                     </div>
                   ) : (
                     <button
                       onClick={() => switchFile(file.id)}
                       onContextMenu={(e) => handleContextMenu(e, file.id)}
                       className={cn(
-                        "w-full flex items-center gap-2 px-3 py-1.5 text-xs transition-colors",
+                        "w-full flex items-center gap-2 px-3 py-1 text-xs transition-colors group",
                         activeFileId === file.id
-                          ? "bg-purple-500/10 text-[var(--text-primary)] border-l-2 border-purple-500"
-                          : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] border-l-2 border-transparent"
+                          ? "bg-[var(--bg-active)] text-[var(--text-primary)]"
+                          : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)]"
                       )}
                     >
                       {getFileIcon(file.name, "w-4 h-4 shrink-0")}

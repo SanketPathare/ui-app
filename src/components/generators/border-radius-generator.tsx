@@ -31,6 +31,7 @@ export function BorderRadiusGenerator() {
     setTopRight(p.tr);
     setBottomRight(p.br);
     setBottomLeft(p.bl);
+    setAll(p.tl === p.tr && p.tr === p.br && p.br === p.bl);
   };
 
   const borderRadius = `${topLeft}px ${topRight}px ${bottomRight}px ${bottomLeft}px`;
@@ -52,11 +53,11 @@ export function BorderRadiusGenerator() {
         Sync Corners
         <div className={cn(
           "w-8 h-4 rounded-full relative transition-colors",
-          all ? "bg-brand-primary" : "bg-[var(--bg-hover)]"
+          all ? "bg-[var(--text-primary)]" : "bg-[var(--bg-hover)]"
         )}>
           <div className={cn(
-            "absolute top-0.5 w-3 h-3 bg-white rounded-full transition-all",
-            all ? "left-4.5" : "left-0.5"
+            "absolute top-0.5 w-3 h-3 rounded-full transition-all",
+            all ? "left-4.5 bg-[var(--bg)]" : "left-0.5 bg-[var(--text-primary)]"
           )} />
         </div>
       </button>
@@ -123,7 +124,7 @@ export function BorderRadiusGenerator() {
 
   const preview = (
     <div 
-      className="w-48 h-48 md:w-64 md:h-64 bg-gradient-to-br from-brand-primary to-brand-accent shadow-[0_40px_80px_-15px_rgba(139,92,246,0.2)] transition-all duration-500"
+      className="w-48 h-48 md:w-64 md:h-64 bg-gradient-to-br from-violet-500 to-fuchsia-500 shadow-[0_40px_80px_-15px_rgba(139,92,246,0.2)] transition-all duration-500"
       style={{ borderRadius }}
     />
   );

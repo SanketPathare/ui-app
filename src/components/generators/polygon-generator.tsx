@@ -34,7 +34,7 @@ export function PolygonGenerator() {
 
   const clipPathValue = `polygon(${points.map(p => `${p.x}% ${p.y}%`).join(", ")})`;
   const cssCode = `clip-path: ${clipPathValue};`;
-  const tailwindCode = `clip-[${clipPathValue}]`;
+  const tailwindCode = `[clip-path:${clipPathValue.replace(/,\s+/g, ",").replace(/\s+/g, "_")}]`;
   const htmlCode = `<div style="clip-path: ${clipPathValue}; width: 300px; height: 300px; background: linear-gradient(135deg, #10b981, #3b82f6);"></div>`;
 
   const reset = () => {
@@ -90,15 +90,15 @@ export function PolygonGenerator() {
               <Star className="w-4 h-4" />
             </div>
             <div>
-              <p className="text-sm font-medium text-white">Star Mode</p>
+              <p className="text-sm font-medium text-[var(--text-primary)]">Star Mode</p>
               <p className="text-[9px] text-[var(--text-secondary)] font-medium tracking-tighter">Toggle between regular and star polygons.</p>
             </div>
           </div>
           <button 
             onClick={() => setIsStar(!isStar)}
-            className={`w-10 h-5 rounded-full transition-all relative ${isStar ? 'bg-brand-primary' : 'bg-[var(--bg-active)]'}`}
+            className={`w-10 h-5 rounded-full transition-all relative ${isStar ? 'bg-[var(--text-primary)]' : 'bg-[var(--bg-active)]'}`}
           >
-            <div className={`absolute top-1 w-3 h-3 rounded-full bg-white transition-all ${isStar ? 'left-6' : 'left-1'}`} />
+            <div className={`absolute top-1 w-3 h-3 rounded-full transition-all ${isStar ? 'left-6 bg-[var(--bg)]' : 'left-1 bg-[var(--text-primary)]'}`} />
           </button>
         </div>
 

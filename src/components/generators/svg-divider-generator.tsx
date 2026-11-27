@@ -31,7 +31,8 @@ export function SvgDividerGenerator() {
       const stepWidth = width / f;
       path = `M0,${h} `;
       for (let i = 0; i < f; i++) {
-        path += `L${i * stepWidth},${h} L${(i + 1) * stepWidth},${h} L${(i + 1) * stepWidth},${h + 40} `;
+        const y = i % 2 === 0 ? h : Math.min(300, h + 60);
+        path += `L${i * stepWidth},${y} L${(i + 1) * stepWidth},${y} `;
       }
       path += `L${width},320 L0,320 Z`;
     } else if (type === "peaks") {
@@ -42,13 +43,18 @@ export function SvgDividerGenerator() {
       }
       path += `L${width},320 L0,320 Z`;
     } else if (type === "curve") {
-      path = `M0,160 Q${width / 2},${160 - h * 2} ${width},160 L${width},320 L0,320 Z`;
+      const ctrlY = Math.max(0, 160 - h);
+      path = `M0,160 Q${width / 2},${ctrlY} ${width},160 L${width},320 L0,320 Z`;
     }
 
     return path;
   }, [type, height, frequency]);
 
-  const svgCode = `<svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg" style="transform: ${isFlipped ? 'scaleX(-1)' : ''} ${isInverted ? 'scaleY(-1)' : ''}">
+  const transformStyle = [isFlipped ? "scaleX(-1)" : "", isInverted ? "scaleY(-1)" : ""]
+    .filter(Boolean)
+    .join(" ");
+
+  const svgCode = `<svg viewBox="0 0 1440 320" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"${transformStyle ? ` style="transform: ${transformStyle};"` : ""}>
   <path d="${pathData}" fill="${color}" />
 </svg>`;
 
@@ -162,7 +168,7 @@ export function SvgDividerGenerator() {
       description="Create beautiful, responsive SVG section dividers for your website layouts."
       controls={controls}
       preview={preview}
-      cssCode={`.divider {\n  background-image: url("data:image/svg+xml,${encodeURIComponent(svgCode)}");\n}`}
+      cssCode={`.divider {\n  width: 100%;\n  height: 150px;\n  background-image: url("data:image/svg+xml,${encodeURIComponent(svgCode)}");\n  background-size: 100% 100%;\n  background-repeat: no-repeat;\n}`}
       htmlCode={svgCode}
       onReset={reset}
     />

@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 const presets = [
   { name: "Pill", px: 24, py: 10, fs: 14, br: 99, fw: "800" },
   { name: "Modern", px: 20, py: 12, fs: 14, br: 12, fw: "700" },
-  { name: "Glass", px: 20, py: 10, fs: 13, br: 10, fw: "600", bg: "#ffffff10", border: 1 },
+  { name: "Glass", px: 20, py: 10, fs: 13, br: 10, fw: "600", bg: "#1e293b", border: 1 },
   { name: "Sharp", px: 18, py: 10, fs: 12, br: 0, fw: "900" },
 ];
 
@@ -28,8 +28,8 @@ export function ButtonGenerator() {
     setFontSize(p.fs);
     setBorderRadius(p.br);
     setFontWeight(p.fw);
-    if (p.bg) setBgColor(p.bg);
-    if (p.border !== undefined) setBorderWidth(p.border);
+    setBgColor(p.bg ?? "#8b5cf6");
+    setBorderWidth(p.border ?? 0);
   };
 
   const cssCode = `padding: ${paddingY}px ${paddingX}px;
@@ -44,7 +44,7 @@ transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 box-shadow: 0 10px 20px -10px ${bgColor};`;
 
   const tailwindCode = `px-[${paddingX}px] py-[${paddingY}px] text-[${fontSize}px] font-[${fontWeight}] rounded-[${borderRadius}px] bg-[${bgColor}] text-[${textColor}] border-[${borderWidth}px] border-[rgba(255,255,255,0.1)] shadow-[0_15px_30px_-10px_${bgColor}] transition-transform duration-200 active:scale-95`;
-  const htmlCode = `<button style="${cssCode.replace(/\n/g, " ")}">\n  Button Text\n</button>`;
+  const htmlCode = `<button style="${cssCode.replace(/\n/g, " ")}">\n  ${text}\n</button>`;
 
   const controls = (
     <div className="space-y-6">
@@ -54,7 +54,7 @@ box-shadow: 0 10px 20px -10px ${bgColor};`;
           type="text"
           value={text}
           onChange={(e) => setText(e.target.value)}
-          className="w-full px-4 py-3 rounded-xl card text-xs font-bold focus:ring-2 focus:ring-[var(--focus-ring)]/30 outline-none transition-all text-white"
+          className="w-full px-4 py-3 rounded-xl card text-xs font-bold focus:ring-2 focus:ring-[var(--focus-ring)]/30 outline-none transition-all text-[var(--text-primary)]"
         />
       </div>
 
@@ -144,12 +144,14 @@ box-shadow: 0 10px 20px -10px ${bgColor};`;
       tailwindCode={tailwindCode}
       htmlCode={htmlCode}
       onReset={() => {
+        setText("Launch Engine");
         setPaddingX(24);
         setPaddingY(12);
         setFontSize(14);
         setBorderRadius(12);
         setBgColor("#8b5cf6");
         setTextColor("#ffffff");
+        setBorderWidth(0);
         setFontWeight("700");
       }}
     />

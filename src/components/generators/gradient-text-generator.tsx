@@ -41,13 +41,14 @@ font-weight: ${fontWeight};
 letter-spacing: ${letterSpacing}px;
 ${strokeWidth > 0 ? `-webkit-text-stroke: ${strokeWidth}px ${strokeColor};` : ""}`;
 
-  const tailwindCode = `<h1 className="bg-gradient-to-r from-[${colors[0]}] to-[${colors[1]}] bg-clip-text text-transparent text-[${fontSize}px] font-[${fontWeight}] tracking-[${letterSpacing}px]">
+  const tailwindCode = `<h1 className="[background-image:${gradientString.replace(/,\s+/g, ",").replace(/\s+/g, "_")}] bg-clip-text text-transparent text-[${fontSize}px] [font-weight:${fontWeight}] tracking-[${letterSpacing}px]">
   ${text}
 </h1>`;
 
   const htmlCode = `<h1 style="
   background: ${gradientString};
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   font-size: ${fontSize}px;
   font-weight: ${fontWeight};
@@ -107,7 +108,7 @@ ${strokeWidth > 0 ? `-webkit-text-stroke: ${strokeWidth}px ${strokeColor};` : ""
            {colors.map((color, i) => (
              <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-[var(--bg-card)] border border-[var(--border)] group">
                 <input type="color" value={color} onChange={(e) => updateColor(i, e.target.value)} className="w-8 h-8 rounded-lg bg-transparent border-none cursor-pointer" />
-                <input type="text" value={color} onChange={(e) => updateColor(i, e.target.value)} className="flex-1 bg-transparent border-none text-[10px] font-mono text-white uppercase outline-none" />
+                <input type="text" value={color} onChange={(e) => updateColor(i, e.target.value)} className="flex-1 bg-transparent border-none text-[10px] font-mono text-[var(--text-primary)] uppercase outline-none" />
                 {colors.length > 2 && (
                   <button onClick={() => removeColor(i)} className="opacity-0 group-hover:opacity-100 text-rose-500 transition-opacity">
                      <RotateCcw className="w-3 h-3 rotate-45" />
@@ -155,7 +156,7 @@ ${strokeWidth > 0 ? `-webkit-text-stroke: ${strokeWidth}px ${strokeColor};` : ""
   const preview = (
     <div className="flex items-center justify-center w-full min-h-[300px] p-8">
        <span 
-         className="leading-tight transition-all duration-500 text-center"
+         className="leading-tight transition-all duration-500 text-center break-words max-w-full"
          style={{ 
            display: "inline",
            backgroundImage: gradientString,

@@ -30,7 +30,7 @@ export function GlassmorphismGenerator() {
     setOpacity(p.op);
     setSaturation(p.sat);
     setBorderColor(p.edge);
-    if (p.color) setColor(p.color);
+    setColor(p.color ?? "#ffffff");
   };
 
   const rgb = hexToRgb(color);
@@ -115,8 +115,8 @@ border-radius: 24px;`;
   const preview = (
     <div className="relative w-full h-full flex items-center justify-center">
       {/* Background shapes for glass effect */}
-      <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-brand-primary rounded-full filter blur-[40px] opacity-40 animate-float" />
-      <div className="absolute top-1/2 right-1/4 w-24 h-24 bg-brand-secondary rounded-full filter blur-[30px] opacity-30 animate-float" style={{ animationDelay: '2s' }} />
+      <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-violet-500 rounded-full filter blur-[40px] opacity-40 animate-float" />
+      <div className="absolute top-1/2 right-1/4 w-24 h-24 bg-fuchsia-500 rounded-full filter blur-[30px] opacity-30 animate-float" style={{ animationDelay: '2s' }} />
       
       <div 
         className="w-48 h-32 md:w-64 md:h-40 lg:w-80 lg:h-48 transition-all duration-500 z-10 shadow-2xl"

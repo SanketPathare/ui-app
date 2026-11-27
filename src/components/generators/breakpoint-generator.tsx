@@ -115,7 +115,7 @@ module.exports = {
              onClick={() => setCurrentView(v)}
              className={cn(
                "px-4 py-1.5 rounded-lg text-sm font-medium uppercase transition-all",
-               currentView === v ? "bg-[var(--text-primary)] text-white shadow-lg shadow-cyan-500/20" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+               currentView === v ? "bg-[var(--text-primary)] text-[var(--bg)] shadow-lg shadow-cyan-500/20" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
              )}
            >
              {v}
@@ -125,7 +125,7 @@ module.exports = {
 
       <div className="relative w-full flex-1 flex items-center justify-center border-t border-[var(--border)] pt-8">
         <div 
-          className="h-full border-2 border-dashed border-[var(--border)] rounded-[8px] transition-all duration-500 flex flex-col items-center justify-center p-6 relative overflow-hidden"
+          className="h-full max-w-full border-2 border-dashed border-[var(--border)] rounded-[8px] transition-all duration-500 flex flex-col items-center justify-center p-4 sm:p-6 relative overflow-hidden"
           style={{ width: `${Math.min(getWidth(), 800)}px` }}
         >
           {/* Scaling info - since real px values might exceed preview area, we cap visual width at 800 but show real label */}

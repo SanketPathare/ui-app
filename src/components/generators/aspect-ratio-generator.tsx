@@ -28,8 +28,8 @@ export function AspectRatioGenerator() {
     : `.aspect-box {\n  aspect-ratio: ${ratioW} / ${ratioH};\n  width: 100%;\n  object-fit: ${objectFit};\n}`;
 
   const tailwindCode = useLegacy
-    ? `<div class="relative w-full pt-[${paddingValue}%]">\n  <div class="absolute inset-0 w-full h-full object-${objectFit}">...</div>\n</div>`
-    : `<div class="aspect-[${ratioW}/${ratioH}] w-full object-${objectFit}"></div>`;
+    ? `<div className="relative w-full pt-[${paddingValue}%]">\n  <div className="absolute inset-0 w-full h-full object-${objectFit}">...</div>\n</div>`
+    : `<div className="aspect-[${ratioW}/${ratioH}] w-full object-${objectFit}"></div>`;
 
   const htmlCode = useLegacy
     ? `<div style="position: relative; width: 100%; padding-top: ${paddingValue}%;">\n  <div style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: ${objectFit}; background: #333;"></div>\n</div>`
@@ -83,7 +83,7 @@ export function AspectRatioGenerator() {
               setRatioW(parseFloat(e.target.value) || 1);
               setPreset("custom");
             }}
-            className="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl px-4 py-3 text-sm text-white focus:border-[var(--border-hover)]/50 outline-none"
+            className="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl px-4 py-3 text-sm text-[var(--text-primary)] focus:border-[var(--border-hover)]/50 outline-none"
           />
         </div>
         <div className="space-y-4">
@@ -94,7 +94,7 @@ export function AspectRatioGenerator() {
               setRatioH(parseFloat(e.target.value) || 1);
               setPreset("custom");
             }}
-            className="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl px-4 py-3 text-sm text-white focus:border-[var(--border-hover)]/50 outline-none"
+            className="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl px-4 py-3 text-sm text-[var(--text-primary)] focus:border-[var(--border-hover)]/50 outline-none"
           />
         </div>
       </div>
@@ -112,7 +112,7 @@ export function AspectRatioGenerator() {
                onClick={() => setContentType(t.id as any)}
                className={cn(
                  "flex-1 py-1.5 rounded-lg text-xs font-medium transition-all",
-                 contentType === t.id ? "bg-[var(--text-primary)] text-white shadow-lg" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                 contentType === t.id ? "bg-[var(--text-primary)] text-[var(--bg)] shadow-lg" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                )}
              >
                {t.label}
@@ -141,7 +141,7 @@ export function AspectRatioGenerator() {
 
       <div className="flex items-center justify-between p-4 rounded-[8px] bg-[var(--bg-card)] border border-[var(--border)] group cursor-pointer" onClick={() => setUseLegacy(!useLegacy)}>
          <div className="space-y-1">
-            <p className="text-sm font-medium text-white uppercase tracking-widest">Legacy Support</p>
+            <p className="text-sm font-medium text-[var(--text-primary)] uppercase tracking-widest">Legacy Support</p>
             <p className="text-[9px] font-bold text-[var(--text-secondary)]">Use padding-top hack for older browsers</p>
          </div>
          <div className={cn(
@@ -158,7 +158,7 @@ export function AspectRatioGenerator() {
   );
 
   const preview = (
-    <div className=" my-10 w-full h-[500px] rounded-[12px] bg-[var(--bg)] border border-[var(--border)] overflow-hidden flex flex-col relative group">
+    <div className="my-4 sm:my-10 w-full min-h-[340px] sm:h-[500px] rounded-[12px] bg-[var(--bg)] border border-[var(--border)] overflow-hidden flex flex-col relative group">
        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
             style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '32px 32px' }} />
        

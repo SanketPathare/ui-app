@@ -67,6 +67,8 @@ export function AuroraGenerator() {
 .aurora-container {
   position: relative;
   overflow: hidden;
+  width: 100%;
+  height: 400px;
   background: #000;
 }
 
@@ -91,15 +93,17 @@ ${hasGrain ? `.aurora-grain {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }` : ""}`;
 
-  const tailwindCode = `<div class="relative overflow-hidden bg-black h-[400px]">
-  <div class="absolute -inset-[50%] opacity-80 blur-[${blur}px] saturate-[${saturate}%] animate-aurora bg-[radial-gradient(circle_at_100%_100%,${colors[0]},transparent),radial-gradient(circle_at_0%_0%,${colors[1]},transparent),radial-gradient(circle_at_100%_0%,${colors[2]},transparent),radial-gradient(circle_at_0%_100%,${colors[3]},transparent)] bg-[length:200%_200%]"></div>
-  ${hasGrain ? '<div class="absolute inset-0 opacity-20 bg-[url(\'data:image/svg+xml...\')]"></div>' : ''}
+  const tailwindCode = `<div className="relative overflow-hidden bg-black h-[400px]">
+  <div
+    className="absolute -inset-[50%] opacity-80 blur-[${blur}px] saturate-[${saturate}%]"
+    style={{
+      backgroundImage: "radial-gradient(circle at 100% 100%, ${colors[0]}, transparent), radial-gradient(circle at 0% 0%, ${colors[1]}, transparent), radial-gradient(circle at 100% 0%, ${colors[2]}, transparent), radial-gradient(circle at 0% 100%, ${colors[3]}, transparent)",
+      backgroundSize: "200% 200%",
+    }}
+  />${hasGrain ? `\n  <div className="pointer-events-none absolute inset-0 opacity-20" style={{ backgroundImage: \`url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")\` }} />` : ""}
 </div>`;
 
-  const htmlCode = `<div class="aurora-container">
-  <div class="aurora-bg"></div>
-  ${hasGrain ? '<div class="aurora-grain"></div>' : ''}
-</div>`;
+  const htmlCode = `<style>\n${cssCode}\n</style>\n<div class="aurora-container">\n  <div class="aurora-bg"></div>${hasGrain ? '\n  <div class="aurora-grain"></div>' : ""}\n</div>`;
 
   const reset = () => {
     applyPreset(presets[0]);
@@ -193,7 +197,7 @@ ${hasGrain ? `.aurora-grain {
           className={cn(
             "flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-[8px] text-xs font-bold uppercase tracking-widest transition-all active:scale-95 shadow-lg",
             isPlaying 
-              ? "bg-[var(--bg-card)] dark:bg-[var(--bg-card)] text-white" 
+              ? "bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)]" 
               : "bg-[var(--text-primary)] text-[var(--bg)]"
           )}
         >

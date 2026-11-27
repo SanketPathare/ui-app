@@ -56,7 +56,7 @@ export function GradientGenerator() {
     : `radial-gradient(circle, ${colorString})`;
 
   const cssCode = `background: ${cssValue};`;
-  const tailwindCode = `bg-[${cssValue}]`;
+  const tailwindCode = `bg-[${cssValue.replace(/,\s+/g, ",").replace(/\s+/g, "_")}]`;
   const htmlCode = `<div style="background: ${cssValue}; width: 100%; height: 200px; border-radius: 24px;"></div>`;
 
   const activeColor = colors.find((c) => c.id === activeId);
@@ -130,7 +130,7 @@ export function GradientGenerator() {
             <button
               onClick={addColor}
               disabled={colors.length >= 5}
-              className="p-1.5 rounded-lg bg-[var(--bg-card)] text-[var(--text-primary)] hover:bg-[var(--text-primary)] hover:text-[var(--text-primary)] transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+              className="p-1.5 rounded-lg bg-[var(--bg-card)] text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-all disabled:opacity-30 disabled:cursor-not-allowed"
             >
               <Plus className="w-3.5 h-3.5" />
             </button>
@@ -232,6 +232,7 @@ export function GradientGenerator() {
           { id: 1, color: "#8b5cf6", stop: 0 },
           { id: 2, color: "#ec4899", stop: 100 },
         ]);
+        setActiveId(1);
         setAngle(135);
         setType("linear");
       }}

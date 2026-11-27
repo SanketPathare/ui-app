@@ -38,23 +38,33 @@ export function HoverGenerator() {
   color: white;`}
 }`;
 
-  const tailwindCode = `<div class="transition-all duration-${duration*1000} ease-out ${effect === 'lift' ? `hover:-translate-y-[${Math.abs(yOffset)}px] hover:scale-[${scale}]` : ""} hover:shadow-2xl hover:shadow-[${accentColor}]/${shadowOpacity} p-8 card">
+  const twHoverClass =
+    effect === "lift"
+      ? `hover:-translate-y-[${Math.abs(yOffset)}px] hover:scale-[${scale}] hover:shadow-[0_10px_25px_${accentColor}40]`
+      : effect === "glow"
+      ? `hover:shadow-[0_0_30px_${accentColor}]`
+      : effect === "border"
+      ? `hover:border-[${accentColor}]`
+      : `hover:bg-[${accentColor}] hover:text-white`;
+
+  const tailwindCode = `<div className="transition-all duration-[${Math.round(duration * 1000)}ms] ease-out p-8 rounded-xl border border-neutral-800 bg-neutral-900 text-white cursor-pointer ${twHoverClass}">
   Hover Content
 </div>`;
 
-  const htmlCode = `<div class="card">Hover me</div>
+  const htmlCode = `<div class="hover-card">Hover me</div>
 
 <style>
-.card {
+.hover-card {
   padding: 2rem;
   background: #1e293b;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  transition: ${duration}s;
+  transition: all ${duration}s ease-out;
   cursor: pointer;
 }
-.card:hover {
-  transform: translateY(${yOffset}px);
-  box-shadow: 0 10px 20px ${accentColor}40;
+.hover-card:hover {
+  ${effect === "lift" ? `transform: translateY(${yOffset}px) scale(${scale});\n  box-shadow: 0 10px 25px ${accentColor}40;` : effect === "glow" ? `box-shadow: 0 0 30px ${accentColor};` : effect === "border" ? `border-color: ${accentColor};\n  box-shadow: inset 0 0 0 2px ${accentColor};` : `background: ${accentColor};\n  color: #ffffff;`}
 }
 </style>`;
 

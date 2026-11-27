@@ -14,6 +14,7 @@ export function GradientBorderGenerator() {
 
   const cssCode = `.gradient-border {
   position: relative;
+  isolation: isolate;
   background: ${bgColor};
   border-radius: ${borderRadius}px;
   padding: 2rem;
@@ -28,13 +29,11 @@ export function GradientBorderGenerator() {
   border-radius: ${borderRadius + borderWidth}px;
 }`;
 
-  const tailwindCode = `<div class="relative p-8 bg-[${bgColor}] rounded-[${borderRadius}px] before:content-[''] before:absolute before:-inset-[${borderWidth}px] before:-z-10 before:bg-gradient-to-r before:from-[${color1}] before:to-[${color2}] before:rounded-[${borderRadius + borderWidth}px]">
+  const tailwindCode = `<div className="relative isolate p-8 bg-[${bgColor}] rounded-[${borderRadius}px] before:content-[''] before:absolute before:-inset-[${borderWidth}px] before:-z-10 before:[background:linear-gradient(${angle}deg,${color1},${color2})] before:rounded-[${borderRadius + borderWidth}px]">
   Content
 </div>`;
 
-  const htmlCode = `<div class="gradient-border">
-  Content
-</div>`;
+  const htmlCode = `<style>\n${cssCode}\n</style>\n<div class="gradient-border">\n  Content\n</div>`;
 
   const reset = () => {
     setBorderWidth(4);

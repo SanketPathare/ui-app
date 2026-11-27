@@ -19,7 +19,7 @@ export function OpacityGenerator() {
 }`;
 
   const tailwindCode = `opacity-[${opacity}] hover:opacity-[${hoverOpacity}] transition-opacity duration-[${transitionTime * 1000}ms]`;
-  const htmlCode = `<div class="element" style="opacity: ${opacity}; transition: opacity ${transitionTime}s ease;">\n  Content Here\n</div>`;
+  const htmlCode = `<style>\n${cssCode}\n</style>\n<div class="element" style="width: 160px; height: 160px; background: #8b5cf6; border-radius: 12px;"></div>`;
 
   const controls = (
     <div className="space-y-6">
@@ -97,7 +97,7 @@ export function OpacityGenerator() {
     <div className="flex flex-col items-center gap-6">
       <p className="text-sm font-medium text-[var(--text-secondary)] uppercase tracking-widest animate-pulse">Hover to test transition</p>
       <div 
-        className="w-40 h-40 md:w-56 md:h-56 bg-brand-primary rounded-[12px] shadow-2xl flex items-center justify-center group cursor-pointer"
+        className="w-40 h-40 md:w-56 md:h-56 bg-violet-500 rounded-[12px] shadow-2xl flex items-center justify-center group cursor-pointer"
         style={{ 
           opacity: opacity,
           transition: `opacity ${transitionTime}s ease`,

@@ -47,9 +47,13 @@ export function KeyframesGenerator() {
   animation: custom-animation ${duration}s linear ${iteration};
 }`;
 
-  const tailwindCode = `<div class="animate-[custom_${duration}s_linear_${iteration}]">
-  <!-- Define custom animation in tailwind.config.js -->
-</div>`;
+  const tailwindCode = `<>
+  <style>{\`@keyframes custom-animation {\n  ${steps.map(s => `${s.percentage}% { transform: ${s.transform}; opacity: ${s.opacity}; }`).join("\n  ")}\n}\`}</style>
+  <div
+    className="w-24 h-24 rounded-xl bg-violet-500"
+    style={{ animation: "custom-animation ${duration}s linear ${iteration}" }}
+  />
+</>`;
 
   const htmlCode = `<div class="box"></div>
 
@@ -58,7 +62,8 @@ export function KeyframesGenerator() {
   width: 100px;
   height: 100px;
   background: #8b5cf6;
-  animation: myAnim ${duration}s linear infinite;
+  border-radius: 12px;
+  animation: myAnim ${duration}s linear ${iteration};
 }
 
 @keyframes myAnim {
@@ -152,7 +157,7 @@ export function KeyframesGenerator() {
   const preview = (
     <div className="w-full h-[400px] flex items-center justify-center rounded-[12px] p-12 overflow-hidden">
       <div 
-        className="w-24 h-24 rounded-[12px] bg-brand-primary relative flex items-center justify-center shadow-2xl"
+        className="w-24 h-24 rounded-[12px] bg-violet-500 relative flex items-center justify-center shadow-2xl"
         style={{ 
           animation: `custom-anim-${duration}-${steps.length} ${duration}s linear infinite`
         }}

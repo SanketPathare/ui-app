@@ -166,10 +166,14 @@ export function PatternGenerator() {
   };
 
   const styles: any = getPatternStyles();
-  const cssCode = `background-color: ${bgColor};\nbackground-image: ${styles.backgroundImage};\nbackground-size: ${styles.backgroundSize};${styles.backgroundPosition ? `\nbackground-position: ${styles.backgroundPosition};` : ""}`;
+  const effectiveBg = styles.backgroundColor || bgColor;
+  const cssCode = `background-color: ${effectiveBg};\nbackground-image: ${styles.backgroundImage};\nbackground-size: ${styles.backgroundSize};${styles.backgroundPosition ? `\nbackground-position: ${styles.backgroundPosition};` : ""}`;
   
-  const tailwindCode = `bg-[${bgColor}] bg-[${styles.backgroundImage?.replace(/ /g, "_")}] bg-[length:${size}px_${size}px]`;
-  const htmlCode = `<div style="background-color: ${bgColor}; background-image: ${styles.backgroundImage}; background-size: ${styles.backgroundSize};${styles.backgroundPosition ? ` background-position: ${styles.backgroundPosition};` : ""} width: 100%; height: 400px; border-radius: 24px;"></div>`;
+  const twBgImage = styles.backgroundImage?.replace(/,\s+/g, ",").replace(/\s+/g, "_") || "";
+  const twBgSize = styles.backgroundSize?.replace(/,\s+/g, ",").replace(/\s+/g, "_") || `${size}px_${size}px`;
+  const twBgPos = styles.backgroundPosition ? ` [background-position:${styles.backgroundPosition.replace(/,\s+/g, ",").replace(/\s+/g, "_")}]` : "";
+  const tailwindCode = `bg-[${effectiveBg}] [background-image:${twBgImage}] [background-size:${twBgSize}]${twBgPos}`;
+  const htmlCode = `<div style="background-color: ${effectiveBg}; background-image: ${styles.backgroundImage}; background-size: ${styles.backgroundSize};${styles.backgroundPosition ? ` background-position: ${styles.backgroundPosition};` : ""} width: 100%; height: 400px; border-radius: 24px;"></div>`;
 
   const controls = (
     <div className="space-y-6">

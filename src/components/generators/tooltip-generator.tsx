@@ -54,13 +54,13 @@ ${showArrow ? `
     'right: 100%; top: 50%; transform: translateY(-50%); border-right-color: rgba(15, 23, 42, 0.9);'}
 }` : ""}`;
 
-  const tailwindCode = `<div class="group relative inline-block">
-  <button class="px-4 py-2 bg-[var(--bg-card)] rounded-lg border border-[var(--border)] text-white">Hover me</button>
+  const tailwindCode = `<div className="group relative inline-block">
+  <button className="px-4 py-2 bg-slate-900 rounded-lg border border-white/10 text-white">Hover me</button>
   
-  <div class="absolute invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-300 ${position === 'top' ? 'bottom-full left-1/2 -translate-x-1/2 mb-3' : position === 'bottom' ? 'top-full left-1/2 -translate-x-1/2 mt-3' : position === 'left' ? 'right-full top-1/2 -translate-y-1/2 mr-3' : 'left-full top-1/2 -translate-y-1/2 ml-3'}">
-    <div class="bg-[var(--bg-card)]/90 backdrop-blur-xl border border-[var(--border)] p-[${padding}px] rounded-[${borderRadius}px] text-xs text-white whitespace-nowrap shadow-2xl">
+  <div className="absolute invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-300 ${position === 'top' ? 'bottom-full left-1/2 -translate-x-1/2 mb-3' : position === 'bottom' ? 'top-full left-1/2 -translate-x-1/2 mt-3' : position === 'left' ? 'right-full top-1/2 -translate-y-1/2 mr-3' : 'left-full top-1/2 -translate-y-1/2 ml-3'}">
+    <div className="relative bg-slate-900/95 backdrop-blur-xl border border-white/10 p-[${padding}px] rounded-[${borderRadius}px] text-xs text-white whitespace-nowrap shadow-2xl">
       Tooltips provide context
-      ${showArrow ? `<div class="absolute w-2 h-2 bg-[var(--bg-card)] border-[var(--border)] ${position === 'top' ? 'top-full left-1/2 -translate-x-1/2 -mt-1 rotate-45 border-r border-b' : position === 'bottom' ? 'bottom-full left-1/2 -translate-x-1/2 -mb-1 rotate-45 border-l border-t' : position === 'left' ? 'left-full top-1/2 -translate-y-1/2 -ml-1 rotate-45 border-r border-t' : 'right-full top-1/2 -translate-y-1/2 -mr-1 rotate-45 border-l border-b'}"></div>` : ""}
+      ${showArrow ? `<div className="absolute w-2 h-2 bg-slate-900 border-white/10 ${position === 'top' ? 'top-full left-1/2 -translate-x-1/2 -mt-1 rotate-45 border-r border-b' : position === 'bottom' ? 'bottom-full left-1/2 -translate-x-1/2 -mb-1 rotate-45 border-l border-t' : position === 'left' ? 'left-full top-1/2 -translate-y-1/2 -ml-1 rotate-45 border-r border-t' : 'right-full top-1/2 -translate-y-1/2 -mr-1 rotate-45 border-l border-b'}" />` : ""}
     </div>
   </div>
 </div>`;
@@ -71,19 +71,18 @@ ${showArrow ? `
 </div>
 
 <style>
-.tooltip-wrapper { position: relative; cursor: pointer; }
+.tooltip-wrapper { position: relative; display: inline-block; cursor: pointer; }
 .tooltip-text { 
   visibility: hidden; 
   background: #0f172a; 
   color: #fff; 
   text-align: center; 
-  padding: 8px; 
-  border-radius: 6px; 
+  padding: ${padding}px; 
+  border-radius: ${borderRadius}px; 
   position: absolute; 
-  z-index: 1; 
-  bottom: 125%; 
-  left: 50%; 
-  transform: translateX(-50%); 
+  z-index: 10; 
+  white-space: nowrap;
+  ${position === 'top' ? 'bottom: 125%; left: 50%; transform: translateX(-50%);' : position === 'bottom' ? 'top: 125%; left: 50%; transform: translateX(-50%);' : position === 'left' ? 'right: 125%; top: 50%; transform: translateY(-50%);' : 'left: 125%; top: 50%; transform: translateY(-50%);'}
 }
 .tooltip-wrapper:hover .tooltip-text { visibility: visible; }
 </style>`;

@@ -149,11 +149,13 @@ export function ParallaxGenerator() {
   };
 
   const preview = (
-    <div className="w-full h-[400px] flex items-center justify-center rounded-[12px] p-8 overflow-hidden [perspective:1000px]">
+    <div
+      className="w-full h-[400px] flex items-center justify-center rounded-[12px] p-8 overflow-hidden"
+      style={{ perspective: `${perspective}px` }}
+    >
        <div 
          className="w-64 h-80 relative group cursor-pointer [transform-style:preserve-3d] transition-all ease-out"
          style={{ 
-            perspective: `${perspective}px`,
             transform: `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
             transitionDuration: `${duration}s`
          }}

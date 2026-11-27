@@ -31,16 +31,23 @@ export function TypingGenerator() {
   50% { border-color: transparent }
 }`;
 
-  const tailwindCode = `<div class="font-mono text-[${fontSize}px] border-r-4 border-[${cursorColor}] w-[${text.length}ch] overflow-hidden whitespace-nowrap animate-typing">
-  ${text}
-</div>`;
+  const tailwindCode = `<>
+  <style>{\`@keyframes typing { from { width: 0 } } @keyframes blink { 50% { border-color: transparent } }\`}</style>
+  <div
+    className="font-mono text-[${fontSize}px] border-r-4 border-[${cursorColor}] w-[${text.length}ch] overflow-hidden whitespace-nowrap"
+    style={{ animation: "typing ${speed}s steps(${text.length}) ${infinite ? "infinite" : "1"}, blink 0.5s step-end infinite alternate" }}
+  >
+    ${text}
+  </div>
+</>`;
 
   const htmlCode = `<div class="typing-demo">${text}</div>
 
 <style>
 .typing-demo {
   width: ${text.length}ch;
-  animation: typing ${speed}s steps(${text.length}), blink .5s step-end infinite alternate;
+  font-size: ${fontSize}px;
+  animation: typing ${speed}s steps(${text.length}) ${infinite ? "infinite" : "1"}, blink .5s step-end infinite alternate;
   white-space: nowrap;
   overflow: hidden;
   border-right: 3px solid ${cursorColor};
@@ -132,8 +139,8 @@ export function TypingGenerator() {
               )}
             >
               <div className={cn(
-                "absolute top-1 w-3 h-3 rounded-full bg-white transition-all duration-300",
-                infinite ? "left-6" : "left-1"
+                "absolute top-1 w-3 h-3 rounded-full transition-all duration-300",
+                infinite ? "left-6 bg-[var(--bg)]" : "left-1 bg-[var(--text-primary)]"
               )} />
             </div>
           </label>
@@ -147,7 +154,7 @@ export function TypingGenerator() {
     <div className="w-full h-[300px] flex items-center justify-center rounded-[12px] p-12 overflow-hidden">
        <div 
          key={text + speed + infinite} // Force animation restart on change
-         className="font-mono font-black text-white whitespace-nowrap overflow-hidden border-r-4 transition-all duration-300"
+         className="font-mono font-black text-[var(--text-primary)] whitespace-nowrap overflow-hidden border-r-4 transition-all duration-300"
          style={{ 
             fontSize: `${fontSize}px`,
             width: `${text.length}ch`,

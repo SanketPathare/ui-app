@@ -88,8 +88,14 @@ export function ClipPathGenerator() {
 
   const clipPathValue = `polygon(${points.map(p => `${p.x}% ${p.y}%`).join(", ")})`;
   const cssCode = `clip-path: ${clipPathValue};`;
-  const tailwindCode = `clip-[${clipPathValue}]`;
-  const htmlCode = `<div style="clip-path: ${clipPathValue}; width: 300px; height: 300px; background: ${bgType === 'gradient' ? `linear-gradient(135deg, ${accentColor}, #22d3ee)` : accentColor};"></div>`;
+  const tailwindCode = `[clip-path:${clipPathValue.replace(/,\s+/g, ",").replace(/\s+/g, "_")}]`;
+  const htmlBg =
+    bgType === "gradient"
+      ? `linear-gradient(135deg, ${accentColor}, #22d3ee)`
+      : bgType === "image"
+      ? `url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop') center/cover`
+      : accentColor;
+  const htmlCode = `<div style="clip-path: ${clipPathValue}; width: 300px; height: 300px; background: ${htmlBg};"></div>`;
 
   const controls = (
     <div className="space-y-6">
@@ -166,7 +172,7 @@ export function ClipPathGenerator() {
               </div>
               <button 
                 onClick={() => removePoint(i)}
-                className="opacity-0 group-hover/node:opacity-100 p-1 rounded-md hover:bg-rose-500/10 hover:text-rose-500 text-[var(--text-secondary)] transition-all"
+                className="opacity-100 sm:opacity-0 sm:group-hover/node:opacity-100 p-1 rounded-md hover:bg-rose-500/10 hover:text-rose-500 text-[var(--text-secondary)] transition-all"
               >
                 <Trash2 className="w-3 h-3" />
               </button>
@@ -192,8 +198,8 @@ export function ClipPathGenerator() {
         <div 
           className={cn(
             "absolute inset-0 transition-all duration-500",
-            bgType === "gradient" ? "bg-gradient-to-br from-brand-primary to-brand-secondary" : 
-            bgType === "solid" ? "bg-brand-primary" : "bg-[url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center"
+            bgType === "gradient" ? "bg-gradient-to-br from-violet-500 to-cyan-400" : 
+            bgType === "solid" ? "bg-violet-500" : "bg-[url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center"
           )}
           style={{ 
             clipPath: clipPathValue,
@@ -236,7 +242,11 @@ export function ClipPathGenerator() {
       cssCode={cssCode}
       tailwindCode={tailwindCode}
       htmlCode={htmlCode}
-      onReset={() => setPoints(PRESETS.Pentagon)}
+      onReset={() => {
+        setPoints(PRESETS.Pentagon);
+        setBgType("gradient");
+        setAccentColor("#8b5cf6");
+      }}
     />
   );
 }

@@ -63,8 +63,12 @@ border-radius: ${radius}px;
 background: ${getBackground()};
 box-shadow: ${getBoxShadow()};`;
 
-  const tailwindCode = `<!-- Note: Neumorphism often requires custom values -->
-<div class="w-[${size}px] h-[${size}px] rounded-[${radius}px] bg-[${color}] shadow-[${getBoxShadow()}]"></div>`;
+  const twBg =
+    shape === "concave" || shape === "convex"
+      ? `bg-[${getBackground().replace(/,\s+/g, ",").replace(/\s+/g, "_")}]`
+      : `bg-[${color}]`;
+
+  const tailwindCode = `<div className="w-[${size}px] h-[${size}px] rounded-[${radius}px] ${twBg} shadow-[${getBoxShadow().replace(/,\s+/g, ",").replace(/\s+/g, "_")}]"></div>`;
 
   const htmlCode = `<div class="neumorphic-element"></div>
 

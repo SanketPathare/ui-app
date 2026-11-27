@@ -253,9 +253,9 @@ ${hoverEffect ? `.card:hover {
   const preview = (
     <div className="w-full max-w-6xl mx-auto p-4 md:p-8">
        <div 
-         className="grid w-full"
+         className="grid w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-[var(--cols)]"
          style={{ 
-           gridTemplateColumns: `repeat(${columns}, 1fr)`,
+           ["--cols" as any]: `repeat(${columns}, minmax(0, 1fr))`,
            gap: `${gap}px`
          }}
        >
@@ -307,7 +307,7 @@ ${hoverEffect ? `.card:hover {
                    <span className="text-[8px] font-bold text-[var(--text-secondary)] uppercase tracking-widest">Entry Fee</span>
                    <span className="text-xs font-black text-white">$99.00</span>
                 </div>
-                <div className="w-8 h-8 rounded-xl bg-[var(--text-primary)] flex items-center justify-center text-white  group-hover/card:scale-110 transition-transform">
+                <div className="w-8 h-8 rounded-xl bg-[var(--text-primary)] flex items-center justify-center text-[var(--bg)] group-hover/card:scale-110 transition-transform">
                    <ArrowRight className="w-4 h-4" />
                 </div>
              </div>

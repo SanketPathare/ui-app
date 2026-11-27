@@ -43,27 +43,33 @@ export function CheckboxGenerator() {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }`;
 
-  const tailwindCode = `<label class="flex items-center gap-3 cursor-pointer group">
-  <div class="w-[${size}px] h-[${size}px] flex items-center justify-center border-2 transition-all duration-300 ${type === 'radio' ? 'rounded-full' : `rounded-[${borderRadius}px]`} ${checked ? `bg-[${accentColor}] border-[${accentColor}] shadow-[0_0_12px_${accentColor}40]` : 'border-[var(--border-hover)] group-hover:border-white/40'}">
-    <${type === 'checkbox' ? 'Check' : 'Circle'} class="w-[${size*0.6}px] h-[${size*0.6}px] text-white transition-all duration-300 ${checked ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}" />
+  const tailwindCode = `<label className="flex items-center gap-3 cursor-pointer group">
+  <div className="w-[${size}px] h-[${size}px] flex items-center justify-center border-2 transition-all duration-300 ${type === 'radio' ? 'rounded-full' : `rounded-[${borderRadius}px]`} ${checked ? `bg-[${accentColor}] border-[${accentColor}] shadow-[0_0_12px_${accentColor}40]` : 'border-neutral-600 group-hover:border-neutral-400'}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="w-[${Math.round(size * 0.6)}px] h-[${Math.round(size * 0.6)}px] text-white transition-all duration-300 ${checked ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}">
+      ${type === 'checkbox' ? '<polyline points="20 6 9 17 4 12" />' : '<circle cx="12" cy="12" r="6" fill="currentColor" />'}
+    </svg>
   </div>
-  <span class="text-sm font-medium text-white/70 group-hover:text-[var(--text-primary)] transition-colors">Select Option</span>
+  <span className="text-sm font-medium text-neutral-300 group-hover:text-white transition-colors">Select Option</span>
 </label>`;
 
   const htmlCode = `<label class="checkbox-wrapper">
-  <input type="checkbox" checked>
+  <input type="${type}" ${checked ? "checked" : ""}>
   <span class="checkmark"></span>
   Option Label
 </label>
 
 <style>
-.checkbox-wrapper { display: flex; align-items: center; gap: 10px; cursor: pointer; color: white; }
+.checkbox-wrapper { position: relative; display: inline-flex; align-items: center; gap: 10px; cursor: pointer; }
+.checkbox-wrapper input { position: absolute; opacity: 0; width: 0; height: 0; }
 .checkmark { 
   width: ${size}px; 
   height: ${size}px; 
   border: 2px solid ${accentColor}; 
-  background: ${accentColor}; 
   border-radius: ${type === 'radio' ? '50%' : borderRadius + 'px'}; 
+  transition: all 0.2s;
+}
+.checkbox-wrapper input:checked + .checkmark {
+  background: ${accentColor};
 }
 </style>`;
 

@@ -34,8 +34,8 @@ export function GridGenerator() {
   color: #8b5cf6;
 }`;
 
-  const tailwindCode = `<div class="grid grid-cols-${columns} grid-rows-${rows} gap-[${rowGap}px_${columnGap}px] w-full h-[400px]">
-  ${gridItems.map((_, i) => `<div class="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg flex items-center justify-center font-mono text-xs text-[var(--text-primary)]">${i + 1}</div>`).join("\n  ")}
+  const tailwindCode = `<div className="grid grid-cols-${columns} grid-rows-${rows} gap-x-[${columnGap}px] gap-y-[${rowGap}px] w-full h-[400px]">
+  ${gridItems.map((_, i) => `<div className="bg-violet-500/10 border border-violet-500/20 rounded-lg flex items-center justify-center font-mono text-xs text-violet-500">${i + 1}</div>`).join("\n  ")}
 </div>`;
 
   const htmlCode = `<div class="grid-container">

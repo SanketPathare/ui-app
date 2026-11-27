@@ -27,7 +27,7 @@ export function ToggleGenerator() {
   width: ${size - 4}px;
   height: ${size - 4}px;
   background: white;
-  border-radius: ${roundness - 2}px;
+  border-radius: ${Math.max(0, roundness - 2)}px;
   position: absolute;
   top: 2px;
   left: ${isOn ? size + 2 : 2}px;
@@ -35,11 +35,8 @@ export function ToggleGenerator() {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }`;
 
-  const tailwindCode = `<div 
-  class="w-[${size * 2}px] h-[${size}px] ${isOn ? `bg-[${accentColor}]` : 'bg-[var(--bg-hover)]'} rounded-[${roundness}px] relative cursor-pointer transition-all duration-300 ${isOn && showGlow ? `shadow-[0_0_20px_${accentColor}40]` : ""}"
-  onclick="this.classList.toggle('bg-[${accentColor}]')"
->
-  <div class="absolute top-[2px] ${isOn ? `left-[${size + 2}px]` : 'left-[2px]'} w-[${size - 4}px] h-[${size - 4}px] bg-white rounded-[${roundness - 2}px] transition-all duration-300 shadow-lg"></div>
+  const tailwindCode = `<div className="w-[${size * 2}px] h-[${size}px] ${isOn ? `bg-[${accentColor}]` : "bg-neutral-700"} rounded-[${roundness}px] relative cursor-pointer transition-all duration-300 ${isOn && showGlow ? `shadow-[0_0_20px_${accentColor}40]` : ""}">
+  <div className="absolute top-[2px] ${isOn ? `left-[${size + 2}px]` : "left-[2px]"} w-[${size - 4}px] h-[${size - 4}px] bg-white rounded-[${Math.max(0, roundness - 2)}px] transition-all duration-300 shadow-lg" />
 </div>`;
 
   const htmlCode = `<div class="toggle ${isOn ? 'on' : ''}" onclick="this.classList.toggle('on')">
@@ -64,7 +61,7 @@ export function ToggleGenerator() {
   width: ${size - 4}px;
   height: ${size - 4}px;
   background: white;
-  border-radius: 50%;
+  border-radius: ${Math.max(0, roundness - 2)}px;
   position: absolute;
   top: 2px;
   left: 2px;

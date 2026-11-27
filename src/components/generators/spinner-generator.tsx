@@ -41,9 +41,37 @@ ${type === 'dots' ? `
   to { transform: translateY(-20px); opacity: 0.5; }
 }` : ""}`;
 
-  const tailwindCode = `<div class="w-${size/4} h-${size/4} border-${thickness} border-[var(--border)] border-t-[${accentColor}] rounded-full animate-spin ${type === 'dual' ? `border-b-[${accentColor}]` : ""}"></div>`;
+  const tailwindCode =
+    type === "dots"
+      ? `<div className="flex gap-2">
+  <div className="w-[${Math.round(size / 4)}px] h-[${Math.round(size / 4)}px] rounded-full bg-[${accentColor}] animate-bounce" />
+  <div className="w-[${Math.round(size / 4)}px] h-[${Math.round(size / 4)}px] rounded-full bg-[${accentColor}] animate-bounce [animation-delay:0.2s]" />
+  <div className="w-[${Math.round(size / 4)}px] h-[${Math.round(size / 4)}px] rounded-full bg-[${accentColor}] animate-bounce [animation-delay:0.4s]" />
+</div>`
+      : `<div className="w-[${size}px] h-[${size}px] border-[${thickness}px] border-white/10 border-t-[${accentColor}] rounded-full animate-spin ${type === "dual" ? `border-b-[${accentColor}]` : ""}" style={{ animationDuration: "${speed}s" }} />`;
 
-  const htmlCode = `<div class="spinner"></div>
+  const htmlCode =
+    type === "dots"
+      ? `<div class="dots">
+  <div class="dot"></div>
+  <div class="dot"></div>
+  <div class="dot"></div>
+</div>
+
+<style>
+.dots { display: flex; gap: 8px; }
+.dot {
+  width: ${Math.round(size / 4)}px;
+  height: ${Math.round(size / 4)}px;
+  background: ${accentColor};
+  border-radius: 50%;
+  animation: bounce ${speed}s infinite alternate;
+}
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes bounce { to { transform: translateY(-20px); opacity: 0.5; } }
+</style>`
+      : `<div class="spinner"></div>
 
 <style>
 .spinner {
@@ -51,6 +79,7 @@ ${type === 'dots' ? `
   height: ${size}px;
   border: ${thickness}px solid rgba(255, 255, 255, 0.1);
   border-top-color: ${accentColor};
+  ${type === "dual" ? `border-bottom-color: ${accentColor};` : ""}
   border-radius: 50%;
   animation: spin ${speed}s linear infinite;
 }

@@ -25,10 +25,8 @@ export function GlowGenerator() {
   {/* Content */}
 </div>`;
 
-  const htmlCode = `<div class="glow-container">
-  <div style="box-shadow: 0 0 ${glowIntensity}px ${spread}px ${glowColor}33; ${isAnimated ? 'animation: glow-pulse 2s infinite ease-in-out;' : ''}">
-    <!-- Content -->
-  </div>
+  const htmlCode = `<div style="width: 128px; height: 128px; border-radius: 12px; background: #18181b; display: flex; align-items: center; justify-content: center; color: #ffffff; box-shadow: 0 0 ${glowIntensity}px ${spread}px ${glowColor}33; ${isAnimated ? 'animation: glow-pulse 2s infinite ease-in-out;' : ''}">
+  Glow Box
 </div>
 
 <style>
@@ -51,7 +49,7 @@ export function GlowGenerator() {
         <label className="text-sm font-medium text-[var(--text-secondary)]">Glow Color</label>
         <div className="flex items-center gap-3 p-3 rounded-xl bg-[var(--bg-card)] border border-[var(--border)]">
            <input type="color" value={glowColor} onChange={(e) => setGlowColor(e.target.value)} className="w-10 h-10 rounded-lg bg-transparent border-none cursor-pointer" />
-           <input type="text" value={glowColor} onChange={(e) => setGlowColor(e.target.value)} className="bg-transparent border-none text-xs font-mono text-white w-full uppercase" />
+           <input type="text" value={glowColor} onChange={(e) => setGlowColor(e.target.value)} className="bg-transparent border-none text-xs font-mono text-[var(--text-primary)] w-full uppercase" />
         </div>
       </div>
 
@@ -102,7 +100,7 @@ export function GlowGenerator() {
            filter: `drop-shadow(0 0 ${glowIntensity / 2}px ${glowColor})`
          }}
        >
-          <Zap className="w-10 h-10 text-white" />
+          <Zap className="w-10 h-10 text-[var(--text-primary)]" />
        </div>
        <style jsx>{`
           @keyframes glow-pulse {

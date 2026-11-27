@@ -31,14 +31,26 @@ export function BorderAnimGenerator() {
   animation: rotate ${speed}s linear infinite;
 }
 
+.animated-border::after {
+  content: '';
+  position: absolute;
+  inset: ${borderWidth}px;
+  background: #020617;
+  border-radius: ${Math.max(0, borderRadius - borderWidth)}px;
+}
+
+.animated-border > * {
+  position: relative;
+  z-index: 1;
+}
+
 @keyframes rotate {
   100% { transform: rotate(360deg); }
 }`;
 
-  const tailwindCode = `<div className="relative p-[${borderWidth}px] overflow-hidden rounded-[${borderRadius}px] bg-[var(--bg)]">
+  const tailwindCode = `<div className="relative p-[${borderWidth}px] overflow-hidden rounded-[${borderRadius}px] bg-slate-950">
   <div className="absolute inset-[-100%] animate-[spin_${speed}s_linear_infinite] bg-[conic-gradient(transparent,transparent,transparent,${color1},${color2})]" />
-  <div className="relative z-10 bg-[var(--bg)] rounded-[${borderRadius-1}px] p-6 text-white">
-    {/* Card Content */}
+  <div className="relative z-10 bg-slate-950 rounded-[${Math.max(0, borderRadius - borderWidth)}px] p-6 text-white">
     <h3 className="text-lg font-bold">Animated Border</h3>
   </div>
 </div>`;
@@ -150,7 +162,7 @@ export function BorderAnimGenerator() {
              <RotateCw className="w-6 h-6 animate-spin-slow" />
           </div>
           <div className="text-center">
-             <h3 className="text-sm font-black text-white uppercase tracking-widest">Active Border</h3>
+             <h3 className="text-sm font-black text-[var(--text-primary)] uppercase tracking-widest">Active Border</h3>
              <p className="text-[9px] font-bold text-[var(--text-secondary)] uppercase tracking-widest mt-1">Conic Gradient Logic</p>
           </div>
        </div>

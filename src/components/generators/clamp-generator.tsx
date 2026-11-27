@@ -50,7 +50,7 @@ export function ClampGenerator() {
   }, [minSize, maxSize, minViewport, maxViewport, outputUnit, simulatedWidth]);
 
   const cssCode = `.responsive-text {\n  font-size: ${clampValue};\n}`;
-  const tailwindCode = `<p class="text-[${clampValue}]">Responsive Text</p>`;
+  const tailwindCode = `<p className="text-[${clampValue}]">Responsive Text</p>`;
   const htmlCode = `<p style="font-size: ${clampValue}">Fluid Typography</p>`;
   const jsCode = `// Fluid Typography Calculation\nconst getFluidSize = (width) => {\n  const minSize = ${minSize};\n  const maxSize = ${maxSize};\n  const minViewport = ${minViewport};\n  const maxViewport = ${maxViewport};\n  \n  const slope = (maxSize - minSize) / (maxViewport - minViewport);\n  const intersection = minSize - slope * minViewport;\n  \n  const size = intersection + slope * width;\n  return Math.min(maxSize, Math.max(minSize, size));\n};`;
 
@@ -92,7 +92,7 @@ export function ClampGenerator() {
           <input 
             type="number" value={minSize} 
             onChange={(e) => setMinSize(parseFloat(e.target.value) || 0)}
-            className="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl px-4 py-2 text-xs text-white focus:border-[var(--border-hover)]/50 outline-none"
+            className="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl px-4 py-2 text-xs text-[var(--text-primary)] focus:border-[var(--border-hover)]/50 outline-none"
           />
         </div>
         <div className="space-y-4">
@@ -100,7 +100,7 @@ export function ClampGenerator() {
           <input 
             type="number" value={maxSize} 
             onChange={(e) => setMaxSize(parseFloat(e.target.value) || 0)}
-            className="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl px-4 py-2 text-xs text-white focus:border-[var(--border-hover)]/50 outline-none"
+            className="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl px-4 py-2 text-xs text-[var(--text-primary)] focus:border-[var(--border-hover)]/50 outline-none"
           />
         </div>
       </div>
@@ -111,7 +111,7 @@ export function ClampGenerator() {
           <input 
             type="number" value={minViewport} 
             onChange={(e) => setMinViewport(parseFloat(e.target.value) || 0)}
-            className="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl px-4 py-2 text-xs text-white focus:border-[var(--border-hover)]/50 outline-none"
+            className="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl px-4 py-2 text-xs text-[var(--text-primary)] focus:border-[var(--border-hover)]/50 outline-none"
           />
         </div>
         <div className="space-y-4">
@@ -119,7 +119,7 @@ export function ClampGenerator() {
           <input 
             type="number" value={maxViewport} 
             onChange={(e) => setMaxViewport(parseFloat(e.target.value) || 0)}
-            className="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl px-4 py-2 text-xs text-white focus:border-[var(--border-hover)]/50 outline-none"
+            className="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl px-4 py-2 text-xs text-[var(--text-primary)] focus:border-[var(--border-hover)]/50 outline-none"
           />
         </div>
       </div>
@@ -129,13 +129,13 @@ export function ClampGenerator() {
         <div className="flex p-1 rounded-xl bg-[var(--bg-card)] border border-[var(--border)]">
           <button 
             onClick={() => setOutputUnit("px")}
-            className={cn("flex-1 py-2 rounded-lg text-sm font-medium transition-all", outputUnit === "px" ? "bg-[var(--text-primary)] text-white" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]")}
+            className={cn("flex-1 py-2 rounded-lg text-sm font-medium transition-all", outputUnit === "px" ? "bg-[var(--text-primary)] text-[var(--bg)]" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]")}
           >
             Pixels (px)
           </button>
           <button 
             onClick={() => setOutputUnit("rem")}
-            className={cn("flex-1 py-2 rounded-lg text-sm font-medium transition-all", outputUnit === "rem" ? "bg-[var(--text-primary)] text-white" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]")}
+            className={cn("flex-1 py-2 rounded-lg text-sm font-medium transition-all", outputUnit === "rem" ? "bg-[var(--text-primary)] text-[var(--bg)]" : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]")}
           >
             Relative (rem)
           </button>
@@ -156,22 +156,24 @@ export function ClampGenerator() {
           </div>
 
           <div className="w-full max-w-xl mx-auto space-y-8">
-            <p style={{ fontSize: `${currentSize}px` }} className="font-black text-white leading-tight text-center break-words transition-all duration-300 ease-out">
+            <p style={{ fontSize: `${currentSize}px` }} className="font-black text-[var(--text-primary)] leading-tight text-center break-words transition-all duration-300 ease-out">
               Fluid Typography Scaling
             </p>
             
             <div className="flex flex-col items-center gap-4">
-              <div className="w-full h-1.5 bg-[var(--bg-card)] rounded-full relative overflow-hidden">
-                <div 
-                  className="absolute inset-y-0 left-0 bg-[var(--text-primary)]/50 transition-all duration-300"
-                  style={{ width: `${((simulatedWidth - 320) / (1920 - 320)) * 100}%` }}
+              <div className="relative w-full flex items-center h-4">
+                <div className="w-full h-1.5 bg-[var(--bg-card)] rounded-full relative overflow-hidden">
+                  <div 
+                    className="absolute inset-y-0 left-0 bg-[var(--text-primary)]/50 transition-all duration-300"
+                    style={{ width: `${((simulatedWidth - 320) / (1920 - 320)) * 100}%` }}
+                  />
+                </div>
+                <input 
+                  type="range" min="320" max="1920" value={simulatedWidth} 
+                  onChange={(e) => setSimulatedWidth(parseInt(e.target.value))}
+                  className="w-full h-4 opacity-0 absolute inset-0 cursor-pointer"
                 />
               </div>
-              <input 
-                type="range" min="320" max="1920" value={simulatedWidth} 
-                onChange={(e) => setSimulatedWidth(parseInt(e.target.value))}
-                className="w-full h-1 opacity-0 absolute cursor-pointer"
-              />
               <div className="flex justify-between w-full text-xs font-medium text-[var(--text-tertiary)] uppercase tracking-widest">
                 <span>320px</span>
                 <span>Current: {currentSize.toFixed(1)}px</span>

@@ -43,7 +43,7 @@ export function TextShadowGenerator() {
   const shadowValue = `${hOffset}px ${vOffset}px ${blur}px ${rgba}`;
   const cssCode = `text-shadow: ${shadowValue};`;
   const tailwindCode = `text-shadow-[${hOffset}px_${vOffset}px_${blur}px_${rgba.replace(/ /g, "")}]`;
-  const htmlCode = `<div style="text-shadow: ${shadowValue}; font-size: ${fontSize}px; font-weight: 900; color: white;">\n  ${text}\n</div>`;
+  const htmlCode = `<div style="text-shadow: ${shadowValue}; font-size: ${fontSize}px; font-weight: 900; color: inherit;">\n  ${text}\n</div>`;
 
   const controls = (
     <div className="space-y-6">
@@ -148,7 +148,10 @@ export function TextShadowGenerator() {
           <input 
             type="color" 
             value={color} 
-            onChange={(e) => setColor(e.target.value)}
+            onChange={(e) => {
+              setColor(e.target.value);
+              setActivePreset(null);
+            }}
             className="w-full h-8 rounded-lg overflow-hidden border-none cursor-pointer"
           />
         </div>
@@ -158,11 +161,10 @@ export function TextShadowGenerator() {
 
   const preview = (
     <div 
-      className="font-sans font-bold tracking-tighter transition-all duration-500 text-center px-4"
+      className="font-sans font-bold tracking-tighter transition-all duration-500 text-center px-4 text-[var(--text-primary)]"
       style={{ 
         fontSize: `${fontSize}px`,
         textShadow: shadowValue,
-        color: "white"
       }}
     >
       {text}
@@ -186,6 +188,7 @@ export function TextShadowGenerator() {
         setOpacity(0.2);
         setFontSize(64);
         setText("Elevate");
+        setActivePreset(null);
       }}
     />
   );

@@ -33,7 +33,7 @@ height: ${size}px;
 background-color: ${color};
 border-radius: ${radius};`;
 
-  const tailwindCode = `<div class="w-[${size}px] h-[${size}px] bg-[${color}] rounded-[${radius}]"></div>`;
+  const tailwindCode = `<div className="w-[${size}px] h-[${size}px] bg-[${color}] rounded-[${radius.replace(/\s+/g, "_")}]"></div>`;
 
   const htmlCode = `<div class="blob-shape"></div>
 

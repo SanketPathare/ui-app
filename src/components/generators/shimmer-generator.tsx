@@ -22,9 +22,17 @@ export function ShimmerGenerator() {
   100% { background-position: -200% 0; }
 }`;
 
-  const tailwindCode = `<div className="animate-shimmer bg-[linear-gradient(${angle}deg,${baseColor}_25%,${highlightColor}_50%,${baseColor}_75%)] bg-[length:200%_100%]">
-  {/* Skeletal Content */}
-</div>`;
+  const tailwindCode = `<>
+  <style>{\`@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }\`}</style>
+  <div
+    className="h-32 w-full rounded-xl"
+    style={{
+      background: "linear-gradient(${angle}deg, ${baseColor} 25%, ${highlightColor} 50%, ${baseColor} 75%)",
+      backgroundSize: "200% 100%",
+      animation: "shimmer ${speed}s infinite linear",
+    }}
+  />
+</>`;
 
   const htmlCode = `<div class="skeleton-box" style="
   width: 100%;

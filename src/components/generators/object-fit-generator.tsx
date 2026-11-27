@@ -11,7 +11,7 @@ export function ObjectFitGenerator() {
   const [positionY, setPositionY] = useState(50);
 
   const cssCode = `.media-element {\n  object-fit: ${fit};\n  object-position: ${positionX}% ${positionY}%;\n  width: 100%;\n  height: 100%;\n}`;
-  const tailwindCode = `<img class="object-${fit} object-[${positionX}%_${positionY}%] w-full h-full" src="..." />`;
+  const tailwindCode = `<img className="object-${fit} object-[${positionX}%_${positionY}%] w-full h-full" src="..." />`;
   const htmlCode = `<img src="..." style="object-fit: ${fit}; object-position: ${positionX}% ${positionY}%; width: 100%; height: 100%;">`;
   const jsCode = `const setMediaFit = (img) => {\n  img.style.objectFit = "${fit}";\n  img.style.objectPosition = "${positionX}% ${positionY}%";\n};`;
 
@@ -90,11 +90,11 @@ export function ObjectFitGenerator() {
              <div className="w-2.5 h-2.5 rounded-full bg-[var(--text-primary)]/20" />
              <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/20" />
           </div>
-          <span className="text-xs font-medium text-[var(--text-tertiary)] uppercase tracking-widest">Media Container (4:3)</span>
+          <span className="text-xs font-medium text-[var(--text-tertiary)] uppercase tracking-widest">Media Container</span>
           <div className="w-10" />
        </div>
        
-       <div className="flex-1 p-8">
+       <div className="flex-1 min-h-0 overflow-hidden p-4 sm:p-8">
           <div className="w-full h-full border-2 border-dashed border-[var(--border)] rounded-[8px] overflow-hidden bg-[var(--bg)] shadow-inner">
              <img 
                src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop" 

@@ -94,12 +94,14 @@ export function MeshGradientGenerator() {
     setActivePreset("");
   };
 
+  const randomHexColor = () =>
+    "#" + Math.floor(Math.random() * 0xffffff).toString(16).padStart(6, "0");
+
   const addPoint = () => {
     if (points.length >= 8) return;
-    const hue = Math.floor(Math.random() * 360);
     const newPoint: MeshPoint = {
       id: "p" + Date.now(),
-      color: `hsl(${hue}, 80%, 55%)`,
+      color: randomHexColor(),
       x: Math.floor(Math.random() * 80 + 10),
       y: Math.floor(Math.random() * 80 + 10),
       size: Math.floor(40 + Math.random() * 30),
@@ -134,10 +136,7 @@ export function MeshGradientGenerator() {
 
   const shuffleColors = () => {
     setPoints((prev) =>
-      prev.map((p) => {
-        const hue = Math.floor(Math.random() * 360);
-        return { ...p, color: `hsl(${hue}, 75%, 55%)` };
-      })
+      prev.map((p) => ({ ...p, color: randomHexColor() }))
     );
     setActivePreset("");
   };
@@ -196,33 +195,19 @@ export function MeshGradientGenerator() {
 </div>
 
 <style>
-.mesh-container {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-  height: 400px;
-}
-.mesh-gradient {
-  position: absolute;
-  inset: -${Math.max(blur, 20)}px;
-  background-color: ${baseColor};
-  background-image:
-    ${bgImageCSS};
-  filter: blur(${blur}px);
-}
+${cssCode}
 </style>`;
 
-  const tailwindCode = `<!-- Mesh gradients require inline styles for the radial layers -->
-<div class="relative overflow-hidden w-full h-[400px]">
+  const tailwindCode = `<div className="relative overflow-hidden w-full h-[400px]">
   <div
-    class="absolute"
-    style="
-      inset: -${Math.max(blur, 20)}px;
-      background-color: ${baseColor};
-      background-image: ${gradientLayers.join(", ")};
-      filter: blur(${blur}px);
-    "
-  ></div>
+    className="absolute"
+    style={{
+      inset: "-${Math.max(blur, 20)}px",
+      backgroundColor: "${baseColor}",
+      backgroundImage: "${gradientLayers.join(", ")}",
+      filter: "blur(${blur}px)",
+    }}
+  />${grain > 0 ? `\n  <div className="pointer-events-none absolute inset-0 mix-blend-overlay" style={{ opacity: ${(grain / 100).toFixed(2)}, backgroundImage: \`url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")\` }} />` : ""}
 </div>`;
 
   const reset = () => {
@@ -309,7 +294,7 @@ export function MeshGradientGenerator() {
           <button
             onClick={addPoint}
             disabled={points.length >= 8}
-            className="p-1.5 rounded-lg bg-[var(--bg-card)] text-[var(--text-primary)] hover:bg-[var(--text-primary)] hover:text-[var(--text-primary)] transition-all disabled:opacity-50"
+            className="p-1.5 rounded-lg bg-[var(--bg-card)] text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-all disabled:opacity-50"
           >
             <Plus className="w-4 h-4" />
           </button>
@@ -365,7 +350,7 @@ export function MeshGradientGenerator() {
       <div className="grid grid-cols-2 gap-2">
         <button
           onClick={shufflePositions}
-          className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-[var(--bg-card)] dark:bg-[var(--bg-card)] text-white dark:text-[var(--text-primary)] text-sm font-medium hover:opacity-80 transition-all active:scale-95 border border-transparent dark:border-[var(--border)]"
+          className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-[var(--bg-card)] text-[var(--text-primary)] text-sm font-medium hover:opacity-80 transition-all active:scale-95 border border-[var(--border)]"
         >
           <Shuffle className="w-3.5 h-3.5" /> Position
         </button>

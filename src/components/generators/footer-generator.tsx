@@ -178,8 +178,8 @@ export function FooterGenerator() {
         style={{ padding: `${paddingY / 2}px 24px` }}
       >
         <div 
-          className="grid gap-8"
-          style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}
+          className="grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-[var(--cols)]"
+          style={{ ["--cols" as any]: `repeat(${columns}, minmax(0, 1fr))` }}
         >
           <div className="space-y-4">
             <div className="h-4 w-20 bg-[var(--bg-active)] rounded-full" />

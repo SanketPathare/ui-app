@@ -24,8 +24,8 @@ export function ContainerGenerator() {
   border-radius: 24px;` : ""}
 }`;
 
-  const tailwindCode = `<div class="max-w-[${maxWidth}px] px-[${paddingX}px] py-[${paddingY}px] w-full ${centered ? "mx-auto" : ""} ${glassEffect ? "bg-[var(--bg-card)] backdrop-blur-xl border border-[var(--border)] rounded-[12px]" : ""}">
-  <!-- Content -->
+  const tailwindCode = `<div className="max-w-[${maxWidth}px] px-[${paddingX}px] py-[${paddingY}px] w-full ${centered ? "mx-auto" : ""} ${glassEffect ? "bg-white/5 backdrop-blur-xl border border-white/10 rounded-[12px]" : ""}">
+  {/* Content */}
 </div>`;
 
   const htmlCode = `<div class="container">

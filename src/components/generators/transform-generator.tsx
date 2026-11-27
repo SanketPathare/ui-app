@@ -61,6 +61,8 @@ export function TransformGenerator() {
               setScale(p.s);
               setSkewX(p.sx);
               setSkewY(p.sy);
+              setTranslateX(0);
+              setTranslateY(0);
             }}
             className="px-2 py-2 rounded-lg card text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all"
           >
@@ -73,7 +75,7 @@ export function TransformGenerator() {
 
   const preview = (
     <div 
-      className="w-40 h-40 md:w-56 md:h-56 bg-brand-primary rounded-[12px] shadow-2xl flex items-center justify-center transition-all duration-300"
+      className="w-40 h-40 md:w-56 md:h-56 bg-violet-500 rounded-[12px] shadow-2xl flex items-center justify-center transition-all duration-300"
       style={{ transform: transformValue }}
     >
       <div className="w-12 h-12 bg-[var(--bg-active)] rounded-lg border-2 border-white/40 flex items-center justify-center">

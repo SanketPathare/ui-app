@@ -35,8 +35,12 @@ export function FlexboxGenerator() {
   font-family: monospace;
 }`;
 
-  const tailwindCode = `<div class="flex flex-${flexDirection} justify-${justifyContent.replace("flex-", "")} items-${alignItems.replace("flex-", "")} flex-${flexWrap} gap-[${gap}px] w-full min-h-[400px]">
-  ${items.map((_, i) => `<div class="bg-brand-secondary/10 border border-brand-secondary/20 rounded-lg p-6 text-brand-secondary font-mono">${i + 1}</div>`).join("\n  ")}
+  const twJustify = justifyContent
+    .replace("flex-", "")
+    .replace("space-", "");
+
+  const tailwindCode = `<div className="flex flex-${flexDirection} justify-${twJustify} items-${alignItems.replace("flex-", "")} flex-${flexWrap} gap-[${gap}px] w-full min-h-[400px]">
+  ${items.map((_, i) => `<div className="bg-cyan-500/10 border border-cyan-500/20 rounded-lg p-6 text-cyan-500 font-mono">${i + 1}</div>`).join("\n  ")}
 </div>`;
 
   const htmlCode = `<div class="flex-container">
@@ -76,7 +80,7 @@ export function FlexboxGenerator() {
         <div className="space-y-2">
           <div className="flex justify-between">
             <label className="text-sm font-medium text-[var(--text-secondary)]">Items</label>
-            <span className="text-[10px] font-bold text-brand-secondary font-mono">{itemCount}</span>
+            <span className="text-[10px] font-bold text-cyan-500 font-mono">{itemCount}</span>
           </div>
           <div className="flex items-center gap-3">
             <button 
@@ -113,7 +117,7 @@ export function FlexboxGenerator() {
                 className={cn(
                   "px-3 py-2 rounded-xl text-xs font-medium border transition-all",
                   flexDirection === dir 
-                    ? "bg-brand-secondary/20 border-brand-secondary/50 text-brand-secondary shadow-lg shadow-brand-secondary/10" 
+                    ? "bg-cyan-500/20 border-cyan-500/50 text-cyan-500 shadow-lg shadow-cyan-500/10" 
                     : "bg-[var(--bg-card)] border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                 )}
               >
@@ -152,7 +156,7 @@ export function FlexboxGenerator() {
         <div className="space-y-2">
           <div className="flex justify-between">
             <label className="text-sm font-medium text-[var(--text-secondary)]">Gap</label>
-            <span className="text-[10px] font-bold text-brand-secondary font-mono">{gap}px</span>
+            <span className="text-[10px] font-bold text-cyan-500 font-mono">{gap}px</span>
           </div>
           <input 
             type="range"
@@ -182,7 +186,7 @@ export function FlexboxGenerator() {
       {items.map((_, i) => (
         <div 
           key={i}
-          className="bg-brand-secondary/10 border border-brand-secondary/20 rounded-xl px-6 py-4 flex items-center justify-center font-mono text-xs text-brand-secondary shadow-lg shadow-brand-secondary/5 group-hover:scale-105 transition-all"
+          className="bg-cyan-500/10 border border-cyan-500/20 rounded-xl px-6 py-4 flex items-center justify-center font-mono text-xs text-cyan-500 shadow-lg shadow-cyan-500/5 group-hover:scale-105 transition-all"
         >
           {i + 1}
         </div>

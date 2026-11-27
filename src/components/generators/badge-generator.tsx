@@ -37,7 +37,7 @@ export function BadgeGenerator() {
   color: ${accentColor};`}
 }`;
 
-  const tailwindCode = `<span class="inline-flex items-center px-[${paddingX}px] py-[${paddingY}px] text-[${fontSize}px] font-black uppercase tracking-widest rounded-[${borderRadius}px] ${variant === 'solid' ? `bg-[${accentColor}] text-white` : variant === 'outline' ? `border border-[${accentColor}] text-[${accentColor}]` : variant === 'ghost' ? `bg-[${accentColor}]/10 text-[${accentColor}]` : `bg-[${accentColor}]/10 backdrop-blur-md border border-[${accentColor}]/20 text-[${accentColor}]`}">
+  const tailwindCode = `<span className="inline-flex items-center px-[${paddingX}px] py-[${paddingY}px] text-[${fontSize}px] font-black uppercase tracking-widest rounded-[${borderRadius}px] ${variant === 'solid' ? `bg-[${accentColor}] text-white` : variant === 'outline' ? `border border-[${accentColor}] text-[${accentColor}]` : variant === 'ghost' ? `bg-[${accentColor}]/10 text-[${accentColor}]` : `bg-[${accentColor}]/10 backdrop-blur-md border border-[${accentColor}]/20 text-[${accentColor}]`}">
   ${text}
 </span>`;
 
@@ -50,7 +50,7 @@ export function BadgeGenerator() {
   font-size: ${fontSize}px;
   border-radius: ${borderRadius}px;
   font-weight: bold;
-  ${variant === 'solid' ? `background: ${accentColor}; color: white;` : `border: 1px solid ${accentColor}; color: ${accentColor};`}
+  ${variant === 'solid' ? `background: ${accentColor}; color: white;` : variant === 'outline' ? `border: 1px solid ${accentColor}; color: ${accentColor};` : variant === 'ghost' ? `background: ${accentColor}15; color: ${accentColor};` : `background: ${accentColor}15; backdrop-filter: blur(8px); border: 1px solid ${accentColor}30; color: ${accentColor};`}
 }
 </style>`;
 

@@ -39,7 +39,20 @@ export function AnimationGenerator() {
   50% { transform: translateY(-30px); }
 }`;
 
-  const tailwindCode = `<div class="animate-[${effect}_${duration}s_${timing}_${delay}s_${iteration}_${direction}] bg-brand-primary w-24 h-24 rounded-[8px] "></div>`;
+  const keyframeMap: Record<string, string> = {
+    float: `@keyframes float {\n  0%, 100% { transform: translateY(0px); }\n  50% { transform: translateY(-20px); }\n}`,
+    pulse: `@keyframes pulse {\n  0%, 100% { transform: scale(1); opacity: 1; }\n  50% { transform: scale(1.1); opacity: 0.7; }\n}`,
+    spin: `@keyframes spin {\n  from { transform: rotate(0deg); }\n  to { transform: rotate(360deg); }\n}`,
+    bounce: `@keyframes bounce {\n  0%, 100% { transform: translateY(0); }\n  50% { transform: translateY(-30px); }\n}`,
+  };
+
+  const tailwindCode = `<>
+  <style>{\`${keyframeMap[effect] || ""}\`}</style>
+  <div
+    className="w-24 h-24 rounded-[8px] bg-violet-500"
+    style={{ animation: "${effect} ${duration}s ${timing} ${delay}s ${iteration} ${direction}" }}
+  />
+</>`;
 
   const htmlCode = `<div class="animated-box"></div>
 
@@ -52,9 +65,7 @@ export function AnimationGenerator() {
   animation: ${effect} ${duration}s ${timing} ${delay}s ${iteration} ${direction};
 }
 
-@keyframes ${effect} {
-  /* Keyframes for ${effect} */
-}
+${keyframeMap[effect] || ""}
 </style>`;
 
   const reset = () => {
@@ -141,7 +152,7 @@ export function AnimationGenerator() {
   const preview = (
     <div className="w-full h-[300px] flex items-center justify-center rounded-[12px] p-12">
       <div 
-        className="w-24 h-24 rounded-[12px] bg-brand-primary relative flex items-center justify-center overflow-hidden group shadow-2xl"
+        className="w-24 h-24 rounded-[12px] bg-violet-500 relative flex items-center justify-center overflow-hidden group shadow-2xl"
         style={{ 
           animationName: effect,
           animationDuration: `${duration}s`,

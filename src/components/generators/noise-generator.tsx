@@ -7,23 +7,16 @@ import { cn } from "@/lib/utils";
 export function NoiseGenerator() {
   const [opacity, setOpacity] = useState(0.2);
   const [density, setDensity] = useState(0.5);
-  const [color, setColor] = useState("#000000");
   const [bgColor, setBgColor] = useState("#6366f1");
 
-  const svgFilter = `<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'>
-  <filter id='noiseFilter'>
-    <feTurbulence 
-      type='fractalNoise' 
-      baseFrequency='${density}' 
-      numOctaves='3' 
-      stitchTiles='stitch' />
-  </filter>
-  <rect width='100%' height='100%' filter='url(#noiseFilter)' />
-</svg>`;
+  const dataUri = `data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='${density}' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E`;
 
   const cssCode = `.noise-container {
   background-color: ${bgColor};
   position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 300px;
 }
 
 .noise-container::after {
@@ -31,14 +24,27 @@ export function NoiseGenerator() {
   position: absolute;
   inset: 0;
   opacity: ${opacity};
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='${density}' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  background-image: url("${dataUri}");
   filter: contrast(150%) brightness(1000%);
+  pointer-events: none;
 }`;
+
+  const tailwindCode = `<div className="relative overflow-hidden w-full h-[300px] bg-[${bgColor}]">
+  <div
+    className="pointer-events-none absolute inset-0"
+    style={{
+      opacity: ${opacity},
+      backgroundImage: \`url("${dataUri}")\`,
+      filter: "contrast(150%) brightness(1000%)",
+    }}
+  />
+</div>`;
+
+  const htmlCode = `<style>\n${cssCode}\n</style>\n<div class="noise-container"></div>`;
 
   const reset = () => {
     setOpacity(0.2);
     setDensity(0.5);
-    setColor("#000000");
     setBgColor("#6366f1");
   };
 
@@ -123,7 +129,8 @@ export function NoiseGenerator() {
       controls={controls}
       preview={preview}
       cssCode={cssCode}
-      htmlCode={svgFilter}
+      tailwindCode={tailwindCode}
+      htmlCode={htmlCode}
       onReset={reset}
     />
   );

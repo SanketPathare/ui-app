@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
@@ -58,7 +59,7 @@
 
 @layer base {
   * {
-    @apply border-[var(--border)] transition-colors duration-150;
+    @apply border-[var(--border)];
   }
   html {
     @apply bg-[var(--bg)] text-[var(--text-primary)];

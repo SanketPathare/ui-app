@@ -115,7 +115,7 @@ function useTheme() {
   }, []);
 
   const toggle = () => {
-    setTheme(theme === "dark" || resolvedTheme === "dark" ? "light" : "dark");
+    setTheme(resolvedTheme === "dark" ? "light" : "dark");
   };
 
   const activeTheme = mounted ? (theme || resolvedTheme || "dark") : "dark";

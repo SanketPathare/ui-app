@@ -10,7 +10,7 @@ import {
   Info, ClipboardList, Play, RotateCw, Loader2, Type as TypeIcon,
   Scissors, Hexagon, Spline, Image, Activity, Code, Terminal, Cpu,
   Component, ArrowDownCircle, Star, Laptop, Braces, Wind, Ghost,
-  Settings2, Frame, Type, MousePointer2, Coffee, BarChart2
+  Settings2, Frame, Type, MousePointer2, Coffee, BarChart2, Eye, SlidersHorizontal
 } from "lucide-react";
 import { useState, useEffect, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -53,6 +53,8 @@ const toolCategories = [
       { title: "Text Shadow", href: "/text-shadow", icon: Type },
       { title: "Gradient Border", href: "/gradient-border", icon: Square },
       { title: "Color Palette", href: "/color-palette", icon: Palette },
+      { title: "Contrast Checker", href: "/contrast-checker", icon: Eye },
+      { title: "Scrollbar Studio", href: "/scrollbar", icon: SlidersHorizontal },
     ]
   },
   {
@@ -88,6 +90,7 @@ const toolCategories = [
       { title: "Spinners", href: "/spinners", icon: Loader2 },
       { title: "Typing FX", href: "/typing", icon: TypeIcon },
       { title: "Parallax", href: "/parallax", icon: Layers },
+      { title: "Cubic Bezier", href: "/cubic-bezier", icon: Spline },
     ]
   },
   {

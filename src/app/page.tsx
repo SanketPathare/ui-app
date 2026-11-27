@@ -9,7 +9,7 @@ import {
   Navigation, Monitor, CheckSquare, ToggleLeft, Tag, Info,
   ClipboardList, Play, Loader2, Scissors, Hexagon, Spline,
   Image, Activity, Zap, Code, Terminal, Cpu, Coffee,
-  ChevronRight, BarChart2
+  ChevronRight, BarChart2, Eye, SlidersHorizontal
 } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
@@ -68,6 +68,9 @@ const tools = [
   { title: "CSS Clamp", description: "Fluid typography without media queries.", href: "/fx-clamp", icon: Type },
   { title: "Aspect Ratio", description: "Element proportion control.", href: "/fx-aspect", icon: Maximize },
   { title: "Object Fit", description: "Image/video alignment.", href: "/fx-object-fit", icon: Image },
+  { title: "Cubic Bezier", description: "Custom CSS easing curves.", href: "/cubic-bezier", icon: Spline },
+  { title: "Scrollbar Studio", description: "Custom cross-browser scrollbars.", href: "/scrollbar", icon: SlidersHorizontal },
+  { title: "Contrast Checker", description: "WCAG AA/AAA color contrast.", href: "/contrast-checker", icon: Eye },
 ];
 
 const compilers = [

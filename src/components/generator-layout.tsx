@@ -1,9 +1,9 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, useState, useEffect } from "react";
 import { Copy, Check, RefreshCcw, ArrowLeft, Sun, Moon, Code } from "lucide-react";
-import { useState } from "react";
 import Link from "next/link";
+import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 
 interface GeneratorLayoutProps {
@@ -34,7 +34,15 @@ export function GeneratorLayout({
   const [copied, setCopied] = useState(false);
   const defaultTab = tailwindCode ? "react" : cssCode ? "css" : htmlCode ? "html" : "js";
   const [activeTab, setActiveTab] = useState<"react" | "css" | "html" | "js">(defaultTab);
-  const [previewMode, setPreviewMode] = useState<"dark" | "light">("dark");
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const previewMode: "dark" | "light" =
+    mounted && resolvedTheme === "light" ? "light" : "dark";
 
   const copyToClipboard = () => {
     let codeToCopy = "";
@@ -49,14 +57,7 @@ export function GeneratorLayout({
   };
 
   const switchPreviewMode = (mode: "dark" | "light") => {
-    setPreviewMode(mode);
-    if (mode === "light") {
-      document.documentElement.classList.remove("dark");
-      document.documentElement.classList.add("light");
-    } else {
-      document.documentElement.classList.remove("light");
-      document.documentElement.classList.add("dark");
-    }
+    setTheme(mode);
   };
 
   return (
@@ -105,10 +106,15 @@ export function GeneratorLayout({
 
           <div className="card p-4 flex items-start gap-3">
             <Code className="w-4 h-4 text-[var(--text-secondary)] mt-0.5 shrink-0" />
-            <div className="space-y-0.5">
-              <h4 className="text-sm font-medium text-[var(--text-primary)]">Engine Specs</h4>
-              <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
-                Optimized for modern browser engines.
+            <div className="space-y-1">
+              <h4 className="text-sm font-medium text-[var(--text-primary)]">Export &amp; Compatibility</h4>
+              <p className="text-xs sm:text-sm text-[var(--text-secondary)] leading-relaxed">
+                Generates standards-compliant CSS and Tailwind utility classes
+                ready for Chrome, Firefox, Safari, and Edge.{" "}
+                <Link href="/docs" className="underline underline-offset-2 hover:text-[var(--text-primary)]">
+                  Read docs
+                </Link>
+                .
               </p>
             </div>
           </div>

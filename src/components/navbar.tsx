@@ -100,6 +100,7 @@ const toolCategories = [
       { title: "Python Compiler", href: "/python-compiler", icon: Braces },
       { title: "Java Compiler", href: "/java-compiler", icon: Coffee },
       { title: "C Compiler", href: "/c-compiler", icon: Terminal },
+      { title: "C# Compiler", href: "/csharp-compiler", icon: Terminal },
       { title: "C++ Compiler", href: "/cpp-compiler", icon: Terminal },
       { title: "R Compiler", href: "/r-compiler", icon: BarChart2 },
     ]
@@ -124,13 +125,14 @@ function useTheme() {
 }
 
 const docsList = [
-  { title: "Introduction", href: "/docs", icon: BookOpen },
-  { title: "Getting Started", href: "/docs/getting-started", icon: BookOpen },
-  { title: "Visual FX Guide", href: "/docs/visual-fx", icon: BookOpen },
-  { title: "Layout Lab Guide", href: "/docs/layout", icon: BookOpen },
-  { title: "Color Palettes Docs", href: "/docs/colors", icon: BookOpen },
-  { title: "API Reference", href: "/docs/api", icon: BookOpen },
-  { title: "CLI Tool Usage", href: "/docs/cli", icon: BookOpen },
+  { title: "Documentation Overview", href: "/docs", icon: BookOpen },
+  { title: "Getting Started", href: "/docs#getting-started", icon: BookOpen },
+  { title: "Visual FX & Styling", href: "/docs#visual-fx", icon: BookOpen },
+  { title: "Layout & Responsive Systems", href: "/docs#layout", icon: BookOpen },
+  { title: "Color & Gradient Engines", href: "/docs#colors", icon: BookOpen },
+  { title: "Browser Compilers", href: "/docs#compilers", icon: BookOpen },
+  { title: "Keyboard Shortcuts", href: "/docs#keyboard-shortcuts", icon: BookOpen },
+  { title: "FAQ & Licensing", href: "/docs#faq", icon: BookOpen },
 ];
 
 export function Navbar() {

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { GitBranch, Globe, Heart, Zap } from "lucide-react";
+import { GitBranch, Globe, Zap } from "lucide-react";
 
 const footerLinks = [
   {
@@ -16,18 +16,18 @@ const footerLinks = [
     title: "Resources",
     links: [
       { label: "Documentation", href: "/docs" },
-      { label: "Components", href: "/badge" },
+      { label: "Getting Started", href: "/docs#getting-started" },
       { label: "Animations", href: "/animations" },
       { label: "Keyframes", href: "/keyframes" },
     ],
   },
   {
-    title: "Company",
+    title: "Guides",
     links: [
-      { label: "About", href: "/#" },
-      { label: "Blog", href: "/#" },
-      { label: "GitHub", href: "https://github.com" },
-      { label: "Twitter", href: "https://twitter.com" },
+      { label: "Visual FX", href: "/docs#visual-fx" },
+      { label: "Layout Systems", href: "/docs#layout" },
+      { label: "Shortcuts", href: "/docs#keyboard-shortcuts" },
+      { label: "FAQ", href: "/docs#faq" },
     ],
   },
 ];
@@ -92,9 +92,6 @@ export function Footer() {
         <div className="mt-12 pt-8 border-t border-[var(--border)] flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-[var(--text-tertiary)]">
             &copy; {new Date().getFullYear()} UI Engine. All rights reserved.
-          </p>
-          <p className="text-xs text-[var(--text-tertiary)] flex items-center gap-1">
-            Built with <Heart className="w-3 h-3 text-red-400 fill-red-400" /> using Next.js
           </p>
         </div>
       </div>

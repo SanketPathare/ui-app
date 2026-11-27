@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { GitBranch, Globe, Zap } from "lucide-react";
+import { Zap } from "lucide-react";
 
 const footerLinks = [
   {
@@ -24,9 +24,9 @@ const footerLinks = [
   {
     title: "Guides",
     links: [
+      { label: "About", href: "/about" },
       { label: "Visual FX", href: "/docs#visual-fx" },
       { label: "Layout Systems", href: "/docs#layout" },
-      { label: "Shortcuts", href: "/docs#keyboard-shortcuts" },
       { label: "FAQ", href: "/docs#faq" },
     ],
   },
@@ -47,25 +47,6 @@ export function Footer() {
             <p className="text-sm text-[var(--text-tertiary)] leading-relaxed max-w-xs">
               A collection of CSS generators and design tools for modern developers.
             </p>
-            <div className="flex gap-3">
-              <a
-                href="https://github.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-[6px] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card)] transition-colors"
-              >
-                <GitBranch className="w-4 h-4" />
-              </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-[6px] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card)] transition-colors"
-              >
-                <Globe className="w-4 h-4" />
-              </a>
-
-            </div>
           </div>
 
           {footerLinks.map((group) => (

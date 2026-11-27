@@ -202,8 +202,8 @@ export default function Home() {
 
   return (
     <Shell>
-      <div className="space-y-24 md:space-y-32 pb-24">
-        <section ref={ref} className="relative overflow-hidden pt-16 md:pt-28 pb-16 md:pb-24 border-b border-dotted border-[var(--border)]">
+      <div className="space-y-16 md:space-y-28 pb-16 md:pb-24">
+        <section ref={ref} className="relative overflow-hidden pt-10 md:pt-24 pb-12 md:pb-20 border-b border-dotted border-[var(--border)]">
           <GridBackground />
 
           <motion.div style={{ y: heroY, opacity: heroOpacity }} className="relative z-10">
@@ -212,7 +212,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
-                className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-[var(--text-primary)] leading-[1.05]"
+                className="text-3xl sm:text-5xl md:text-7xl font-bold tracking-tight text-[var(--text-primary)] leading-[1.08]"
               >
                  Design Tools for Modern Developers
               </motion.h1>

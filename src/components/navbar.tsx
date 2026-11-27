@@ -281,6 +281,18 @@ export function Navbar() {
           </Link>
 
           <button
+            onClick={() => {
+              setIsSearchOpen(true);
+              setSearchQuery("");
+              setActiveIndex(0);
+            }}
+            className="md:hidden p-1.5 rounded-[6px] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card)] transition-colors"
+            aria-label="Search tools"
+          >
+            <Search className="w-4 h-4" />
+          </button>
+
+          <button
             onClick={toggle}
             className="p-1.5 rounded-[6px] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card)] transition-colors"
             aria-label="Toggle theme"
@@ -363,9 +375,19 @@ export function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden border-t border-[var(--border)] bg-[var(--bg)] overflow-hidden"
+            className="lg:hidden border-t border-[var(--border)] bg-[var(--bg)] max-h-[calc(100vh-3.5rem)] overflow-y-auto"
           >
             <div className="p-4 space-y-6">
+              <div className="flex items-center gap-2 pb-2 border-b border-[var(--border)] sm:hidden">
+                <Link
+                  href="/docs"
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center gap-2 px-2.5 py-2 rounded-[4px] text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card)] transition-colors w-full"
+                >
+                  <BookOpen className="w-4 h-4 shrink-0" />
+                  <span>Documentation</span>
+                </Link>
+              </div>
               {toolCategories.map((category) => (
                 <div key={category.name} className="space-y-2">
                   <h3 className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider">
@@ -393,7 +415,7 @@ export function Navbar() {
 
       <AnimatePresence>
         {isSearchOpen && (
-          <div className="fixed inset-0 z-[250] flex items-start justify-center pt-24 px-4">
+          <div className="fixed inset-0 z-[250] flex items-start justify-center pt-12 sm:pt-24 px-3 sm:px-4">
             {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}

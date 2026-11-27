@@ -60,7 +60,7 @@ export function GeneratorLayout({
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 md:space-y-8">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div className="space-y-3">
           <Link
@@ -72,7 +72,7 @@ export function GeneratorLayout({
           </Link>
           <div className="space-y-1">
             <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-[var(--text-primary)] flex items-center gap-2">
-              {icon && <span className="text-[var(--text-secondary)]">{icon}</span>}
+              {icon && <span className="text-[var(--text-secondary)] shrink-0">{icon}</span>}
               {title}
             </h1>
             <p className="text-sm text-[var(--text-secondary)] max-w-xl">
@@ -84,7 +84,7 @@ export function GeneratorLayout({
         {onReset && (
           <button
             onClick={onReset}
-            className="btn-secondary text-sm"
+            className="btn-secondary text-sm self-start md:self-auto"
           >
             <RefreshCcw className="w-3.5 h-3.5" />
             Reset
@@ -94,7 +94,7 @@ export function GeneratorLayout({
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         <div className="lg:col-span-4 space-y-4">
-          <div className="card p-5 space-y-5">
+          <div className="card p-4 sm:p-5 space-y-5">
             <label className="text-xs font-semibold text-[var(--text-primary)] flex items-center gap-2">
               Configuration
             </label>
@@ -142,11 +142,11 @@ export function GeneratorLayout({
 
             <div
               className={cn(
-                "rounded-[6px] border transition-colors flex items-center justify-center min-h-[400px] relative overflow-hidden",
+                "rounded-[6px] border transition-colors flex items-center justify-center min-h-[260px] sm:min-h-[340px] md:min-h-[400px] relative overflow-hidden",
                 previewMode === "dark" ? "bg-[var(--bg)] border-[var(--border)]" : "bg-white border-[#e0e0e0]"
               )}
             >
-              <div className="relative z-10 w-full h-full flex items-center justify-center p-8">
+              <div className="relative z-10 w-full h-full flex items-center justify-center p-4 sm:p-6 md:p-8 overflow-x-auto">
                 {preview}
               </div>
             </div>
@@ -170,7 +170,7 @@ export function GeneratorLayout({
             </div>
 
             <div className="rounded-[6px] bg-[var(--bg)] border border-[var(--border)] overflow-hidden">
-              <div className="flex items-center gap-4 px-4 py-2.5 border-b border-[var(--border)] bg-[var(--bg-card)]">
+              <div className="flex items-center gap-3 sm:gap-4 px-3 sm:px-4 py-2.5 border-b border-[var(--border)] bg-[var(--bg-card)] overflow-x-auto whitespace-nowrap">
                 {tailwindCode && (
                   <button
                     onClick={() => setActiveTab("react")}
@@ -216,8 +216,8 @@ export function GeneratorLayout({
                   </button>
                 )}
               </div>
-              <div className="p-4 font-mono text-sm leading-relaxed max-h-[300px] overflow-y-auto text-[var(--text-primary)]">
-                <pre className="whitespace-pre-wrap">
+              <div className="p-3 sm:p-4 font-mono text-xs sm:text-sm leading-relaxed max-h-[300px] overflow-y-auto text-[var(--text-primary)]">
+                <pre className="whitespace-pre-wrap break-words">
                   {activeTab === "react" ? (tailwindCode || "") : activeTab === "css" ? (cssCode || "") : activeTab === "html" ? (htmlCode || "") : (jsCode || "")}
                 </pre>
               </div>

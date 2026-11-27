@@ -85,16 +85,16 @@ const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.05 }
+    transition: { staggerChildren: 0.015 }
   }
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 12 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.4, ease: [0.25, 0.1, 0.25, 1] as const }
+    transition: { duration: 0.25, ease: [0.25, 0.1, 0.25, 1] as const }
   }
 };
 
@@ -103,13 +103,13 @@ function GridBackground() {
     <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
       {/* Subtle radial gradients for background depth */}
       <div 
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-[0.08] dark:opacity-[0.12] blur-3xl pointer-events-none"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-[0.08] dark:opacity-[0.12] pointer-events-none"
         style={{
           background: "radial-gradient(circle, rgba(102,126,234,0.3) 0%, transparent 70%)"
         }}
       />
       <div 
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full opacity-[0.03] dark:opacity-[0.04] blur-3xl pointer-events-none"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full opacity-[0.03] dark:opacity-[0.04] pointer-events-none"
         style={{
           background: "radial-gradient(circle, rgba(236,72,153,0.2) 0%, transparent 80%)"
         }}
@@ -120,7 +120,7 @@ function GridBackground() {
         <div className="relative w-full h-full border-x border-dotted border-[var(--border)]">
           {/* Top-Left Intersection Circle Detail */}
           <div className="absolute left-0 top-[20%] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center z-10">
-            <div className="w-12 h-12 rounded-full border border-dotted border-[var(--border-hover)] bg-[var(--bg)]/80 backdrop-blur-sm animate-[spin_60s_linear_infinite]" />
+            <div className="w-12 h-12 rounded-full border border-dotted border-[var(--border-hover)] bg-[var(--bg)]/80 animate-[spin_60s_linear_infinite]" />
             <div className="absolute w-2 h-2 rounded-full bg-[var(--bg)] border border-[var(--border-active)]" />
             {/* Crosshair lines inside circle */}
             <div className="absolute w-6 h-px bg-[var(--border-active)]" />
@@ -129,7 +129,7 @@ function GridBackground() {
 
           {/* Bottom-Right Intersection Circle Detail */}
           <div className="absolute right-0 bottom-[20%] translate-x-1/2 translate-y-1/2 flex items-center justify-center z-10">
-            <div className="w-12 h-12 rounded-full border border-dotted border-[var(--border-hover)] bg-[var(--bg)]/80 backdrop-blur-sm animate-[spin_60s_linear_infinite]" />
+            <div className="w-12 h-12 rounded-full border border-dotted border-[var(--border-hover)] bg-[var(--bg)]/80 animate-[spin_60s_linear_infinite]" />
             <div className="absolute w-2 h-2 rounded-full bg-[var(--bg)] border border-[var(--border-active)]" />
             {/* Crosshair lines inside circle */}
             <div className="absolute w-6 h-px bg-[var(--border-active)]" />
@@ -156,7 +156,7 @@ function FeatureHighlight({ icon: Icon, title, description, index }: {
       className="group relative"
     >
       <div className="absolute -inset-px rounded-2xl bg-gradient-to-b from-[var(--border)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      <div className="relative h-full rounded-2xl border border-[var(--border)] bg-[var(--bg-card)] p-6 backdrop-blur-sm">
+      <div className="relative h-full rounded-2xl border border-[var(--border)] bg-[var(--bg-card)] p-6">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--bg-hover)] to-transparent border border-[var(--border)] mb-4">
           <Icon className="w-5 h-5 text-[var(--text-secondary)]" />
         </div>
@@ -285,7 +285,7 @@ export default function Home() {
               <motion.div key={tool.href} variants={itemVariants}>
                 <Link href={tool.href} className="group block relative">
                   <div className="absolute -inset-px rounded-2xl bg-gradient-to-b from-[var(--border)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="relative flex items-start gap-4 rounded-2xl border border-[var(--border)] bg-[var(--bg-card)] p-5 backdrop-blur-sm group-hover:bg-[var(--bg-hover)] transition-all duration-300">
+                  <div className="relative flex items-start gap-4 rounded-2xl border border-[var(--border)] bg-[var(--bg-card)] p-5 group-hover:bg-[var(--bg-hover)] transition-colors duration-200">
                     <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--bg-hover)] to-transparent border border-[var(--border)]">
                       <tool.icon className="w-5 h-5 text-[var(--text-secondary)]" />
                     </div>
@@ -330,7 +330,7 @@ export default function Home() {
               <motion.div key={tool.href} variants={itemVariants}>
                 <Link href={tool.href} className="group block relative">
                   <div className="absolute -inset-px rounded-2xl bg-gradient-to-b from-[var(--border)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="relative rounded-2xl border border-[var(--border)] bg-[var(--bg-card)] p-4 backdrop-blur-sm group-hover:bg-[var(--bg-hover)] group-hover:border-[var(--border-hover)] transition-all duration-300">
+                  <div className="relative rounded-2xl border border-[var(--border)] bg-[var(--bg-card)] p-4 group-hover:bg-[var(--bg-hover)] group-hover:border-[var(--border-hover)] transition-colors duration-200">
                     <div className="flex items-start gap-3">
                       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-[var(--bg-hover)] to-transparent border border-[var(--border)]">
                         <tool.icon className="w-4 h-4 text-[var(--text-secondary)]" />

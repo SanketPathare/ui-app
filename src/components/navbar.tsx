@@ -12,7 +12,7 @@ import {
   Component, ArrowDownCircle, Star, Laptop, Braces, Wind, Ghost,
   Settings2, Frame, Type, MousePointer2, Coffee, BarChart2
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme as useNextTheme } from "next-themes";
 
@@ -153,18 +153,27 @@ export function Navbar() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
 
-  const allTools = [
-    ...navItems,
-    ...toolCategories.flatMap(c => c.tools)
-  ];
+  const allTools = useMemo(
+    () => [...navItems, ...toolCategories.flatMap(c => c.tools)],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
-  const searchResults = searchCategory === "tools"
-    ? (searchQuery.trim() === ""
+  const searchResults = useMemo(() => {
+    if (!isSearchOpen) return [];
+    const q = searchQuery.trim().toLowerCase();
+    if (searchCategory === "tools") {
+      return q === ""
         ? allTools.slice(0, 7)
-        : allTools.filter(tool => tool.title.toLowerCase().includes(searchQuery.toLowerCase())))
-    : (searchQuery.trim() === ""
-        ? docsList
-        : docsList.filter(doc => doc.title.toLowerCase().includes(searchQuery.toLowerCase())));
+        : allTools.filter(tool => tool.title.toLowerCase().includes(q));
+    }
+    return q === ""
+      ? docsList
+      : docsList.filter(doc => doc.title.toLowerCase().includes(q));
+  }, [isSearchOpen, searchCategory, searchQuery, allTools]);
+
+  const searchStateRef = useRef({ isSearchOpen, activeIndex, searchResults });
+  searchStateRef.current = { isSearchOpen, activeIndex, searchResults };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -182,16 +191,17 @@ export function Navbar() {
         setSearchQuery("");
       }
 
-      if (isSearchOpen) {
+      const { isSearchOpen: open, activeIndex: idx, searchResults: results } = searchStateRef.current;
+      if (open && results.length > 0) {
         if (e.key === "ArrowDown") {
           e.preventDefault();
-          setActiveIndex(prev => (prev + 1) % Math.max(1, searchResults.length));
+          setActiveIndex((idx + 1) % results.length);
         } else if (e.key === "ArrowUp") {
           e.preventDefault();
-          setActiveIndex(prev => (prev - 1 + searchResults.length) % Math.max(1, searchResults.length));
+          setActiveIndex((idx - 1 + results.length) % results.length);
         } else if (e.key === "Enter") {
           e.preventDefault();
-          const activeItem = searchResults[activeIndex];
+          const activeItem = results[idx];
           if (activeItem) {
             router.push(activeItem.href);
             setIsSearchOpen(false);
@@ -202,7 +212,7 @@ export function Navbar() {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isSearchOpen, activeIndex, searchResults, router]);
+  }, [router]);
 
   return (
     <>
@@ -253,7 +263,7 @@ export function Navbar() {
               setSearchQuery("");
               setActiveIndex(0);
             }}
-            className="relative hidden md:flex items-center bg-[var(--bg-card)] border border-[var(--border)] rounded-[10px] px-3 h-8 gap-2 group hover:border-[var(--border-hover)] transition-colors backdrop-blur-xl text-left cursor-pointer"
+            className="relative hidden md:flex items-center bg-[var(--bg-card)] border border-[var(--border)] rounded-[10px] px-3 h-8 gap-2 group hover:border-[var(--border-hover)] transition-colors text-left cursor-pointer"
           >
             <Search className="w-3.5 h-3.5 text-[var(--text-secondary)]" />
             <span className="text-sm text-[var(--text-secondary)] w-24 sm:w-28 font-medium">Search...</span>
